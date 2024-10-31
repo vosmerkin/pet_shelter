@@ -17,7 +17,7 @@ import ua.tc.marketplace.util.openapi.AuthOpenApi;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/user")
+@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthController implements AuthOpenApi {
 

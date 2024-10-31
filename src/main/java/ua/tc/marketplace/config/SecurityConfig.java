@@ -39,9 +39,9 @@ public class SecurityConfig {
   private static final String ALL_URL = "/**";
   public static final String GET_ONE_DEMO_URL = "/api/v1/demo";
   private static final String DEFAULT_SUCCESS_PAGE = GET_ONE_DEMO_URL;
-  private static final String CREATE_USER_POST_URL = "/api/v1/user/signup";
-  public static final String LOGIN_URL = "/api/v1/user/login";
-  public static final String LOGOUT_URL = "/api/v1/user/logout";
+  private static final String CREATE_USER_POST_URL = "/api/v1/auth/signup";
+  public static final String LOGIN_URL = "/api/v1/auth/login";
+  public static final String LOGOUT_URL = "/api/v1/auth/logout";
   public static final String GET_ALL_DEMO_URL = "/api/v1/demo/all";
   public static final String SWAGGER_DOCS = "/v3/api-docs/**";
   public static final String SWAGGER_UI_PAGES = "/swagger-ui/**";
@@ -81,6 +81,8 @@ public class SecurityConfig {
                         HttpMethod.GET,
                         "/api/v1/ad",
                         "/api/v1/ad/{adId}",
+                        "/api/v1/attribute",
+                        "/api/v1/attribute/{attributeId}",
                         "/api/v1/photo/ad/{adId}",
                         "/api/v1/file/ad/{adId}",
                         "/api/v1/file/ad/{adId}/photo/{photoId}",
