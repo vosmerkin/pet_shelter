@@ -82,11 +82,17 @@ public class SecurityConfig {
                         "/api/v1/ad",
                         "/api/v1/ad/{adId}",
                         "/api/v1/attribute",
-                        "/api/v1/attribute/{attributeId}",
+                        "/api/v1/attribute/{id}",
                         "/api/v1/photo/ad/{adId}",
                         "/api/v1/file/ad/{adId}",
                         "/api/v1/file/ad/{adId}/photo/{photoId}",
-                        "/api/v1/category")
+                        "/api/v1/category",
+                        "/api/v1/category/{id}",
+                        "/api/v1/comment",
+                        "/api/v1/comment/{id}",
+                        "/api/v1/tag",
+                        "/api/v1/tag/{id}",
+                        "/api/v1/user/{id}")
                     .permitAll()
                     .anyRequest()
                     .authenticated())
