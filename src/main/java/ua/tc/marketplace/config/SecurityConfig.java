@@ -92,7 +92,8 @@ public class SecurityConfig {
                         "/api/v1/comment/{id}",
                         "/api/v1/tag",
                         "/api/v1/tag/{id}",
-                        "/api/v1/user/{id}")
+                        "/api/v1/user/{id}",
+                        "/api/v1/category/counted")
                     .permitAll()
                     .anyRequest()
                     .authenticated())
