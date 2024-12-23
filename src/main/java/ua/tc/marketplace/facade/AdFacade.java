@@ -8,6 +8,7 @@ import ua.tc.marketplace.model.dto.ad.AdAttributeCountDto;
 import ua.tc.marketplace.model.dto.ad.AdDto;
 import ua.tc.marketplace.model.dto.ad.CreateAdDto;
 import ua.tc.marketplace.model.dto.ad.UpdateAdDto;
+import ua.tc.marketplace.model.entity.Category;
 
 /**
  * AdFacade defines the interface for operations related to ads within the system.
@@ -28,4 +29,6 @@ public interface AdFacade {
   void deleteAd(Long adId);
 
   List<AdAttributeCountDto> countAdsByAdAttribute(Map<String, String> filterCriteria);
+
+  Long countAdsByCategory(Category category);
 }

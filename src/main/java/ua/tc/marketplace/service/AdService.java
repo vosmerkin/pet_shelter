@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import ua.tc.marketplace.model.AttributeValueKey;
 import ua.tc.marketplace.model.entity.Ad;
+import ua.tc.marketplace.model.entity.Category;
 
 import java.util.Map;
 
@@ -23,4 +24,6 @@ public interface AdService {
   Ad findAdById(Long adId);
 
   Map<AttributeValueKey, Long> countAdsByAdAttribute(Specification<Ad> specification);
+
+  Long countAdsByCategory(Category category);
 }

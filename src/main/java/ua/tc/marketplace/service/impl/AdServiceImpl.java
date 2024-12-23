@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.tc.marketplace.exception.ad.AdNotFoundException;
 import ua.tc.marketplace.model.AttributeValueKey;
 import ua.tc.marketplace.model.entity.Ad;
+import ua.tc.marketplace.model.entity.Category;
 import ua.tc.marketplace.model.entity.AdAttribute;
 import ua.tc.marketplace.repository.AdRepository;
 import ua.tc.marketplace.service.AdService;
@@ -28,23 +29,23 @@ import java.util.stream.Collectors;
 @Transactional
 public class AdServiceImpl implements AdService {
 
-    private final AdRepository adRepository;
+  private final AdRepository adRepository;
 
-    @Transactional(readOnly = true)
-    @Override
-    public Page<Ad> findAll(Specification<Ad> specification, Pageable pageable) {
-        return adRepository.findAll(specification, pageable);
-    }
+  @Transactional(readOnly = true)
+  @Override
+  public Page<Ad> findAll(Specification<Ad> specification, Pageable pageable) {
+    return adRepository.findAll(specification, pageable);
+  }
 
-    @Override
-    public Ad save(Ad ad) {
-        return adRepository.save(ad);
-    }
+  @Override
+  public Ad save(Ad ad) {
+    return adRepository.save(ad);
+  }
 
-    @Override
-    public void delete(Ad ad) {
-        adRepository.delete(ad);
-    }
+  @Override
+  public void delete(Ad ad) {
+    adRepository.delete(ad);
+  }
 
     @Transactional(readOnly = true)
     @Override
@@ -54,10 +55,10 @@ public class AdServiceImpl implements AdService {
 
     public Map<AttributeValueKey, Long> countAdsByAdAttribute(Specification<Ad> specification) {
         return adRepository.countAdsGroupedByAttribute(specification);
-
-
     }
 
-
-
+  @Override
+  public Long countAdsByCategory(Category category) {
+    return adRepository.countByCategoryId(category.getId());
+  }
 }

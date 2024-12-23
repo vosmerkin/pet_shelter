@@ -54,7 +54,7 @@ import ua.tc.marketplace.util.mapper.AdMapper;
 @RequiredArgsConstructor
 public class AdFacadeImpl implements AdFacade {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+  private final ObjectMapper objectMapper = new ObjectMapper();
 
     private final AdService adService;
     private final AdMapper adMapper;
@@ -67,145 +67,149 @@ public class AdFacadeImpl implements AdFacade {
     private final AuthenticationService authenticationService;
     private final LocationService locationService;
 
-    @Override
-    @Transactional
-    public Page<AdDto> findAll(Map<String, String> filterCriteria, Pageable pageable) {
-        Specification<Ad> specification = filterSpecificationFactory.getSpecification(filterCriteria);
-        Page<AdDto> adDtoPage = adService.findAll(specification, pageable).map(adMapper::toAdDto);
-        log.debug("adDtoPage.content : {}", adDtoPage.getContent());
+  @Override
+  @Transactional
+  public Page<AdDto> findAll(Map<String, String> filterCriteria, Pageable pageable) {
+    Specification<Ad> specification = filterSpecificationFactory.getSpecification(filterCriteria);
+    Page<AdDto> adDtoPage = adService.findAll(specification, pageable).map(adMapper::toAdDto);
+    log.debug("adDtoPage.content : {}", adDtoPage.getContent());
 
-        Optional<Location> optionalLocation1 =
-                locationService.extractLocationFromParams(filterCriteria);
+    Optional<Location> optionalLocation1 =
+        locationService.extractLocationFromParams(filterCriteria);
 
-        if (optionalLocation1.isPresent() && !optionalLocation1.get().getAddress().isEmpty()) {
-            Location location1 = optionalLocation1.get();
-            log.debug("Location is present in request params: {}", location1);
+    if (optionalLocation1.isPresent() && !optionalLocation1.get().getAddress().isEmpty()) {
+      Location location1 = optionalLocation1.get();
+      log.debug("Location is present in request params: {}", location1);
 
-            Optional<Location> optionalExistingLocation = locationService.findByParams(location1);
-            Location finalLocation = location1;
-            location1 = optionalExistingLocation.orElseGet(() -> locationService.save(finalLocation));
-            log.debug("Location1 after database existence check : {}", location1);
+      Optional<Location> optionalExistingLocation = locationService.findByParams(location1);
+      Location finalLocation = location1;
+      location1 = optionalExistingLocation.orElseGet(() -> locationService.save(finalLocation));
+      log.debug("Location1 after database existence check : {}", location1);
 
-            // Assign the updated page after distance calculation
-            adDtoPage = distanceService.calculateDistance(location1, adDtoPage);
-        } else {
-            Optional<User> optionalUser = authenticationService.getAuthenticatedUser();
-            if (optionalUser.isPresent()) {
-                User authenticatedUser = optionalUser.get();
-                log.debug("try to extract location from user: {}", authenticatedUser);
+      // Assign the updated page after distance calculation
+      adDtoPage = distanceService.calculateDistance(location1, adDtoPage);
+    } else {
+      Optional<User> optionalUser = authenticationService.getAuthenticatedUser();
+      if (optionalUser.isPresent()) {
+        User authenticatedUser = optionalUser.get();
+        log.debug("try to extract location from user: {}", authenticatedUser);
 
-                // Assign the updated page after distance calculation
-                adDtoPage = distanceService.calculateDistance(authenticatedUser.getLocation(), adDtoPage);
-            }
-        }
-
-        return adDtoPage;
+        // Assign the updated page after distance calculation
+        adDtoPage = distanceService.calculateDistance(authenticatedUser.getLocation(), adDtoPage);
+      }
     }
 
-    @Transactional(readOnly = true)
-    @Override
-    public AdDto findAdById(Long adId) {
-        Ad ad = adService.findAdById(adId);
-        return adMapper.toAdDto(ad);
+    return adDtoPage;
+  }
+
+  @Transactional(readOnly = true)
+  @Override
+  public AdDto findAdById(Long adId) {
+    Ad ad = adService.findAdById(adId);
+    return adMapper.toAdDto(ad);
+  }
+
+  @Override
+  public AdDto createNewAd(CreateAdDto dto) {
+    Ad ad = adMapper.getPrimitiveFields(dto);
+
+    User author = userService.findUserById(dto.authorId());
+
+    Category category = categoryService.findCategoryById(dto.categoryId());
+
+    List<AdAttributeRequestDto> adAttributeRequestDtos = parseJsonAdAttributes(dto);
+
+    List<AdAttribute> adAttributes = mapToAdAttributes(adAttributeRequestDtos, category, ad);
+
+    ad.setAdAttributes(adAttributes);
+    ad.setAuthor(author);
+    ad.setCategory(category);
+    ad = adService.save(ad);
+
+    photoService.saveAdPhotos(ad.getId(), dto.photoFiles());
+
+    ad = adService.findAdById(ad.getId());
+    return adMapper.toAdDto(ad);
+  }
+
+  @Override
+  public AdDto updateAd(Long adId, UpdateAdDto dto) {
+    Ad ad = adService.findAdById(adId);
+    adMapper.updateAd(dto, ad);
+    updateAdAttributes(dto, ad);
+
+    Category category = categoryService.findCategoryById(dto.categoryId());
+    User author = userService.findUserById(dto.authorId());
+    ad.setCategory(category);
+    ad.setAuthor(author);
+
+    ad = adService.save(ad);
+    return adMapper.toAdDto(ad);
+  }
+
+  @Override
+  public void deleteAd(Long adId) {
+    Ad ad = adService.findAdById(adId);
+    photoService.deleteAllAdPhotos(ad);
+    adService.delete(ad);
+  }
+
+  @Override
+  public Long countAdsByCategory(Category category) {
+    return adService.countAdsByCategory(category);
+  }
+
+  private AdAttribute getAdAttribute(Entry<Long, String> entry, Ad finalAd, Category category) {
+    return new AdAttribute(
+        null,
+        finalAd,
+        category.getAttributes().stream()
+            .filter(attribute -> attribute.getId().equals(entry.getKey()))
+            .findFirst()
+            .orElseThrow(() -> new AttributeNotFoundException(entry.getKey())),
+        entry.getValue());
+  }
+
+  private List<AdAttributeRequestDto> parseJsonAdAttributes(CreateAdDto dto) {
+    try {
+      return objectMapper.readValue(dto.adAttributes(), new TypeReference<>() {});
+    } catch (IOException e) {
+      throw new FailedToParseAdAttributesJsonException(dto.adAttributes());
     }
+  }
 
-    @Override
-    public AdDto createNewAd(CreateAdDto dto) {
-        Ad ad = adMapper.getPrimitiveFields(dto);
+  private List<AdAttribute> mapToAdAttributes(
+      List<AdAttributeRequestDto> adAttributeRequestDtos, Category category, Ad ad) {
 
-        User author = userService.findUserById(dto.authorId());
+    Map<Long, String> attributeMap =
+        adAttributeRequestDtos.stream()
+            .collect(
+                Collectors.toMap(AdAttributeRequestDto::attributeId, AdAttributeRequestDto::value));
+    // Convert the list of attributes to a set of IDs
+    Set<Long> requiredAttributeIds =
+        category.getAttributes().stream().map(Attribute::getId).collect(Collectors.toSet());
 
-        Category category = categoryService.findCategoryById(dto.categoryId());
+    // Check if every key in attributeMap is present in attributeIds
+    boolean allKeysPresent = requiredAttributeIds.containsAll(attributeMap.keySet());
 
-        List<AdAttributeRequestDto> adAttributeRequestDtos = parseJsonAdAttributes(dto);
-
-        List<AdAttribute> adAttributes = mapToAdAttributes(adAttributeRequestDtos, category, ad);
-
-        ad.setAdAttributes(adAttributes);
-        ad.setAuthor(author);
-        ad.setCategory(category);
-        ad = adService.save(ad);
-
-        photoService.saveAdPhotos(ad.getId(), dto.photoFiles());
-
-        ad = adService.findAdById(ad.getId());
-        return adMapper.toAdDto(ad);
+    if (allKeysPresent) {
+      return attributeMap.entrySet().stream()
+          .map(entry -> getAdAttribute(entry, ad, category))
+          .collect(Collectors.toList());
+    } else {
+      throw new AdAttributesNotMatchCategoryException(attributeMap.keySet(), requiredAttributeIds);
     }
+  }
 
-    @Override
-    public AdDto updateAd(Long adId, UpdateAdDto dto) {
-        Ad ad = adService.findAdById(adId);
-        adMapper.updateAd(dto, ad);
-        updateAdAttributes(dto, ad);
+  private void updateAdAttributes(UpdateAdDto dto, Ad ad) {
+    List<AdAttributeRequestDto> adAttributeRequestDtos = dto.adAttributes();
+    List<AdAttribute> adAttributes = ad.getAdAttributes();
 
-        Category category = categoryService.findCategoryById(dto.categoryId());
-        User author = userService.findUserById(dto.authorId());
-        ad.setCategory(category);
-        ad.setAuthor(author);
-
-        ad = adService.save(ad);
-        return adMapper.toAdDto(ad);
-    }
-
-    @Override
-    public void deleteAd(Long adId) {
-        Ad ad = adService.findAdById(adId);
-        photoService.deleteAllAdPhotos(ad);
-        adService.delete(ad);
-    }
-
-    private AdAttribute getAdAttribute(Entry<Long, String> entry, Ad finalAd, Category category) {
-        return new AdAttribute(
-                null,
-                finalAd,
-                category.getAttributes().stream()
-                        .filter(attribute -> attribute.getId().equals(entry.getKey()))
-                        .findFirst()
-                        .orElseThrow(() -> new AttributeNotFoundException(entry.getKey())),
-                entry.getValue());
-    }
-
-    private List<AdAttributeRequestDto> parseJsonAdAttributes(CreateAdDto dto) {
-        try {
-            return objectMapper.readValue(dto.adAttributes(), new TypeReference<>() {
-            });
-        } catch (IOException e) {
-            throw new FailedToParseAdAttributesJsonException(dto.adAttributes());
-        }
-    }
-
-    private List<AdAttribute> mapToAdAttributes(
-            List<AdAttributeRequestDto> adAttributeRequestDtos, Category category, Ad ad) {
-
-        Map<Long, String> attributeMap =
-                adAttributeRequestDtos.stream()
-                        .collect(
-                                Collectors.toMap(AdAttributeRequestDto::attributeId, AdAttributeRequestDto::value));
-        // Convert the list of attributes to a set of IDs
-        Set<Long> requiredAttributeIds =
-                category.getAttributes().stream().map(Attribute::getId).collect(Collectors.toSet());
-
-        // Check if every key in attributeMap is present in attributeIds
-        boolean allKeysPresent = requiredAttributeIds.containsAll(attributeMap.keySet());
-
-        if (allKeysPresent) {
-            return attributeMap.entrySet().stream()
-                    .map(entry -> getAdAttribute(entry, ad, category))
-                    .collect(Collectors.toList());
-        } else {
-            throw new AdAttributesNotMatchCategoryException(attributeMap.keySet(), requiredAttributeIds);
-        }
-    }
-
-    private void updateAdAttributes(UpdateAdDto dto, Ad ad) {
-        List<AdAttributeRequestDto> adAttributeRequestDtos = dto.adAttributes();
-        List<AdAttribute> adAttributes = ad.getAdAttributes();
-
-        // Step 1: Convert adAttributeRequestDtos to a Map<Long, String> for quick lookup
-        Map<Long, String> attributeUpdates =
-                adAttributeRequestDtos.stream()
-                        .collect(
-                                Collectors.toMap(AdAttributeRequestDto::attributeId, AdAttributeRequestDto::value));
+    // Step 1: Convert adAttributeRequestDtos to a Map<Long, String> for quick lookup
+    Map<Long, String> attributeUpdates =
+        adAttributeRequestDtos.stream()
+            .collect(
+                Collectors.toMap(AdAttributeRequestDto::attributeId, AdAttributeRequestDto::value));
 
         // Step 2: Update adAttributes list based on the attributeUpdates map
         adAttributes.forEach(
