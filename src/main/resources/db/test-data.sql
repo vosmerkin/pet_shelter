@@ -184,8 +184,7 @@ VALUES
     (5, 4, 'Female'),           -- gender
     (5, 6, 'Gold'),             -- color
     (5, 7, 'Healthy'),          -- health condition
-    (5, 8, 'Bubbles');
--- pet name
+    (5, 8, 'Bubbles');          -- pet name
 
 -- Insert records into 'location' table
 

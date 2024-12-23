@@ -3,7 +3,10 @@ package ua.tc.marketplace.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import ua.tc.marketplace.model.AttributeValueKey;
 import ua.tc.marketplace.model.entity.Ad;
+
+import java.util.Map;
 
 /**
  * Service interface defining operations for managing advertisements. Includes methods for
@@ -18,4 +21,6 @@ public interface AdService {
   void delete(Ad ad);
 
   Ad findAdById(Long adId);
+
+  Map<AttributeValueKey, Long> countAdsByAdAttribute(Specification<Ad> specification);
 }

@@ -1,8 +1,10 @@
 package ua.tc.marketplace.facade;
 
+import java.util.List;
 import java.util.Map;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import ua.tc.marketplace.model.dto.ad.AdAttributeCountDto;
 import ua.tc.marketplace.model.dto.ad.AdDto;
 import ua.tc.marketplace.model.dto.ad.CreateAdDto;
 import ua.tc.marketplace.model.dto.ad.UpdateAdDto;
@@ -24,4 +26,6 @@ public interface AdFacade {
   AdDto updateAd(Long adId, UpdateAdDto dto);
 
   void deleteAd(Long adId);
+
+  List<AdAttributeCountDto> countAdsByAdAttribute(Map<String, String> filterCriteria);
 }
