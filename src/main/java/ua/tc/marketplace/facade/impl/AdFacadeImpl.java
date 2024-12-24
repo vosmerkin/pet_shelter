@@ -2,6 +2,7 @@ package ua.tc.marketplace.facade.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +10,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -20,10 +22,8 @@ import ua.tc.marketplace.exception.attribute.AdAttributesNotMatchCategoryExcepti
 import ua.tc.marketplace.exception.attribute.AttributeNotFoundException;
 import ua.tc.marketplace.exception.attribute.FailedToParseAdAttributesJsonException;
 import ua.tc.marketplace.facade.AdFacade;
-import ua.tc.marketplace.model.dto.ad.AdAttributeRequestDto;
-import ua.tc.marketplace.model.dto.ad.AdDto;
-import ua.tc.marketplace.model.dto.ad.CreateAdDto;
-import ua.tc.marketplace.model.dto.ad.UpdateAdDto;
+import ua.tc.marketplace.model.AttributeValueKey;
+import ua.tc.marketplace.model.dto.ad.*;
 import ua.tc.marketplace.model.entity.Ad;
 import ua.tc.marketplace.model.entity.AdAttribute;
 import ua.tc.marketplace.model.entity.Attribute;
@@ -38,6 +38,7 @@ import ua.tc.marketplace.service.LocationService;
 import ua.tc.marketplace.service.PhotoStorageService;
 import ua.tc.marketplace.service.UserService;
 import ua.tc.marketplace.util.ad_filtering.FilterSpecificationFactory;
+import ua.tc.marketplace.util.mapper.AdAttributeMapper;
 import ua.tc.marketplace.util.mapper.AdMapper;
 
 /**
@@ -55,15 +56,16 @@ public class AdFacadeImpl implements AdFacade {
 
   private final ObjectMapper objectMapper = new ObjectMapper();
 
-  private final AdService adService;
-  private final AdMapper adMapper;
-  private final PhotoStorageService photoService;
-  private final UserService userService;
-  private final CategoryService categoryService;
-  private final FilterSpecificationFactory filterSpecificationFactory;
-  private final DistanceService distanceService;
-  private final AuthenticationService authenticationService;
-  private final LocationService locationService;
+    private final AdService adService;
+    private final AdMapper adMapper;
+    private final AdAttributeMapper adAttributeMapper;
+    private final PhotoStorageService photoService;
+    private final UserService userService;
+    private final CategoryService categoryService;
+    private final FilterSpecificationFactory filterSpecificationFactory;
+    private final DistanceService distanceService;
+    private final AuthenticationService authenticationService;
+    private final LocationService locationService;
 
   @Override
   @Transactional
@@ -209,12 +211,21 @@ public class AdFacadeImpl implements AdFacade {
             .collect(
                 Collectors.toMap(AdAttributeRequestDto::attributeId, AdAttributeRequestDto::value));
 
-    // Step 2: Update adAttributes list based on the attributeUpdates map
-    adAttributes.forEach(
-        adAttribute -> {
-          if (attributeUpdates.containsKey(adAttribute.getAttribute().getId())) {
-            adAttribute.setValue(attributeUpdates.get(adAttribute.getAttribute().getId()));
-          }
-        });
-  }
+        // Step 2: Update adAttributes list based on the attributeUpdates map
+        adAttributes.forEach(
+                adAttribute -> {
+                    if (attributeUpdates.containsKey(adAttribute.getAttribute().getId())) {
+                        adAttribute.setValue(attributeUpdates.get(adAttribute.getAttribute().getId()));
+                    }
+                });
+    }
+
+    public List<AdAttributeCountDto> countAdsByAdAttribute(Map<String, String> filterCriteria) {
+        Specification<Ad> specification = filterSpecificationFactory.getSpecification(filterCriteria);
+        Map<AttributeValueKey, Long> attributeCounts = adService.countAdsByAdAttribute(specification);
+
+        return attributeCounts.entrySet().stream()
+                .map(entry -> adAttributeMapper.toDto(entry.getKey(), entry.getValue()))
+                .toList();
+    }
 }

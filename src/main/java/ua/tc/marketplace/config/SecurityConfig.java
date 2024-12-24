@@ -81,6 +81,7 @@ public class SecurityConfig {
                         HttpMethod.GET,
                         "/api/v1/ad",
                         "/api/v1/ad/{adId}",
+                        "/api/v1/ad/counted",
                         "/api/v1/attribute",
                         "/api/v1/attribute/{id}",
                         "/api/v1/photo/ad/{adId}",

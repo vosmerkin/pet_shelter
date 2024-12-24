@@ -1,7 +1,10 @@
 package ua.tc.marketplace.controller;
 
 import jakarta.validation.Valid;
+
+import java.util.List;
 import java.util.Map;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,9 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ua.tc.marketplace.facade.AdFacade;
-import ua.tc.marketplace.model.dto.ad.AdDto;
-import ua.tc.marketplace.model.dto.ad.CreateAdDto;
-import ua.tc.marketplace.model.dto.ad.UpdateAdDto;
+import ua.tc.marketplace.model.dto.ad.*;
 import ua.tc.marketplace.util.openapi.AdOpenApi;
 
 /**
@@ -43,37 +44,48 @@ import ua.tc.marketplace.util.openapi.AdOpenApi;
 @RequestMapping("/api/v1/ad")
 public class AdController implements AdOpenApi {
 
-  private final AdFacade adFacade;
+    private final AdFacade adFacade;
 
-  @Override
-  @GetMapping
-  public ResponseEntity<Page<AdDto>> getAllAds(
-      @RequestParam Map<String, String> params, @PageableDefault(sort = "id") Pageable pageable) {
-    return ResponseEntity.ok(adFacade.findAll(params, pageable));
-  }
+    @Override
+    @GetMapping
+    public ResponseEntity<Page<AdDto>> getAllAds(
+            @RequestParam Map<String, String> params, @PageableDefault(sort = "id") Pageable pageable) {
+        return ResponseEntity.ok(adFacade.findAll(params, pageable));
+    }
 
-  @Override
-  @GetMapping("/{adId}")
-  public ResponseEntity<AdDto> getAdById(@PathVariable Long adId) {
-    return ResponseEntity.ok(adFacade.findAdById(adId));
-  }
+    @GetMapping("/counted")
+    public ResponseEntity<AdFilterPageAndAttributesCountDto> getAllAdsWithAttributeItemCount(
+            @RequestParam Map<String, String> params,
+            @PageableDefault(sort = "id") Pageable pageable) {
+        return ResponseEntity.ok(new AdFilterPageAndAttributesCountDto(
+                adFacade.findAll(params, pageable),
+                adFacade.countAdsByAdAttribute(params)
+                )
+        );
+    }
 
-  @Override
-  @PostMapping
-  public ResponseEntity<AdDto> createNewAd(@ModelAttribute @Valid CreateAdDto dto) {
-    return ResponseEntity.ok(adFacade.createNewAd(dto));
-  }
+    @Override
+    @GetMapping("/{adId}")
+    public ResponseEntity<AdDto> getAdById(@PathVariable Long adId) {
+        return ResponseEntity.ok(adFacade.findAdById(adId));
+    }
 
-  @Override
-  @PutMapping("/{adId}")
-  public ResponseEntity<AdDto> updateAd(@PathVariable Long adId, @RequestBody UpdateAdDto dto) {
-    return ResponseEntity.ok(adFacade.updateAd(adId, dto));
-  }
+    @Override
+    @PostMapping
+    public ResponseEntity<AdDto> createNewAd(@ModelAttribute @Valid CreateAdDto dto) {
+        return ResponseEntity.ok(adFacade.createNewAd(dto));
+    }
 
-  @Override
-  @DeleteMapping("/{adId}")
-  public ResponseEntity<Void> deleteAd(@PathVariable Long adId) {
-    adFacade.deleteAd(adId);
-    return ResponseEntity.status(HttpStatus.OK).build();
-  }
+    @Override
+    @PutMapping("/{adId}")
+    public ResponseEntity<AdDto> updateAd(@PathVariable Long adId, @RequestBody UpdateAdDto dto) {
+        return ResponseEntity.ok(adFacade.updateAd(adId, dto));
+    }
+
+    @Override
+    @DeleteMapping("/{adId}")
+    public ResponseEntity<Void> deleteAd(@PathVariable Long adId) {
+        adFacade.deleteAd(adId);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }

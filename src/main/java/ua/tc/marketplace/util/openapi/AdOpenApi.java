@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import ua.tc.marketplace.model.dto.ad.AdDto;
+import ua.tc.marketplace.model.dto.ad.AdFilterPageAndAttributesCountDto;
 import ua.tc.marketplace.model.dto.ad.CreateAdDto;
 import ua.tc.marketplace.model.dto.ad.UpdateAdDto;
 
@@ -33,6 +34,15 @@ public interface AdOpenApi {
   @GetMapping
   ResponseEntity<Page<AdDto>> getAllAds(
       @RequestParam Map<String, String> params, @PageableDefault(sort = "id") Pageable pageable);
+
+  @Operation(
+          summary = "Get advertisements with attribute item count",
+          description = "Retrieves a pageable list of advertisements along with counts of their attribute items."
+  )
+  @GetMapping("/counted")
+  ResponseEntity<AdFilterPageAndAttributesCountDto> getAllAdsWithAttributeItemCount(
+          @RequestParam Map<String, String> params,
+          @PageableDefault(sort = "id") Pageable pageable);
 
   @Operation(
       summary = "Get advertisement by ID",
