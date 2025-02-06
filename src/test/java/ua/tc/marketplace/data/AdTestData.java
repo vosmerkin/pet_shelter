@@ -111,7 +111,8 @@ public final class AdTestData {
         1L,
         adAttributeDtos,
         LocalDateTime.now(),
-        LocalDateTime.now());
+        LocalDateTime.now(),
+        false);
   }
 
   public static Ad getMockUpdatedAd(
@@ -128,7 +129,8 @@ public final class AdTestData {
         mockCategory,
         new ArrayList<>(),
         LocalDateTime.now(),
-        LocalDateTime.now());
+        LocalDateTime.now(),
+        false);
   }
 
   public static AdDto getMockUpdatedAdDto(Long adId, UpdateAdDto updateAdDto) {
@@ -145,7 +147,8 @@ public final class AdTestData {
         updateAdDto.categoryId(),
         getUpdatedAttributeDtos(),
         LocalDateTime.now(),
-        LocalDateTime.now());
+        LocalDateTime.now(),
+        false);
   }
 
   public static UpdateAdDto getUpdateAdDto() {
@@ -155,7 +158,8 @@ public final class AdTestData {
         "Updated Description",
         BigDecimal.valueOf(200.00),
         2L, // Updated Category ID
-        getAdAttributeRequestDtos());
+        getAdAttributeRequestDtos(),
+        false);
   }
 
   public static CreateAdDto getCreateAdDto(MultipartFile[] files) {

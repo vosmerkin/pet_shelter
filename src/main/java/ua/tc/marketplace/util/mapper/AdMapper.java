@@ -31,6 +31,7 @@ public interface AdMapper {
   @Mapping(target = "category", ignore = true)
   @Mapping(target = "author", ignore = true)
   @Mapping(target = "adAttributes", ignore = true)
+  @Mapping(target = "isHot", constant = "false")
   Ad getPrimitiveFields(CreateAdDto dto);
 
   @Mapping(target = "location", ignore = true)

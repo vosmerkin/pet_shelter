@@ -116,6 +116,7 @@ public class DistanceServiceImpl implements DistanceService {
         adDto.categoryId(),
         adDto.adAttributes(),
         adDto.createdAt(),
-        adDto.updatedAt());
+        adDto.updatedAt(),
+        adDto.isHot());
   }
 }
