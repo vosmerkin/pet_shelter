@@ -17,6 +17,7 @@ public record UpdateArticleDto(
         @Schema(example = "Ways to support and care for stray animals in your community") String metaDescription,
         String structuredData,
         ArticleStatus status,
-        @Schema(example = "false") Boolean isFeatured
+        @Schema(example = "false") Boolean isFeatured,
+        @Schema(example = "how-to-adopt-a-rescue-dog") String slug
 ) {
 }

@@ -6,6 +6,8 @@ import org.springframework.data.repository.query.Param;
 import ua.tc.marketplace.model.entity.Article;
 import ua.tc.marketplace.model.entity.Tag;
 
+import java.util.Optional;
+
 /**
  * Repository interface for managing {@link Article} entities.
  *
@@ -16,4 +18,6 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
     @Query(nativeQuery = true,
             value = "SELECT COUNT(*) FROM article_tag WHERE tag_id = :tagId")
     Integer getTagCountById(@Param("tagId") Long id);
+
+    Optional<Article> findBySlug(String slug);
 }

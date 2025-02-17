@@ -19,5 +19,6 @@ public record CreateArticleDto(
         @Schema(example = "A step-by-step guide to fostering kittens") String metaDescription,
         String structuredData,
         @NotNull ArticleStatus status,
-        @Schema(example = "true") Boolean isFeatured
+        @Schema(example = "true") Boolean isFeatured,
+        @Schema(example = "how-to-adopt-a-rescue-dog") String slug
 ) {}
