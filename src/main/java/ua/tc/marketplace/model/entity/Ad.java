@@ -1,18 +1,18 @@
 package ua.tc.marketplace.model.entity;
 
 import jakarta.persistence.*;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Entity class representing an advertisement.
@@ -65,7 +65,7 @@ public class Ad {
 
   @UpdateTimestamp private LocalDateTime updatedAt;
 
-  @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
+  @Column(name = "is_hot", nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
   private Boolean isHot;
 
   @Override
