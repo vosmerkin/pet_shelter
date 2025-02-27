@@ -31,8 +31,14 @@ public class UserController implements UserOpenApi {
 
   @GetMapping("/{id}")
   public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
-    log.info("Get users by id request: id={}" , id);
+    log.info("Get user by id request: id={}" , id);
     return ResponseEntity.status(HttpStatus.OK).body(userService.findUserDtoById(id));
+  }
+
+  @GetMapping("/email/{email}")
+  public ResponseEntity<UserDto> getUserById(@PathVariable String email) {
+    log.info("Get user by email request: email={}" , email);
+    return ResponseEntity.status(HttpStatus.OK).body(userService.findUserDtoByEmail(email));
   }
 
   @PutMapping()
