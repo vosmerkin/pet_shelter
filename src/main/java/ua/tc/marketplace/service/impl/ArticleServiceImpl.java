@@ -17,6 +17,7 @@ import ua.tc.marketplace.repository.ArticleRepository;
 import ua.tc.marketplace.repository.CategoryRepository;
 import ua.tc.marketplace.repository.UserRepository;
 import ua.tc.marketplace.service.ArticleService;
+import ua.tc.marketplace.util.mapper.ArticleMapper;
 
 import java.util.Optional;
 
@@ -30,7 +31,7 @@ import java.util.Optional;
 public class ArticleServiceImpl implements ArticleService {
 
     private final ArticleRepository articleRepository;
-    private final ua.tc.marketplace.model.mapper.ArticleMapper articleMapper;
+    private final ArticleMapper articleMapper;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
 

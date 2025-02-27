@@ -3,6 +3,8 @@ package ua.tc.marketplace.model.dto.article;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import jakarta.validation.constraints.NotNull;
 import ua.tc.marketplace.model.dto.user.UserDto;
 import ua.tc.marketplace.model.dto.category.CategoryDto;
 import ua.tc.marketplace.model.dto.tag.TagDto;
@@ -16,7 +18,7 @@ public record ArticleDto(
         Long id,
         @Schema(example = "How to Adopt a Rescue Dog") String title,
         @Schema(example = "Adopting a rescue dog can be a rewarding experience...") String content,
-        UserDto author,
+        @NotNull(message = "Author ID cannot be null") Long authorId,
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
         List<String> photos, // Assuming only URLs or filenames

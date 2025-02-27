@@ -67,9 +67,11 @@ public class Article {
   private ArticleStatus status;
 
   @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
+  @Builder.Default
   private Boolean isFeatured = false;
 
   @Column(nullable = false, columnDefinition = "INTEGER DEFAULT 0")
+  @Builder.Default
   private Integer likes = 0;
 
   private String slug;
