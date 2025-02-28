@@ -57,7 +57,7 @@ public class TagServiceImpl implements TagService {
      * @throws TagNotFoundException If the Tag is not found.
      */
     @Override
-    public TagDto findTagById(Long id) {
+    public TagDto findById(Long id) {
         Tag tag = getTag(id);
         return tagMapper.toDto(tag);
     }

@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import ua.tc.marketplace.model.dto.user.UserDto;
 import ua.tc.marketplace.model.dto.category.CategoryDto;
 import ua.tc.marketplace.model.dto.tag.TagDto;
+import ua.tc.marketplace.model.entity.Photo;
 import ua.tc.marketplace.model.enums.ArticleStatus;
 
 /**
@@ -21,7 +22,7 @@ public record ArticleDto(
         @NotNull(message = "Author ID cannot be null") Long authorId,
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
-        List<String> photos, // Assuming only URLs or filenames
+        List<Photo> photos,
         List<TagDto> tags,
         CategoryDto category,
         @Schema(example = "A complete guide to adopting rescue dogs") String metaDescription,

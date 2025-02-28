@@ -10,7 +10,7 @@ public interface TagService {
 
   Page<TagDto> findAll(Pageable pageable);
 
-  TagDto findTagById(Long id);
+  TagDto findById(Long id);
 
   TagDto createTag(CreateTagDto createTagDto);
 

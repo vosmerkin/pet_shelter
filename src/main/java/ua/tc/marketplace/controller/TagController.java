@@ -30,7 +30,7 @@ public class TagController implements TagOpenApi {
   @Override
   @GetMapping("/{id}")
   public ResponseEntity<TagDto> getTagById(@PathVariable Long id) {
-    return ResponseEntity.status(HttpStatus.OK).body(tagService.findTagById(id));
+    return ResponseEntity.status(HttpStatus.OK).body(tagService.findById(id));
   }
 
   @Override
