@@ -56,7 +56,7 @@ public class ArticleServiceImpl implements ArticleService {
      */
     @Override
     public ArticleDto findById(Long id) {
-        Article article = getArticle(id);
+        Article article = getArticlebyId(id);
         return articleMapper.toDto(article);
     }
 
@@ -76,8 +76,8 @@ public class ArticleServiceImpl implements ArticleService {
         Article article = articleMapper.toEntity(createArticleDto);
 
         // Set author and category
-        article.setAuthor(userRepository.findById(createArticleDto.authorId()).orElseThrow());
-        article.setCategory(categoryRepository.findById(createArticleDto.categoryId()).orElseThrow());
+//        article.setAuthor(userRepository.findById(createArticleDto.authorId()).orElseThrow());
+//        article.setCategory(categoryRepository.findById(createArticleDto.categoryId()).orElseThrow());
 
         return articleMapper.toDto(articleRepository.save(article));
     }
@@ -93,7 +93,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Transactional
     @Override
     public ArticleDto update(Long id, @NonNull UpdateArticleDto updateArticleDto) {
-        Article existingArticle = getArticle(id);
+        Article existingArticle = getArticlebyId(id);
         Optional<Article> sameSlugArticle = articleRepository.findBySlug(updateArticleDto.slug());
         if (sameSlugArticle.isPresent()) throw new ArticleSlugInUseException(updateArticleDto.slug());
         articleMapper.updateEntityFromDto(existingArticle, updateArticleDto);
@@ -110,7 +110,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public void deleteById(Long id) {
         log.info("Deleting article with id={}", id);
-        Article existingArticle = getArticle(id);
+        Article existingArticle = getArticlebyId(id);
         articleRepository.deleteById(existingArticle.getId());
     }
 
@@ -121,7 +121,7 @@ public class ArticleServiceImpl implements ArticleService {
      * @return The found Article entity.
      * @throws ArticleNotFoundException If the article is not found.
      */
-    private Article getArticle(Long id) {
+    private Article getArticlebyId(Long id) {
         return articleRepository.findById(id).orElseThrow(() -> new ArticleNotFoundException(id));
     }
 }
