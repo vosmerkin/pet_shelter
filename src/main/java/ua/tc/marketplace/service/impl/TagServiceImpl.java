@@ -3,8 +3,8 @@ package ua.tc.marketplace.service.impl;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +22,6 @@ import ua.tc.marketplace.service.TagService;
 import ua.tc.marketplace.util.mapper.TagMapper;
 
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Implementation of the {@link TagService} interface. Provides methods for creating, retrieving,
@@ -58,7 +57,7 @@ public class TagServiceImpl implements TagService {
      */
     @Override
     public TagDto findById(Long id) {
-        Tag tag = getTag(id);
+        Tag tag = getById(id);
         return tagMapper.toDto(tag);
     }
 
@@ -73,7 +72,7 @@ public class TagServiceImpl implements TagService {
     @Transactional
     @Override
     public TagDto updateTag(Long id, @NonNull UpdateTagDto updateTagDto) {
-        Tag existingTag = getTag(id);
+        Tag existingTag = getById(id);
         Optional<Tag> sameNameTag = tagRepository.getByName(updateTagDto.name());
         if (sameNameTag.isPresent()) throw new TagNameInUseException(updateTagDto.name());
         tagMapper.updateEntityFromDto(existingTag, updateTagDto);
@@ -90,7 +89,7 @@ public class TagServiceImpl implements TagService {
     @Override
     public void deleteTagById(Long id) {
         log.info("Deleting tag with id={}", id);
-        Tag existingTag = getTag(id);
+        Tag existingTag = getById(id);
         if (articleRepository.getTagCountById(id)>0){
             throw new TagInUseException(id);
         } else {
@@ -120,7 +119,8 @@ public class TagServiceImpl implements TagService {
      * @return The found Tag entity.
      * @throws TagNotFoundException If the tag is not found.
      */
-    private Tag getTag(Long id) {
+    @Override
+    public Tag getById(Long id) {
         return tagRepository.findById(id).orElseThrow(() -> new TagNotFoundException(id));
     }
 }

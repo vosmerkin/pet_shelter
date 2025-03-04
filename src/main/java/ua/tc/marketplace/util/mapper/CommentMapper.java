@@ -40,6 +40,7 @@ public interface CommentMapper {
      * @param dto The CreateCommentDto.
      * @return The corresponding Comment entity.
      */
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "shelter", source = "shelterId", qualifiedByName = "mapIdToUser")
     @Mapping(target = "author", source = "authorId", qualifiedByName = "mapIdToUser")
     @Mapping(target = "createdAt", ignore = true)

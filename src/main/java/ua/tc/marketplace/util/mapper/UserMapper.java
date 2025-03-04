@@ -22,17 +22,20 @@ import ua.tc.marketplace.model.enums.UserRole;
  * for converting User to UserDto, creating User from UserDto or CreateUserDto, and updating an
  * existing User entity with fields from UpdateUserDto.
  */
-@Mapper(config = MapperConfig.class)
+@Mapper(componentModel = "spring", config = MapperConfig.class)
 public interface UserMapper {
 
     @Mapping(target = "favoriteAdIds", source = "favorites", qualifiedByName = "mapAdsToIds")
     UserDto toDto(User entity);
 
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "profilePicture", ignore = true)
     @Mapping(target = "favorites", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "comments", ignore = true)
+    @Mapping(target = "ratings", ignore = true)
+    @Mapping(target = "location", ignore = true)
     User toEntity(CreateUserDto dto);
 
     @Mapping(target = "updatedAt", ignore = true)
@@ -43,6 +46,9 @@ public interface UserMapper {
             source = "userRole",
             qualifiedByName = "mapUserRoleFromStringToEnum")
     @Mapping(target = "password", ignore = true)
+    @Mapping(target = "comments", ignore = true)
+    @Mapping(target = "ratings", ignore = true)
+    @Mapping(target = "location", ignore = true)
     void updateEntityFromDto(@MappingTarget User user, UpdateUserDto userDto);
 
     @Named("mapUserRoleFromStringToEnum")
