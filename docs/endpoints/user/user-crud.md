@@ -6,7 +6,7 @@ User may look like this
   "id": 1,
   "email": "taras@shevchenko.ua",
   "password": "$2a$10$eyVIuZiP9ahPEzfcpQyMC.ka9DquNcpL/iaxkh7Sm6532G8p7j/tS",
-  "userRole": "INDIVIDUAL",
+  "userRole": "USER",
   "firstName": "Taras",
   "lastName": "Shevchenko",
   "profilePicture": {
@@ -43,7 +43,7 @@ without any filtering. Request body - empty.
       "id": 1,
       "email": "taras@shevchenko.ua",
       "password": "$2a$10$eyVIuZiP9ahPEzfcpQyMC.ka9DquNcpL/iaxkh7Sm6532G8p7j/tS",
-      "userRole": "INDIVIDUAL",
+      "userRole": "USER",
       "firstName": "Taras",
       "lastName": null,
       "profilePicture": null,
@@ -69,7 +69,7 @@ Request params - `Raw`
 {
 "email": "taras@shevchenko.ua",
 "password": "password",
-"userRole": "INDIVIDUAL",
+"userRole": "USER",
 "firstName": "Taras"
 }
 ```
@@ -80,7 +80,7 @@ Request params - `Raw`
   "id": 1,
   "email": "taras@shevchenko.ua",
   "password": "$2a$10$eyVIuZiP9ahPEzfcpQyMC.ka9DquNcpL/iaxkh7Sm6532G8p7j/tS",
-  "userRole": "INDIVIDUAL",
+  "userRole": "USER",
   "firstName": "Taras",
   "lastName": null,
   "profilePicture": null,
@@ -105,7 +105,7 @@ Request params - `Raw`
   "id":"1",
   "email":"taras@shevchenko.ua",
   "password":"password",
-  "userRole":"INDIVIDUAL",
+  "userRole":"USER",
   "firstName":"Taras",
   "lastName":"Shevchenko"
 }
@@ -116,7 +116,7 @@ Request params - `Raw`
   "id": 1,
   "email": "taras@shevchenko.ua",
   "password": "$2a$10$eyVIuZiP9ahPEzfcpQyMC.ka9DquNcpL/iaxkh7Sm6532G8p7j/tS",
-  "userRole": "INDIVIDUAL",
+  "userRole": "USER",
   "firstName": "Taras",
   "lastName": "Shevchenko",
   "profilePicture": {

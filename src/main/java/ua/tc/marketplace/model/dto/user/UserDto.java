@@ -21,7 +21,7 @@ public record UserDto(
     @Schema(example = "strong_secure_password_with_bigAndSmallLetters_and_digits_and_symbols")
         @NotBlank
         String password,
-    @Schema(example = "INDIVIDUAL") @NotBlank String userRole,
+    @Schema(example = "USER") @NotBlank String userRole,
     @Schema(example = "Taras") @NotBlank String firstName,
     @Schema(example = "Shevchenko") String lastName, // optional
     Photo profilePicture,

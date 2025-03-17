@@ -38,7 +38,7 @@ public class UserController implements UserOpenApi {
   @GetMapping("/email/{email}")
   public ResponseEntity<Boolean> getUserById(@PathVariable String email) {
     log.info("Get user by email request: email={}" , email);
-    return ResponseEntity.status(HttpStatus.OK).body(userService.findUserDtoByEmail(email)!=null);
+    return ResponseEntity.status(HttpStatus.OK).body(userService.ifUserExists(email));
   }
 
   @PutMapping()
