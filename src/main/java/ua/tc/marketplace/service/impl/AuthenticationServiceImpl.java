@@ -50,7 +50,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             String email = authentication.getName();
             User user = userService.findUserByEmail(email);
             String token = jwtUtil.createToken(user);
-            return new AuthResponse(email, token, "", jwtConfig.getTokenExpirationAfterSeconds());
+            return new AuthResponse(user.getId(),email, token, "", jwtConfig.getTokenExpirationAfterSeconds());
         } catch (BadCredentialsException e) {
             throw new BadCredentialsAuthenticationException();
         } catch (Exception e) {
