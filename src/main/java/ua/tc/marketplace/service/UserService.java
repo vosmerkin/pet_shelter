@@ -24,4 +24,6 @@ public interface UserService {
   UserDto updateUser(UpdateUserDto updateUserDto);
 
   void deleteUserById(Long id);
+
+  Boolean ifUserExists(String email);
 }

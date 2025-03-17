@@ -158,4 +158,14 @@ public class UserServiceImpl implements UserService {
     private User getUser(String email) {
         return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
     }
+
+    /**
+     * Returns true if a user with the specified email exists, otherwise returns false.
+     *
+     * @param email The email of the user to check.
+     * @return {@code true} if the user exists, {@code false} otherwise.
+     */
+    public Boolean ifUserExists(String email) {
+        return userRepository.findByEmail(email).isPresent();
+    }
 }

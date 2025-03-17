@@ -23,7 +23,7 @@ public record UpdateUserDto(
     @NotBlank
     String password,
 
-    @Schema(example = "INDIVIDUAL")
+    @Schema(example = "USER")
     @NotBlank
     String userRole,
 

@@ -30,11 +30,11 @@ VALUES ('+380 63 123 45 67'),
 -- Insert Users
 INSERT INTO app_user (email, password, user_role, first_name, last_name, profile_picture_id,
                       contact_info_id, created_at, updated_at)
-VALUES ('user1@example.com', 'password1', 'INDIVIDUAL', 'John', 'Doe', null, 1, NOW(), NOW()),
+VALUES ('user1@example.com', 'password1', 'USER', 'John', 'Doe', null, 1, NOW(), NOW()),
        ('user2@example.com', 'password2', 'SHELTER', 'Jane', 'Smith', null, 2, NOW(), NOW()),
-       ('user3@example.com', 'password3', 'INDIVIDUAL', 'Alice', 'Johnson', null, 3, NOW(), NOW()),
+       ('user3@example.com', 'password3', 'USER', 'Alice', 'Johnson', null, 3, NOW(), NOW()),
        ('user4@example.com', 'password4', 'SHELTER', 'Bob', 'Brown', null, 4, NOW(), NOW()),
-       ('user5@example.com', 'password5', 'INDIVIDUAL', 'Charlie', 'Davis', null, 5, NOW(), NOW());
+       ('user5@example.com', 'password5', 'USER', 'Charlie', 'Davis', null, 5, NOW(), NOW());
 
 -- Insert Ads
 INSERT INTO ad (author_id, title, description, price, thumbnail_id, category_id, created_at,

@@ -23,7 +23,7 @@ public record CreateUserDto(
     @Size(min = 8, max = 24)
     String password,
 
-    @Schema(example = "INDIVIDUAL")
+    @Schema(example = "VOLUNTEER")
     @NotBlank
     String userRole,
 

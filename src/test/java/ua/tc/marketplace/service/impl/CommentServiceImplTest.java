@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ua.tc.marketplace.exception.comment.CommentCreationErrorWrongShelterRole;
 import ua.tc.marketplace.exception.comment.CommentNotFoundException;
@@ -67,7 +66,7 @@ class CommentServiceImplTest {
         shelter = new User();
         shelter.setUserRole(UserRole.SHELTER);
         nonShelterUser = new User();
-        nonShelterUser.setUserRole(UserRole.INDIVIDUAL);
+        nonShelterUser.setUserRole(UserRole.USER);
         updatedComment = new Comment(commentId, author, shelter, commentText, LocalDateTime.now());
         updatedCommentDto = new CommentDto(commentId, authorId, shelterId, updatedCommentText, LocalDateTime.now());
     }
