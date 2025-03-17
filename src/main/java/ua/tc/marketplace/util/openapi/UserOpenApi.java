@@ -32,10 +32,10 @@ public interface UserOpenApi {
   ResponseEntity<UserDto> getUserById(@PathVariable Long id);
 
   @Operation(
-          summary = "Get user by email",
-          description = "Retrieves a user by its unique email address.")
+          summary = "Verifies if user by email exists",
+          description = "Returns true if a user by its unique email address is registered.")
   @GetMapping("/email/{email}")
-  ResponseEntity<UserDto> getUserById(@PathVariable String email);
+  ResponseEntity<Boolean> getUserById(@PathVariable String email);
 
   @Operation(
       summary = "Updates an existing user",
