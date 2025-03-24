@@ -60,7 +60,7 @@ class TagServiceImplTest {
   }
 
   @Test
-  void findTagById_shouldReturnTagDto_whenExists() {
+  void findTagById_shouldReturnDto_whenExists() {
 
     // Mock repository
     when(tagRepository.findById(tagId)).thenReturn(Optional.of(tag));
@@ -69,7 +69,7 @@ class TagServiceImplTest {
     when(tagMapper.toDto(tag)).thenReturn(tagDto);
 
     // run method
-    TagDto result = tagService.findTagById(tagId);
+    TagDto result = tagService.findById(tagId);
 
     // Assert results
     assertEquals(tagDto, result);
@@ -79,14 +79,14 @@ class TagServiceImplTest {
   }
 
   @Test
-  void findTagById_shouldThrow_whenNotExists() {
+  void findById_shouldThrow_whenNotExists() {
 
     // Mock repository method to return an empty Optional (simulating not found scenario)
     when(tagRepository.findById(tagId)).thenReturn(Optional.empty());
 
     // Act and Assert
     // Use assertThrows to verify that TagNotFoundException is thrown
-    assertThrows(TagNotFoundException.class, () -> tagService.findTagById(tagId));
+    assertThrows(TagNotFoundException.class, () -> tagService.findById(tagId));
 
     // Verify that repository method was called with correct argument
     verify(tagRepository, times(1)).findById(tagId);
