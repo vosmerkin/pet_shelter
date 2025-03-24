@@ -19,7 +19,7 @@ import ua.tc.marketplace.util.openapi.ArticleOpenApi;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/articles")
+@RequestMapping("/api/v1/article")
 public class ArticleController implements ArticleOpenApi {
 
   private final ArticleService articleService;
