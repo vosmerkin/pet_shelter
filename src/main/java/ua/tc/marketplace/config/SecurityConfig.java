@@ -1,7 +1,9 @@
 package ua.tc.marketplace.config;
 
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -34,114 +36,113 @@ import ua.tc.marketplace.service.impl.UserDetailsServiceImpl;
 @AllArgsConstructor
 public class SecurityConfig {
 
-  private final JwtAuthorizationFilter jwtAuthorizationFilter;
+    private final JwtAuthorizationFilter jwtAuthorizationFilter;
 
-  private static final String ALL_URL = "/**";
-  public static final String GET_ONE_DEMO_URL = "/api/v1/demo";
-  private static final String DEFAULT_SUCCESS_PAGE = GET_ONE_DEMO_URL;
-  private static final String CREATE_USER_POST_URL = "/api/v1/auth/signup";
-  public static final String LOGIN_URL = "/api/v1/auth/login";
-  public static final String LOGOUT_URL = "/api/v1/auth/logout";
-  public static final String GET_ALL_DEMO_URL = "/api/v1/demo/all";
-  public static final String SWAGGER_DOCS = "/v3/api-docs/**";
-  public static final String SWAGGER_UI_PAGES = "/swagger-ui/**";
-  public static final String SWAGGER_UI_MAIN = "/swagger-ui.html";
+    private static final String ALL_URL = "/**";
+    public static final String GET_ONE_DEMO_URL = "/api/v1/demo";
+    private static final String DEFAULT_SUCCESS_PAGE = GET_ONE_DEMO_URL;
+    private static final String CREATE_USER_POST_URL = "/api/v1/auth/signup";
+    public static final String LOGIN_URL = "/api/v1/auth/login";
+    public static final String LOGOUT_URL = "/api/v1/auth/logout";
+    public static final String GET_ALL_DEMO_URL = "/api/v1/demo/all";
+    public static final String SWAGGER_DOCS = "/v3/api-docs/**";
+    public static final String SWAGGER_UI_PAGES = "/swagger-ui/**";
+    public static final String SWAGGER_UI_MAIN = "/swagger-ui.html";
 
-  private static final String[] WHITELIST = {
-    DEFAULT_SUCCESS_PAGE,
-    SWAGGER_DOCS,
-    SWAGGER_UI_PAGES,
-    SWAGGER_UI_MAIN,
-    GET_ONE_DEMO_URL,
-    GET_ALL_DEMO_URL,
-    LOGIN_URL,
-    DEFAULT_SUCCESS_PAGE
-  };
+    private static final String[] WHITELIST = {
+            DEFAULT_SUCCESS_PAGE,
+            SWAGGER_DOCS,
+            SWAGGER_UI_PAGES,
+            SWAGGER_UI_MAIN,
+            GET_ONE_DEMO_URL,
+            GET_ALL_DEMO_URL,
+            LOGIN_URL,
+            DEFAULT_SUCCESS_PAGE
+    };
 
-  @Bean
-  public UserDetailsService userDetailsService() {
-    return new UserDetailsServiceImpl();
-  }
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return new UserDetailsServiceImpl();
+    }
 
-  @Bean
-  SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http.csrf(AbstractHttpConfigurer::disable)
-        .sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
-        .authenticationProvider(authenticationProvider())
-        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-        .authorizeHttpRequests(
-            config ->
-                config
-                    .requestMatchers(WHITELIST)
-                    .permitAll()
-                    .requestMatchers(HttpMethod.POST, CREATE_USER_POST_URL)
-                    .permitAll()
-                    .requestMatchers(
-                        HttpMethod.GET,
-                        "/api/v1/ad",
-                        "/api/v1/ad/{adId}",
-                        "/api/v1/ad/counted",
-                        "/api/v1/attribute",
-                        "/api/v1/attribute/{id}",
-                        "/api/v1/photo/ad/{adId}",
-                        "/api/v1/file/ad/{adId}",
-                        "/api/v1/file/ad/{adId}/photo/{photoId}",
-                        "/api/v1/category",
-                        "/api/v1/category/{id}",
-                        "/api/v1/comment",
-                        "/api/v1/comment/{id}",
-                        "/api/v1/tag",
-                        "/api/v1/tag/{id}",
-                        "/api/v1/user/{id}",
-                        "/api/v1/category",
-                        "/api/v1/category/counted")
-                    .permitAll()
-                    .anyRequest()
-                    .authenticated())
-        .logout(
-            logout ->
-                logout
-                    .logoutUrl(LOGOUT_URL)
-                    .invalidateHttpSession(true) // Invalidate session
-                    .clearAuthentication(true) // Clear authentication
-                    .deleteCookies("JSESSIONID") // If using cookies
-                    .logoutSuccessHandler(
-                        (request, response, authentication) ->
-                            response.setStatus(HttpServletResponse.SC_OK))
-                    .permitAll());
-    return http.build();
-  }
+    @Bean
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
+                .authenticationProvider(authenticationProvider())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .authorizeHttpRequests(
+                        config ->
+                                config
+                                        .requestMatchers(WHITELIST).permitAll()
+                                        .requestMatchers(HttpMethod.POST, CREATE_USER_POST_URL).permitAll()
+                                        .requestMatchers(
+                                                HttpMethod.GET,
+                                                "/api/v1/ad",
+                                                "/api/v1/ad/{adId}",
+                                                "/api/v1/ad/counted",
+                                                "/api/v1/article/",
+                                                "/api/v1/article/{id}",
+                                                "/api/v1/attribute",
+                                                "/api/v1/attribute/{id}",
+                                                "/api/v1/photo/ad/{adId}",
+                                                "/api/v1/file/ad/{adId}",
+                                                "/api/v1/file/ad/{adId}/photo/{photoId}",
+                                                "/api/v1/category",
+                                                "/api/v1/category/{id}",
+                                                "/api/v1/comment",
+                                                "/api/v1/comment/{id}",
+                                                "/api/v1/tag",
+                                                "/api/v1/tag/{id}",
+//                                                "/api/v1/user/{id}",
+                                                "/api/v1/category",
+                                                "/api/v1/category/counted").permitAll()
+                                        .anyRequest().authenticated()
+                )
+                .logout(
+                        logout ->
+                                logout
+                                        .logoutUrl(LOGOUT_URL)
+                                        .invalidateHttpSession(true) // Invalidate session
+                                        .clearAuthentication(true) // Clear authentication
+                                        .deleteCookies("JSESSIONID") // If using cookies
+                                        .logoutSuccessHandler(
+                                                (request, response, authentication) ->
+                                                        response.setStatus(HttpServletResponse.SC_OK))
+                                        .permitAll());
+        return http.build();
+    }
 
-  @Bean
-  public AuthenticationProvider authenticationProvider() {
-    DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-    provider.setUserDetailsService(userDetailsService());
-    provider.setPasswordEncoder(passwordEncoder());
-    return provider;
-  }
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userDetailsService());
+        provider.setPasswordEncoder(passwordEncoder());
+        return provider;
+    }
 
-  @Bean
-  public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-  @Bean
-  public CorsConfigurationSource corsConfigurationSource() {
-    CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedOrigins(List.of("*"));
-    configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"));
-    configuration.setAllowedHeaders(List.of("*"));
-    configuration.setAllowCredentials(false);
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("*"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(false);
 
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration(ALL_URL, configuration);
-    return source;
-  }
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration(ALL_URL, configuration);
+        return source;
+    }
 
-  @Bean
-  public AuthenticationManager authenticationManager(
-      AuthenticationConfiguration authenticationConfiguration) throws Exception {
-    return authenticationConfiguration.getAuthenticationManager();
-  }
+    @Bean
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
 }

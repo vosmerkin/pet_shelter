@@ -25,6 +25,7 @@ public class AttributeController implements AttributeOpenApi {
 
   private final AttributeService attributeService;
 
+  @Override
   @GetMapping
   public ResponseEntity<List<AttributeDto>> getAllAttributes(Pageable pageable) {
     List<AttributeDto> attributes = attributeService.findAll(pageable);
@@ -32,6 +33,7 @@ public class AttributeController implements AttributeOpenApi {
     return ResponseEntity.ok(attributes);
   }
 
+  @Override
   @GetMapping("/{id}")
   public ResponseEntity<AttributeDto> getAttributeById(@PathVariable Long id) {
     AttributeDto attributeDto = attributeService.findById(id);
@@ -39,6 +41,7 @@ public class AttributeController implements AttributeOpenApi {
     return ResponseEntity.ok(attributeDto);
   }
 
+  @Override
   @PostMapping
   public ResponseEntity<AttributeDto> createAttribute(
       @Valid @RequestBody AttributeRequest attributeDTO) {
@@ -47,6 +50,7 @@ public class AttributeController implements AttributeOpenApi {
     return ResponseEntity.status(HttpStatus.CREATED).body(createdAttribute);
   }
 
+  @Override
   @PutMapping("/{id}")
   public ResponseEntity<AttributeDto> updateAttribute(
       @PathVariable Long id, @RequestBody AttributeRequest attributeDto) {
@@ -55,6 +59,7 @@ public class AttributeController implements AttributeOpenApi {
     return ResponseEntity.ok(updatedAttribute);
   }
 
+  @Override
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteAttribute(@PathVariable Long id) {
     attributeService.deleteById(id);

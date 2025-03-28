@@ -56,7 +56,8 @@ public class CommentController implements CommentOpenApi {
    * @param dto The CreateCommentDto containing the new comment data.
    * @return A ResponseEntity containing the created CommentDto.
    */
-  @PreAuthorize("hasAnyRole('INDIVIDUAL','SHELTER') and @authentication.principal.id == #dto.id")
+//  @PreAuthorize("hasAnyRole('INDIVIDUAL','SHELTER') and @authentication.principal.id == #dto.authorId")
+  @PreAuthorize("@securityService.hasAnyRoleAndOwnership(#dto.authorId)")
   @Override
   @PostMapping
   public ResponseEntity<CommentDto> createComment(@RequestBody @Valid CreateCommentDto dto) {

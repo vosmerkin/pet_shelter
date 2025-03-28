@@ -27,6 +27,7 @@ public class CategoryController implements CategoryOpenApi {
 
   private final CategoryService categoryService;
 
+  @Override
   @GetMapping
   public ResponseEntity<Page<CategoryDto>> getAllCategories(Pageable pageable) {
     log.info("Request to get all categories");
@@ -35,6 +36,7 @@ public class CategoryController implements CategoryOpenApi {
     return ResponseEntity.ok(categories);
   }
 
+  @Override
   @GetMapping("/counted")
   public ResponseEntity<Page<CategoryCountedDto>> getAllCountedCategories(Pageable pageable) {
     log.info("Request to get all categories with ads counts");
@@ -43,6 +45,7 @@ public class CategoryController implements CategoryOpenApi {
     return ResponseEntity.ok(categories);
   }
 
+  @Override
   @GetMapping("/{id}")
   public ResponseEntity<CategoryDto> getCategoryById(@PathVariable Long id) {
     log.info("Request to get category with ID: {}", id);
@@ -51,6 +54,7 @@ public class CategoryController implements CategoryOpenApi {
     return ResponseEntity.ok(categoryDto);
   }
 
+  @Override
   @PostMapping
   public ResponseEntity<CategoryDto> createCategory(@Valid @RequestBody CreateCategoryDto categoryDTO) {
     log.info("Request to create category ");
@@ -59,6 +63,7 @@ public class CategoryController implements CategoryOpenApi {
     return ResponseEntity.status(HttpStatus.CREATED).body(createCategory);
   }
 
+  @Override
   @PutMapping("/{id}")
   public ResponseEntity<CategoryDto> updateCategory(
       @PathVariable Long id, @RequestBody UpdateCategoryDto categoryDto) {
@@ -68,6 +73,7 @@ public class CategoryController implements CategoryOpenApi {
     return ResponseEntity.ok(updatedCategory);
   }
 
+  @Override
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
     log.info("Request to delete category with ID: {}", id);
