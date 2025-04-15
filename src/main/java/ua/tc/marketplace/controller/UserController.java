@@ -46,7 +46,7 @@ public class UserController implements UserOpenApi {
   }
 
   @Override
-  @PreAuthorize("@securityService.hasAnyRoleAndOwnership(#id)")
+  @PreAuthorize("@SecurityService.hasAnyRoleAndOwnership(#id)")
 //  @PreAuthorize("@securityService.hasAnyRoleAndOwnership(#id)")
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteUser(@PathVariable Long id) {

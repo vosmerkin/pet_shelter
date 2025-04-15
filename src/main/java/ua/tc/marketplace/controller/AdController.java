@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -72,14 +73,16 @@ public class AdController implements AdOpenApi {
 
     @Override
     @PostMapping
+    @PreAuthorize("hasAnyRole")
     public ResponseEntity<AdDto> createNewAd(@ModelAttribute @Valid CreateAdDto dto) {
         return ResponseEntity.ok(adFacade.createNewAd(dto));
     }
 
     @Override
     @PutMapping("/{adId}")
-    public ResponseEntity<AdDto> updateAd(@PathVariable Long adId, @RequestBody UpdateAdDto dto) {
-        return ResponseEntity.ok(adFacade.updateAd(adId, dto));
+    @PreAuthorize("@securityService.hasAnyRoleAndOwnership(#id)")
+    public ResponseEntity<AdDto> updateAd(@PathVariable Long id, @RequestBody UpdateAdDto dto) {
+        return ResponseEntity.ok(adFacade.updateAd(id, dto));
     }
 
     @Override
