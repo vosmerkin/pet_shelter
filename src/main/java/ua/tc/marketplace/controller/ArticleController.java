@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ua.tc.marketplace.model.dto.article.ArticleDto;
 import ua.tc.marketplace.model.dto.article.CreateArticleDto;
@@ -37,18 +38,21 @@ public class ArticleController implements ArticleOpenApi {
   }
 
   @Override
+  @PreAuthorize("@securityService.hasAnyRoleAndOwnership(#dto.authorId)")
   @PostMapping
   public ResponseEntity<ArticleDto> createArticle(@RequestBody @Valid CreateArticleDto dto) {
     return ResponseEntity.status(HttpStatus.CREATED).body(articleService.create(dto));
   }
 
   @Override
+  @PreAuthorize("@securityService.hasAnyRoleAndOwnership(#dto.authorId)")
   @PutMapping("/{id}")
   public ResponseEntity<ArticleDto> updateArticle(@PathVariable Long id, @RequestBody @Valid UpdateArticleDto dto) {
     return ResponseEntity.ok(articleService.update(id, dto));
   }
 
   @Override
+  @PreAuthorize("hasAuthority('ADMIN') or @securityService.hasAnyRoleAndOwnership(#articleService.findById(id).authorId)")
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteArticle(@PathVariable Long id) {
     articleService.deleteById(id);

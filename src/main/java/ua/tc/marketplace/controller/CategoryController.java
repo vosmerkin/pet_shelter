@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ua.tc.marketplace.model.dto.category.CategoryCountedDto;
 import ua.tc.marketplace.model.dto.category.CategoryDto;
@@ -55,6 +56,7 @@ public class CategoryController implements CategoryOpenApi {
   }
 
   @Override
+  @PreAuthorize("hasAuthority('ADMIN')")
   @PostMapping
   public ResponseEntity<CategoryDto> createCategory(@Valid @RequestBody CreateCategoryDto categoryDTO) {
     log.info("Request to create category ");
@@ -64,6 +66,7 @@ public class CategoryController implements CategoryOpenApi {
   }
 
   @Override
+  @PreAuthorize("hasAuthority('ADMIN')")
   @PutMapping("/{id}")
   public ResponseEntity<CategoryDto> updateCategory(
       @PathVariable Long id, @RequestBody UpdateCategoryDto categoryDto) {
@@ -74,6 +77,7 @@ public class CategoryController implements CategoryOpenApi {
   }
 
   @Override
+  @PreAuthorize("hasAuthority('ADMIN')")
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
     log.info("Request to delete category with ID: {}", id);

@@ -1,6 +1,7 @@
 package ua.tc.marketplace.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,7 +20,8 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@Service
+@Slf4j
+@Service("securityService")
 @RequiredArgsConstructor
 public class SecurityServiceImpl implements SecurityService {
 
@@ -40,6 +42,10 @@ public class SecurityServiceImpl implements SecurityService {
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new UnauthenticatedException();
         }
+
+//        log.debug("Authorities: {}",authentication.getAuthorities().stream()
+//                .map(GrantedAuthority::getAuthority)
+//                .collect(Collectors.joining(", ")));
 
         // 2. Check roles (if any required)
         if (requiredRoles.length > 0) {

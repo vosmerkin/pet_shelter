@@ -87,6 +87,7 @@ public class AdController implements AdOpenApi {
 
     @Override
     @DeleteMapping("/{adId}")
+    @PreAuthorize("hasAuthority('ADMIN') or @securityService.hasAnyRoleAndOwnership(#id)")
     public ResponseEntity<Void> deleteAd(@PathVariable Long adId) {
         adFacade.deleteAd(adId);
         return ResponseEntity.status(HttpStatus.OK).build();

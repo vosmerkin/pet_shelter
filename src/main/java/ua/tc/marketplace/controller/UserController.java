@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ua.tc.marketplace.model.dto.user.UpdateUserDto;
 import ua.tc.marketplace.model.dto.user.UserDto;
+import ua.tc.marketplace.service.SecurityService;
 import ua.tc.marketplace.service.UserService;
 import ua.tc.marketplace.util.openapi.UserOpenApi;
 
@@ -22,9 +23,11 @@ import ua.tc.marketplace.util.openapi.UserOpenApi;
 public class UserController implements UserOpenApi {
 
   private final UserService userService;
+//  private final SecurityService securityService;
 
 
   @Override
+  @PreAuthorize("hasAuthority('ADMIN')")
   @GetMapping("/all")
   public ResponseEntity<Page<UserDto>> getAllUsers(@PageableDefault Pageable pageable) {
     log.info("Get all users request: {}" , pageable);
@@ -40,14 +43,14 @@ public class UserController implements UserOpenApi {
 
   @Override
   @PutMapping()
+  @PreAuthorize("@securityService.hasAnyRoleAndOwnership(#id)")
   public ResponseEntity<UserDto> updateUser(@RequestBody @Valid UpdateUserDto userDto) {
     log.info("Update user request: {}" , userDto);
     return ResponseEntity.status(HttpStatus.OK).body(userService.updateUser(userDto));
   }
 
   @Override
-  @PreAuthorize("@SecurityService.hasAnyRoleAndOwnership(#id)")
-//  @PreAuthorize("@securityService.hasAnyRoleAndOwnership(#id)")
+  @PreAuthorize("hasAuthority('ADMIN') or @securityService.hasAnyRoleAndOwnership(#id)")
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
     log.info("Delete user request: id={}" , id);

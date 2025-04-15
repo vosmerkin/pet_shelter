@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ua.tc.marketplace.model.dto.attribute.AttributeDto;
 import ua.tc.marketplace.model.dto.attribute.AttributeRequest;
@@ -42,6 +43,7 @@ public class AttributeController implements AttributeOpenApi {
   }
 
   @Override
+  @PreAuthorize("hasAuthority('ADMIN')")
   @PostMapping
   public ResponseEntity<AttributeDto> createAttribute(
       @Valid @RequestBody AttributeRequest attributeDTO) {
@@ -51,6 +53,7 @@ public class AttributeController implements AttributeOpenApi {
   }
 
   @Override
+  @PreAuthorize("hasAuthority('ADMIN')")
   @PutMapping("/{id}")
   public ResponseEntity<AttributeDto> updateAttribute(
       @PathVariable Long id, @RequestBody AttributeRequest attributeDto) {
@@ -60,6 +63,7 @@ public class AttributeController implements AttributeOpenApi {
   }
 
   @Override
+  @PreAuthorize("hasAuthority('ADMIN')")
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteAttribute(@PathVariable Long id) {
     attributeService.deleteById(id);
