@@ -19,3 +19,17 @@ jwt:
   secretKey: FC80F451C01186135C05853AED4FB52FCF8F4563E5A00FDEA7C406A3CAC8307B
   token-prefix: Bearer
   token-expiration-after-days: 14
+
+external:
+  api:
+    users:
+      base-url: /api/v1/users
+
+    ad:
+      base-url: /api/v1/ad
+      get-all-url:
+      get-all-counted-url: /counted
+      get-by-id-url: /{adId}
+      create-url:
+      update-url: /{adId}
+      delete-url: /{adId}

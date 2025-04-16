@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -43,7 +45,34 @@ import ua.tc.marketplace.util.openapi.AdOpenApi;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/ad")
+@ConfigurationProperties(prefix = "external.api.ad")
 public class AdController implements AdOpenApi {
+
+
+
+
+//    base-url: /api/v1/ad
+
+
+    private String baseUrl;
+
+//    get-all:
+    private String getAllUrl;
+
+//    get-all-counted: /counted
+    private String getAllCountedUrl;
+
+//    get-by-id: /{adId}
+    private String getByIdUrl;
+
+//    create:
+    private String createUrl;
+
+//    update: /{adId}
+    private String updateUrl;
+
+//    delete: /{adId}
+    private String deleteUrl;
 
     private final AdFacade adFacade;
 
@@ -73,7 +102,7 @@ public class AdController implements AdOpenApi {
 
     @Override
     @PostMapping
-    @PreAuthorize("hasAnyRole")
+//    @PreAuthorize("hasAnyRole")
     public ResponseEntity<AdDto> createNewAd(@ModelAttribute @Valid CreateAdDto dto) {
         return ResponseEntity.ok(adFacade.createNewAd(dto));
     }
