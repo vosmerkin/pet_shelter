@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ua.tc.marketplace.config.ApiURLs;
 import ua.tc.marketplace.facade.AdFacade;
 import ua.tc.marketplace.model.dto.ad.*;
 import ua.tc.marketplace.util.openapi.AdOpenApi;
@@ -44,35 +45,9 @@ import ua.tc.marketplace.util.openapi.AdOpenApi;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/ad")
+@RequestMapping(ApiURLs.AD_BASE)
 @ConfigurationProperties(prefix = "external.api.ad")
 public class AdController implements AdOpenApi {
-
-
-
-
-//    base-url: /api/v1/ad
-
-
-    private String baseUrl;
-
-//    get-all:
-    private String getAllUrl;
-
-//    get-all-counted: /counted
-    private String getAllCountedUrl;
-
-//    get-by-id: /{adId}
-    private String getByIdUrl;
-
-//    create:
-    private String createUrl;
-
-//    update: /{adId}
-    private String updateUrl;
-
-//    delete: /{adId}
-    private String deleteUrl;
 
     private final AdFacade adFacade;
 
