@@ -78,6 +78,7 @@ public class SecurityConfig {
                                 config
                                         .requestMatchers(WHITELIST).permitAll()
                                         .requestMatchers(HttpMethod.POST, CREATE_USER_POST_URL).permitAll()
+                                        .requestMatchers(HttpMethod.POST, "/api/v1/ad").authenticated()
                                         .requestMatchers(
                                                 HttpMethod.GET,
                                                 "/api/v1/ad",

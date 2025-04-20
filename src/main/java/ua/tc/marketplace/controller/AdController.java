@@ -77,7 +77,7 @@ public class AdController implements AdOpenApi {
 
     @Override
     @PostMapping
-//    @PreAuthorize("hasAnyRole")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<AdDto> createNewAd(@ModelAttribute @Valid CreateAdDto dto) {
         return ResponseEntity.ok(adFacade.createNewAd(dto));
     }

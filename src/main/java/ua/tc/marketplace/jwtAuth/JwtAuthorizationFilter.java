@@ -28,9 +28,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private final UserDetailsServiceImpl userDetailsService;
 
     @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request,
-                                    @NonNull HttpServletResponse response,
-                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
+    public void doFilterInternal(@NonNull HttpServletRequest request,
+                                 @NonNull HttpServletResponse response,
+                                 @NonNull FilterChain filterChain) throws ServletException, IOException {
         try {
             String accessToken = jwtUtil.resolveToken(request);
             if (accessToken == null) {
