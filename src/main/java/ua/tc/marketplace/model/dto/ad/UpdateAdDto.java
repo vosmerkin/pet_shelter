@@ -25,4 +25,5 @@ public record UpdateAdDto(
         @DecimalMin(value = "0.0", message = "Price must be zero or positive")
         BigDecimal price,
     @NotNull(message = "Category ID cannot be null") Long categoryId,
-    @NotEmpty List<AdAttributeRequestDto> adAttributes) {}
+    @NotEmpty List<AdAttributeRequestDto> adAttributes,
+    @NotNull Boolean isHot) {}

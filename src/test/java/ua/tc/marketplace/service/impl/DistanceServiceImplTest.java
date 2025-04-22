@@ -54,7 +54,8 @@ class DistanceServiceImplTest {
             1L,
             List.of(),
             null,
-            null);
+            null,
+            false);
     Page<AdDto> adDtoPage = new PageImpl<>(List.of(adDto));
 
     Distance existingDistance = new Distance(1L, location1, location2, 5000.0);
@@ -92,7 +93,8 @@ class DistanceServiceImplTest {
             1L,
             List.of(),
             null,
-            null);
+            null,
+            false);
     Distance savedDistance = new Distance(1L, location1, location2, 10000.0);
     Page<AdDto> adDtoPage = new PageImpl<>(List.of(adDto));
 

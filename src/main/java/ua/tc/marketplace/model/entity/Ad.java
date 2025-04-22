@@ -1,26 +1,18 @@
 package ua.tc.marketplace.model.entity;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Entity class representing an advertisement.
@@ -73,6 +65,9 @@ public class Ad {
 
   @UpdateTimestamp private LocalDateTime updatedAt;
 
+  @Column(name = "is_hot", nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
+  private Boolean isHot;
+
   @Override
   public String toString() {
     String adAttributesString =
@@ -82,7 +77,7 @@ public class Ad {
             .collect(Collectors.joining(", "));
 
     return String.format(
-        "Ad{id=%d, title='%s', description='%s', price=%s, category=%s, adAttributes=[%s], createdAt=%s, updatedAt=%s}",
+        "Ad{id=%d, title='%s', description='%s', price=%s, category=%s, adAttributes=[%s], createdAt=%s, updatedAt=%s, isHot=%s}",
         id,
         title,
         description,
@@ -90,6 +85,7 @@ public class Ad {
         category != null ? category.getName() : "N/A",
         adAttributesString,
         createdAt,
-        updatedAt);
+        updatedAt,
+        isHot);
   }
 }

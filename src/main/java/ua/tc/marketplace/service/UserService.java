@@ -17,9 +17,13 @@ public interface UserService {
 
   User findUserById(Long id);
 
+  UserDto findUserDtoByEmail(String email);
+
   User findUserByEmail(String email);
 
   UserDto updateUser(UpdateUserDto updateUserDto);
 
   void deleteUserById(Long id);
+
+  Boolean ifUserExists(String email);
 }

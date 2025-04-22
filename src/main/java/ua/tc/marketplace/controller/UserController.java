@@ -37,11 +37,17 @@ public class UserController implements UserOpenApi {
   @Override
   @GetMapping("/{id}")
   public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
-    log.info("Get users by id request: id={}" , id);
+    log.info("Get user by id request: id={}" , id);
     return ResponseEntity.status(HttpStatus.OK).body(userService.findUserDtoById(id));
   }
 
-  @Override
+  @GetMapping("/email/{email}")
+  public ResponseEntity<Boolean> getUserById(@PathVariable String email) {
+    log.info("Get user by email request: email={}" , email);
+    return ResponseEntity.status(HttpStatus.OK).body(userService.ifUserExists(email));
+  }
+
+    @Override
   @PutMapping()
   @PreAuthorize("@securityService.hasAnyRoleAndOwnership(#userDto.id)")
   public ResponseEntity<UserDto> updateUser(@RequestBody @Valid UpdateUserDto userDto) {
@@ -57,4 +63,6 @@ public class UserController implements UserOpenApi {
     userService.deleteUserById(id);
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
+
+
 }

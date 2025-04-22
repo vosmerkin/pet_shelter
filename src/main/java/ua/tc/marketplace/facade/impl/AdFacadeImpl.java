@@ -112,6 +112,7 @@ public class AdFacadeImpl implements AdFacade {
   @Override
   public AdDto createNewAd(CreateAdDto dto) {
     Ad ad = adMapper.getPrimitiveFields(dto);
+    ad.setIsHot(false);
 
     User author = userService.findUserById(dto.authorId());
 
