@@ -26,7 +26,7 @@ import java.util.Optional;
  * updating, and deleting articles related to pet adoption and shelter topics.
  */
 @RequiredArgsConstructor
-@Service
+@Service("articleService")
 @Slf4j
 public class ArticleServiceImpl implements ArticleService {
 

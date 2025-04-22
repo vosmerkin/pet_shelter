@@ -67,9 +67,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public Optional<User> getAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
         if (authentication != null
-                && authentication.getPrincipal() instanceof UserDetailsImpl principal) {
-            return Optional.of(principal.getUser());
+                && principal instanceof UserDetailsImpl ) {
+            return Optional.of( ((UserDetailsImpl) principal).getUser());
         } else if (authentication instanceof UsernamePasswordAuthenticationToken) {
             String email = (String) authentication.getPrincipal();
             User user = userService.findUserByEmail(email);

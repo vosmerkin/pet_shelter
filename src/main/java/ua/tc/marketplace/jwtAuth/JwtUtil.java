@@ -6,8 +6,11 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import ua.tc.marketplace.model.entity.User;
+import ua.tc.marketplace.service.impl.UserDetailsServiceImpl;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -17,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class JwtUtil {
     private final JwtConfig jwtConfig;
+    private final UserDetailsServiceImpl userDetailsService;
 
 
     public String createToken(User user) {
@@ -60,4 +64,41 @@ public class JwtUtil {
         return claims.getExpiration().after(new Date());
 
     }
+
+    public boolean validateToken(String jwtToken) {
+//        try { // Parse and verify the token
+        parseJwtClaims(jwtToken);
+        return true;
+//        } catch (Exception e) {
+//            throw new GeneralAuthenticationException("JWT token not valid"); // Token is invalid (expired, malformed, etc.)
+//        }
+    }
+
+    public boolean isTokenExpired(String token) {
+        if (token != null) {
+            Claims claims = parseJwtClaims(token);
+            if (claims != null) {
+                return claims
+                        .getExpiration()
+                        .after(new Date());
+            }
+        }
+        return false;
+    }
+
+    public String extractEmail(String jwtToken) {
+        Claims claims = parseJwtClaims(jwtToken);
+        if (claims != null && validateClaims(claims)) return claims.getSubject(); // Returns the "sub" (subject) claim
+        return null;
+    }
+
+    public Authentication getAuthentication(String token) {
+        String email = extractEmail(token);
+        Authentication authentication =
+                new UsernamePasswordAuthenticationToken(
+                        email, "",
+                        userDetailsService.loadUserByUsername(email).getAuthorities());
+        return authentication;
+    }
+
 }

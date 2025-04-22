@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ua.tc.marketplace.model.dto.attribute.AttributeDto;
 import ua.tc.marketplace.model.dto.attribute.AttributeRequest;
@@ -25,6 +26,7 @@ public class AttributeController implements AttributeOpenApi {
 
   private final AttributeService attributeService;
 
+  @Override
   @GetMapping
   public ResponseEntity<List<AttributeDto>> getAllAttributes(Pageable pageable) {
     List<AttributeDto> attributes = attributeService.findAll(pageable);
@@ -32,6 +34,7 @@ public class AttributeController implements AttributeOpenApi {
     return ResponseEntity.ok(attributes);
   }
 
+  @Override
   @GetMapping("/{id}")
   public ResponseEntity<AttributeDto> getAttributeById(@PathVariable Long id) {
     AttributeDto attributeDto = attributeService.findById(id);
@@ -39,6 +42,8 @@ public class AttributeController implements AttributeOpenApi {
     return ResponseEntity.ok(attributeDto);
   }
 
+  @Override
+  @PreAuthorize("hasAuthority('ADMIN')")
   @PostMapping
   public ResponseEntity<AttributeDto> createAttribute(
       @Valid @RequestBody AttributeRequest attributeDTO) {
@@ -47,6 +52,8 @@ public class AttributeController implements AttributeOpenApi {
     return ResponseEntity.status(HttpStatus.CREATED).body(createdAttribute);
   }
 
+  @Override
+  @PreAuthorize("hasAuthority('ADMIN')")
   @PutMapping("/{id}")
   public ResponseEntity<AttributeDto> updateAttribute(
       @PathVariable Long id, @RequestBody AttributeRequest attributeDto) {
@@ -55,6 +62,8 @@ public class AttributeController implements AttributeOpenApi {
     return ResponseEntity.ok(updatedAttribute);
   }
 
+  @Override
+  @PreAuthorize("hasAuthority('ADMIN')")
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteAttribute(@PathVariable Long id) {
     attributeService.deleteById(id);

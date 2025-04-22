@@ -6,11 +6,15 @@ import java.util.List;
 import java.util.Map;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -21,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ua.tc.marketplace.config.ApiURLs;
 import ua.tc.marketplace.facade.AdFacade;
 import ua.tc.marketplace.model.dto.ad.*;
 import ua.tc.marketplace.util.openapi.AdOpenApi;
@@ -39,9 +44,11 @@ import ua.tc.marketplace.util.openapi.AdOpenApi;
  *   <li>DELETE /api/v1/ad/{adId}: Deletes an advertisement by its unique identifier.
  * </ul>
  */
+@Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/ad")
+@RequestMapping(ApiURLs.AD_BASE)
+@ConfigurationProperties(prefix = "external.api.ad")
 public class AdController implements AdOpenApi {
 
     private final AdFacade adFacade;
@@ -72,18 +79,21 @@ public class AdController implements AdOpenApi {
 
     @Override
     @PostMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<AdDto> createNewAd(@ModelAttribute @Valid CreateAdDto dto) {
         return ResponseEntity.ok(adFacade.createNewAd(dto));
     }
 
     @Override
     @PutMapping("/{adId}")
+    @PreAuthorize("@securityService.hasAnyRoleAndAdOwnership(#adId)")
     public ResponseEntity<AdDto> updateAd(@PathVariable Long adId, @RequestBody UpdateAdDto dto) {
         return ResponseEntity.ok(adFacade.updateAd(adId, dto));
     }
 
     @Override
     @DeleteMapping("/{adId}")
+    @PreAuthorize("hasAuthority('ADMIN') or @securityService.hasAnyRoleAndAdOwnership(#adId)")
     public ResponseEntity<Void> deleteAd(@PathVariable Long adId) {
         adFacade.deleteAd(adId);
         return ResponseEntity.status(HttpStatus.OK).build();

@@ -8,9 +8,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ua.tc.marketplace.model.dto.user.UpdateUserDto;
 import ua.tc.marketplace.model.dto.user.UserDto;
+import ua.tc.marketplace.service.SecurityService;
 import ua.tc.marketplace.service.UserService;
 import ua.tc.marketplace.util.openapi.UserOpenApi;
 
@@ -21,14 +23,18 @@ import ua.tc.marketplace.util.openapi.UserOpenApi;
 public class UserController implements UserOpenApi {
 
   private final UserService userService;
+//  private final SecurityService securityService;
+
 
   @Override
+  @PreAuthorize("hasAuthority('ADMIN')")
   @GetMapping("/all")
   public ResponseEntity<Page<UserDto>> getAllUsers(@PageableDefault Pageable pageable) {
     log.info("Get all users request: {}" , pageable);
     return ResponseEntity.status(HttpStatus.OK).body(userService.findAll(pageable));
   }
 
+  @Override
   @GetMapping("/{id}")
   public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
     log.info("Get user by id request: id={}" , id);
@@ -41,12 +47,16 @@ public class UserController implements UserOpenApi {
     return ResponseEntity.status(HttpStatus.OK).body(userService.ifUserExists(email));
   }
 
+    @Override
   @PutMapping()
+  @PreAuthorize("@securityService.hasAnyRoleAndOwnership(#userDto.id)")
   public ResponseEntity<UserDto> updateUser(@RequestBody @Valid UpdateUserDto userDto) {
     log.info("Update user request: {}" , userDto);
     return ResponseEntity.status(HttpStatus.OK).body(userService.updateUser(userDto));
   }
 
+  @Override
+  @PreAuthorize("hasAuthority('ADMIN') or @securityService.hasAnyRoleAndOwnership(#id)")
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
     log.info("Delete user request: id={}" , id);
