@@ -56,7 +56,7 @@ public class CommentController implements CommentOpenApi {
    * @param dto The CreateCommentDto containing the new comment data.
    * @return A ResponseEntity containing the created CommentDto.
    */
-//  @PreAuthorize("hasAnyRole('INDIVIDUAL','SHELTER') and @authentication.principal.id == #dto.authorId")
+//  @PreAuthorize("hasAnyRole('USER','SHELTER') and @authentication.principal.id == #dto.authorId")
   @PreAuthorize("@securityService.hasAnyRoleAndOwnership(#dto.authorId)")
   @Override
   @PostMapping
@@ -73,6 +73,7 @@ public class CommentController implements CommentOpenApi {
    * @return A ResponseEntity containing the updated CommentDto.
    */
   @Override
+  @PreAuthorize("@securityService.hasAnyRoleAndOwnership(#commentDto.authorId)")
   @PutMapping("/{id}")
   public ResponseEntity<CommentDto> updateComment(@PathVariable Long id, @RequestBody @Valid UpdateCommentDto commentDto) {
     return ResponseEntity.status(HttpStatus.OK).body(commentService.updateComment(id, commentDto));
@@ -85,6 +86,7 @@ public class CommentController implements CommentOpenApi {
    * @return A ResponseEntity with no content status.
    */
   @Override
+  @PreAuthorize("hasAuthority('ADMIN') or @securityService.hasAnyRoleAndOwnership(#articleService.findById(id).authorId)")
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteComment(@PathVariable Long id) {
     commentService.deleteCommentById(id);

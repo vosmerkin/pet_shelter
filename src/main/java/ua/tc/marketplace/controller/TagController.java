@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ua.tc.marketplace.model.dto.tag.CreateTagDto;
 import ua.tc.marketplace.model.dto.tag.TagDto;
@@ -34,18 +35,21 @@ public class TagController implements TagOpenApi {
   }
 
   @Override
+  @PreAuthorize("hasAuthority('ADMIN')")
   @PostMapping
   public ResponseEntity<TagDto> createTag(@RequestBody @Valid CreateTagDto dto) {
     return ResponseEntity.ok(tagService.createTag(dto));
   }
 
   @Override
+  @PreAuthorize("hasAuthority('ADMIN')")
   @PutMapping("/{id}")
   public ResponseEntity<TagDto> updateTag(@PathVariable Long id, @RequestBody @Valid UpdateTagDto tagDto) {
     return ResponseEntity.status(HttpStatus.OK).body(tagService.updateTag(id, tagDto));
   }
 
   @Override
+  @PreAuthorize("hasAuthority('ADMIN')")
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteTag(@PathVariable Long id) {
     tagService.deleteTagById(id);

@@ -8,9 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ua.tc.marketplace.exception.auth.GeneralAuthenticationException;
-import ua.tc.marketplace.exception.security.OwnershipException;
-import ua.tc.marketplace.exception.security.UnauthenticatedException;
-import ua.tc.marketplace.exception.security.UnauthorizedException;
+import ua.tc.marketplace.facade.AdFacade;
 import ua.tc.marketplace.model.entity.User;
 import ua.tc.marketplace.service.AuthenticationService;
 import ua.tc.marketplace.service.SecurityService;
@@ -18,7 +16,6 @@ import ua.tc.marketplace.service.SecurityService;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service("securityService")
@@ -27,6 +24,16 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Autowired
     private final AuthenticationService authenticationService;
+
+    @Autowired
+    private final AdFacade adFacade;
+
+    public boolean hasAnyRoleAndAdOwnership(Long adId) {
+
+        // Default to checking if user has ANY role
+        return hasAnyRoleAndOwnership(adFacade.findAdById(adId).authorId(), new String[0]);
+    }
+
 
     @Override
     public boolean hasAnyRoleAndOwnership(Long authorId) {
@@ -40,7 +47,9 @@ public class SecurityServiceImpl implements SecurityService {
 
         // 1. Check authentication
         if (authentication == null || !authentication.isAuthenticated()) {
-            throw new UnauthenticatedException();
+//            throw new UnauthenticatedException();
+            log.info("User with id {} is not authenticated or no authentication info found", authorId);
+            return false;
         }
 
 //        log.debug("Authorities: {}",authentication.getAuthorities().stream()
@@ -55,9 +64,11 @@ public class SecurityServiceImpl implements SecurityService {
                     .anyMatch(authority -> Arrays.asList(requiredRoles).contains(authority));
 
             if (!hasRequiredRole) {
-                throw new UnauthorizedException(authorities.stream()
-                        .map(GrantedAuthority::getAuthority)
-                        .collect(Collectors.joining(", ")));
+                log.info("User with id {} is not authorized to the method",  authorId);
+                return false;
+//                throw new UnauthorizedException(authorities.stream()
+//                        .map(GrantedAuthority::getAuthority)
+//                        .collect(Collectors.joining(", ")));
             }
         }
 
@@ -68,7 +79,9 @@ public class SecurityServiceImpl implements SecurityService {
         if (Objects.equals(authorId, authenticatedUser.getId())){
             return true;
         } else {
-            throw new OwnershipException(authenticatedUser.getEmail());
+            log.info("User with id {} is not the owner of the resource",  authorId);
+            return false;
+//            throw new OwnershipException(authenticatedUser.getEmail());
         }
     }
 }

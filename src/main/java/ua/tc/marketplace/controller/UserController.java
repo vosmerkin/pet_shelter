@@ -43,7 +43,7 @@ public class UserController implements UserOpenApi {
 
   @Override
   @PutMapping()
-  @PreAuthorize("@securityService.hasAnyRoleAndOwnership(#id)")
+  @PreAuthorize("@securityService.hasAnyRoleAndOwnership(#userDto.id)")
   public ResponseEntity<UserDto> updateUser(@RequestBody @Valid UpdateUserDto userDto) {
     log.info("Update user request: {}" , userDto);
     return ResponseEntity.status(HttpStatus.OK).body(userService.updateUser(userDto));

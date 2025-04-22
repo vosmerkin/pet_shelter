@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.data.domain.Page;
@@ -43,6 +44,7 @@ import ua.tc.marketplace.util.openapi.AdOpenApi;
  *   <li>DELETE /api/v1/ad/{adId}: Deletes an advertisement by its unique identifier.
  * </ul>
  */
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(ApiURLs.AD_BASE)
@@ -84,14 +86,14 @@ public class AdController implements AdOpenApi {
 
     @Override
     @PutMapping("/{adId}")
-    @PreAuthorize("@securityService.hasAnyRoleAndOwnership(#id)")
-    public ResponseEntity<AdDto> updateAd(@PathVariable Long id, @RequestBody UpdateAdDto dto) {
-        return ResponseEntity.ok(adFacade.updateAd(id, dto));
+    @PreAuthorize("@securityService.hasAnyRoleAndAdOwnership(#adId)")
+    public ResponseEntity<AdDto> updateAd(@PathVariable Long adId, @RequestBody UpdateAdDto dto) {
+        return ResponseEntity.ok(adFacade.updateAd(adId, dto));
     }
 
     @Override
     @DeleteMapping("/{adId}")
-    @PreAuthorize("hasAuthority('ADMIN') or @securityService.hasAnyRoleAndOwnership(#id)")
+    @PreAuthorize("hasAuthority('ADMIN') or @securityService.hasAnyRoleAndAdOwnership(#adId)")
     public ResponseEntity<Void> deleteAd(@PathVariable Long adId) {
         adFacade.deleteAd(adId);
         return ResponseEntity.status(HttpStatus.OK).build();

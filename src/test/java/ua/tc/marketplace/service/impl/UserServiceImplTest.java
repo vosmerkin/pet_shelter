@@ -46,7 +46,7 @@ class UserServiceImplTest {
             1L,
             "taras@shevchenko.ua",
             "password",
-            "INDIVIDUAL",
+            "USER",
             "Taras",
             "Shevchenko",
             null,
@@ -91,7 +91,7 @@ class UserServiceImplTest {
   void createUser_shouldCreate_whenValidInput() {
     // createUserDto, received from controller
     CreateUserDto createUserDto =
-        new CreateUserDto("taras@shevchenko.ua", "password", "INDIVIDUAL", "Taras", null, null);
+        new CreateUserDto("taras@shevchenko.ua", "password", "USER", "Taras", null, null);
 
     // User entity after mapping from createUserDto
     User user =
@@ -116,7 +116,7 @@ class UserServiceImplTest {
             1L,
             "taras@shevchenko.ua",
             "password",
-            "INDIVIDUAL",
+            "USER",
             "Taras",
             null,
             null,
@@ -166,7 +166,7 @@ class UserServiceImplTest {
             1L,
             "taras@shevchenko.ua",
             "password",
-            "INDIVIDUAL",
+            "USER",
             "Taras",
             "Shevchenko",
             null,
@@ -214,7 +214,7 @@ class UserServiceImplTest {
             1L,
             "taras@shevchenko.ua",
             "password",
-            "INDIVIDUAL",
+            "USER",
             "Taras",
             "Shevchenko",
             null,
@@ -276,7 +276,7 @@ class UserServiceImplTest {
             1L,
             "taras@shevchenko.ua",
             "password",
-            "INDIVIDUAL",
+            "USER",
             "Taras",
             "Shevchenko",
             null,
