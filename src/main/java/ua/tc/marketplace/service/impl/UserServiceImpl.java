@@ -11,10 +11,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.tc.marketplace.exception.user.UserNotFoundException;
+import ua.tc.marketplace.model.UnverifiedUser;
 import ua.tc.marketplace.model.dto.user.CreateUserDto;
 import ua.tc.marketplace.model.dto.user.UpdateUserDto;
 import ua.tc.marketplace.model.dto.user.UserDto;
 import ua.tc.marketplace.model.entity.User;
+import ua.tc.marketplace.model.enums.UserRole;
 import ua.tc.marketplace.repository.UserRepository;
 import ua.tc.marketplace.service.UserService;
 import ua.tc.marketplace.util.mapper.UserMapper;
@@ -134,6 +136,13 @@ public class UserServiceImpl implements UserService {
     public UserDto createUser(CreateUserDto createUserDto) {
         User user = userMapper.toEntity(createUserDto);
         user.setPassword(passwordEncoder.encode(createUserDto.password()));
+        return userMapper.toDto(userRepository.save(user));
+    }
+
+    @Override
+    public UserDto createUser(UnverifiedUser unverifiedUser) {
+        User user = userMapper.toEntity(unverifiedUser);
+        user.setUserRole(UserRole.USER);
         return userMapper.toDto(userRepository.save(user));
     }
 
