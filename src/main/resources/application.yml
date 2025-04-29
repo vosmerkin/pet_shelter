@@ -12,6 +12,23 @@ spring:
   profiles:
     active: local
 
+  mail:
+    host: smtp.gmail.com
+    port: 587 # Use 465 for SSL if preferred, but TLS is generally recommended
+#    username: ***** # Replace with your actual Gmail address
+#    password: ***** # Replace with your actual Gmail password or an App Password if 2FA is enabled
+    properties:
+      mail:
+        transport:
+          protocol: smtp
+        smtp:
+          auth: true
+          starttls:
+            enable: true # for TLS
+          # socketFactory:
+          #   class: javax.net.ssl.SSLSocketFactory # for SSL (uncomment if using port 465)
+          #   port: 465 # for SSL (uncomment if using port 465)
+    default-encoding: UTF-8
 
 
   #Jwt properties

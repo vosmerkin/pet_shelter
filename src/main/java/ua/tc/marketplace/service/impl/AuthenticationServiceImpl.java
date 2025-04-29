@@ -23,7 +23,6 @@ import ua.tc.marketplace.model.auth.AuthResponse;
 import ua.tc.marketplace.model.dto.user.CreateUserDto;
 import ua.tc.marketplace.model.dto.user.UserDto;
 import ua.tc.marketplace.model.entity.User;
-import ua.tc.marketplace.repository.UnverifiedUserRepository;
 import ua.tc.marketplace.service.AuthenticationService;
 import ua.tc.marketplace.service.UnverifiedUserService;
 import ua.tc.marketplace.service.UserService;
@@ -105,7 +104,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public UserDto verifyEmail(String token) {
+    public AuthResponse verifyEmail(String token) {
         if (!unverifiedUserService.existByToken(token)) throw new EmailVerificationTokenNotFoundOrExpiredException();
         UnverifiedUser unverifiedUser = unverifiedUserService.getByToken(token);
 
@@ -113,7 +112,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         if ( unverifiedUser.getRegistrationTimestamp().isBefore(LocalDateTime.now())) {
             // Verification complete, creating user
-            return userService.createUser(unverifiedUser);
+            UserDto userDto = userService.createUser(unverifiedUser);
+             return authenticate(new AuthRequest(unverifiedUser.getEmail(), ""));
             // Or, you could directly return the unverified user's email if needed on the frontend
             // return ResponseEntity.ok(Map.of("email", unverifiedUser.getEmail(), "token", token));
         } else {

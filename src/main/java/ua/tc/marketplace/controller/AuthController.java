@@ -38,15 +38,15 @@ public class AuthController implements AuthOpenApi {
     return ResponseEntity.status(HttpStatus.OK).body(authenticationService.registerUser(userDto));
   }
   @Override
-  @PostMapping("/signup_verify")
-  public ResponseEntity<Void> registerUserWithVerify(@Valid @RequestBody String email) {
+  @PostMapping("/signup_verify/{email}")
+  public ResponseEntity<Void> registerUserWithVerify(@Valid @PathVariable String email) {
     log.info("Register user with verification request: {}", email);
     authenticationService.registerUser(email);
     return ResponseEntity.ok().build();
   }
 
-  @GetMapping("/verify")
-  public ResponseEntity<UserDto> verifyEmail(@RequestParam("token") String token) {
+  @GetMapping("/verify/{token}")
+  public ResponseEntity<AuthResponse> verifyEmail(@PathVariable String token) {
     log.info("Verify user request: {}", token);
 //    Optional<UnverifiedUser> unverifiedUser = registrationService.findByVerificationToken(token);
 //    if (unverifiedUser.isPresent()) {
