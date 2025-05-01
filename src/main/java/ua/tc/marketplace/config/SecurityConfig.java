@@ -13,7 +13,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -50,13 +49,13 @@ public class SecurityConfig {
     public static final String GET_ALL_DEMO_URL = "/api/v1/demo/all";
     public static final String SWAGGER_DOCS = "/v3/api-docs/**";
     public static final String SWAGGER_UI_PAGES = "/swagger-ui/**";
-    public static final String SWAGGER_UI_MAIN = "/swagger-ui.html";
+    public static final String SWAGGER_UI_MAIN_PAGE = "/swagger-ui.html";
 
     private static final String[] WHITELIST = {
             DEFAULT_SUCCESS_PAGE,
             SWAGGER_DOCS,
             SWAGGER_UI_PAGES,
-            SWAGGER_UI_MAIN,
+            SWAGGER_UI_MAIN_PAGE,
             GET_ONE_DEMO_URL,
             GET_ALL_DEMO_URL,
             LOGIN_URL,
