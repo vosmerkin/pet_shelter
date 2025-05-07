@@ -13,7 +13,7 @@ public interface AuthenticationService {
 
   AuthResponse registerUser(CreateUserDto userDto);
 
-  void registerUser(String email);
+  void registerUserWithVerify(CreateUserDto userDto);
 
   Optional<User> getAuthenticatedUser();
 

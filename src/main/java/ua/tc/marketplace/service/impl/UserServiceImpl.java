@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ua.tc.marketplace.exception.auth.EmailAlreadyRegisteredException;
 import ua.tc.marketplace.exception.user.UserNotFoundException;
 import ua.tc.marketplace.model.UnverifiedUser;
 import ua.tc.marketplace.model.dto.user.CreateUserDto;
@@ -134,17 +135,19 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public UserDto createUser(CreateUserDto createUserDto) {
+        if (ifUserExists(createUserDto.email()))
+            throw new EmailAlreadyRegisteredException(createUserDto.email());
         User user = userMapper.toEntity(createUserDto);
         user.setPassword(passwordEncoder.encode(createUserDto.password()));
         return userMapper.toDto(userRepository.save(user));
     }
 
-    @Override
-    public UserDto createUser(UnverifiedUser unverifiedUser) {
-        User user = userMapper.toEntity(unverifiedUser);
-        user.setUserRole(UserRole.USER);
-        return userMapper.toDto(userRepository.save(user));
-    }
+//    @Override
+//    public UserDto createUser(UnverifiedUser unverifiedUser) {
+//        User user = userMapper.toEntity(unverifiedUser);
+//        user.setUserRole(UserRole.USER);
+//        return userMapper.toDto(userRepository.save(user));
+//    }
 
     /**
      * Retrieves a user by their ID, throwing a UserNotFoundException if not found.

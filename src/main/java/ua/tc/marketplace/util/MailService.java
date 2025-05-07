@@ -15,7 +15,7 @@ public class MailService {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
         message.setSubject("Verify Your Email Address");
-        message.setText("Click the following link to verify your email: " + baseUrl + "/verify-email?token=" + token);
+//        message.setText("Click the following link to verify your email: " + baseUrl + "/verify-email?token=" + token);
         mailSender.send(message);
     }
 }

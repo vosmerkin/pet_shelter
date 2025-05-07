@@ -2,6 +2,7 @@ package ua.tc.marketplace.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,11 +38,12 @@ public class AuthController implements AuthOpenApi {
     log.info("Register user request: {}", userDto);
     return ResponseEntity.status(HttpStatus.OK).body(authenticationService.registerUser(userDto));
   }
+
   @Override
-  @PostMapping("/signup_verify/{email}")
-  public ResponseEntity<Void> registerUserWithVerify(@Valid @PathVariable String email) {
-    log.info("Register user with verification request: {}", email);
-    authenticationService.registerUser(email);
+  @PostMapping("/signup_verify")
+  public ResponseEntity<Void> registerUserWithVerify(@Valid @RequestBody CreateUserDto userDto) {
+    log.info("Register user with verification request: {}", userDto);
+    authenticationService.registerUserWithVerify(userDto);
     return ResponseEntity.ok().build();
   }
 

@@ -1,11 +1,8 @@
 package ua.tc.marketplace.service.impl;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.UUID;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,30 +10,38 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ua.tc.marketplace.config.UserDetailsImpl;
-import ua.tc.marketplace.exception.auth.*;
+import ua.tc.marketplace.exception.auth.BadCredentialsAuthenticationException;
+import ua.tc.marketplace.exception.auth.EmailAlreadyRegisteredException;
+import ua.tc.marketplace.exception.auth.EmailVerificationTokenNotFoundOrExpiredException;
+import ua.tc.marketplace.exception.auth.GeneralAuthenticationException;
 import ua.tc.marketplace.exception.user.UserNotFoundException;
 import ua.tc.marketplace.jwtAuth.JwtConfig;
 import ua.tc.marketplace.jwtAuth.JwtUtil;
-import ua.tc.marketplace.model.UnverifiedUser;
+import ua.tc.marketplace.model.VerificationToken;
 import ua.tc.marketplace.model.auth.AuthRequest;
 import ua.tc.marketplace.model.auth.AuthResponse;
 import ua.tc.marketplace.model.dto.user.CreateUserDto;
 import ua.tc.marketplace.model.dto.user.UserDto;
 import ua.tc.marketplace.model.entity.User;
 import ua.tc.marketplace.service.AuthenticationService;
-import ua.tc.marketplace.service.UnverifiedUserService;
 import ua.tc.marketplace.service.UserService;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
 
+
+    @Value("${verification.token.expiryTimeInMinutes}")
+    private final int tokenExpiryTimeInMinutes;
+
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
     private final JwtConfig jwtConfig;
     private final UserService userService;
-    private final UnverifiedUserService unverifiedUserService;
 
     /**
      * Authentificats a user/
@@ -69,20 +74,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public void registerUser(String email) {
-        if (userService.ifUserExists(email))
-            throw new EmailAlreadyRegisteredException(email);
-        if (unverifiedUserService.existByEmail(email)) {
-            throw new EmailAlreadyPendingVerificationException(email);
-        }
-        String verificationToken = UUID.randomUUID().toString();
+    public void registerUserWithVerify(CreateUserDto userDto) {
+        if (userService.ifUserExists(userDto.email()))
+            throw new EmailAlreadyRegisteredException(userDto.email());
 
-        UnverifiedUser unverifiedUser = new UnverifiedUser( );
-        unverifiedUser.setEmail(email);
-        unverifiedUser.setVerificationToken(verificationToken);
-        unverifiedUserService.createUser(unverifiedUser);
+        UserDto user = userService.createUser(userDto);
+        VerificationToken token = new VerificationToken(userService.findUserByEmail(user.email()),tokenExpiryTimeInMinutes);
 
-        emailService.sendVerificationEmail(email, verificationToken);
+        verificationTokenRepository.save(token);
+
+        emailService.sendVerificationEmail(user.email(), token);
     }
 
     @Override

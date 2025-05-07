@@ -37,16 +37,20 @@ jwt:
   token-prefix: Bearer
   token-expiration-after-days: 14
 
-external:
-  api:
-    users:
-      base-url: /api/v1/users
+verification:
+  token:
+    expiryTimeInMinuets: 60
 
-    ad:
-      base-url: /api/v1/ad
-      get-all-url:
-      get-all-counted-url: /counted
-      get-by-id-url: /{adId}
-      create-url:
-      update-url: /{adId}
-      delete-url: /{adId}
+#external:
+#  api:
+#    users:
+#      base-url: /api/v1/users
+#
+#    ad:
+#      base-url: /api/v1/ad
+#      get-all-url:
+#      get-all-counted-url: /counted
+#      get-by-id-url: /{adId}
+#      create-url:
+#      update-url: /{adId}
+#      delete-url: /{adId}
