@@ -10,5 +10,9 @@ public class ApiURLs {
     public static final String AD_UPDATE = "/{adId}";
     public static final String AD_DELETE = "/{adId}";
 
+    //AuthController
+    public static final String AUTH_BASE = "/api/v1/auth";
+    public static final String AUTH_VERIFY_EMAIL = "/verify-email/{token}";
+
 
 }

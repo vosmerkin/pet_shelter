@@ -1,15 +1,10 @@
 package ua.tc.marketplace.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import ua.tc.marketplace.model.entity.User;
 
-import java.security.Timestamp;
 import java.time.Instant;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
@@ -52,6 +47,8 @@ public class VerificationToken {
 //        cal.add(Calendar.MINUTE, expiryTimeInMinutes);
 //        return new Date(cal.getTime().getTime());
     }
+
+
 
     // standard constructors, getters and setters
 }

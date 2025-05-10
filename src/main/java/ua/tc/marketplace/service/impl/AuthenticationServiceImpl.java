@@ -21,12 +21,16 @@ import ua.tc.marketplace.model.VerificationToken;
 import ua.tc.marketplace.model.auth.AuthRequest;
 import ua.tc.marketplace.model.auth.AuthResponse;
 import ua.tc.marketplace.model.dto.user.CreateUserDto;
-import ua.tc.marketplace.model.dto.user.UserDto;
 import ua.tc.marketplace.model.entity.User;
+import ua.tc.marketplace.repository.UserRepository;
+import ua.tc.marketplace.repository.VerificationTokenRepository;
 import ua.tc.marketplace.service.AuthenticationService;
 import ua.tc.marketplace.service.UserService;
+import ua.tc.marketplace.service.VerificationTokenService;
+import ua.tc.marketplace.util.MailService;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.util.Date;
 import java.util.Optional;
 
 @Slf4j
@@ -42,9 +46,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final JwtUtil jwtUtil;
     private final JwtConfig jwtConfig;
     private final UserService userService;
+    private final VerificationTokenRepository verificationTokenRepository;
+    private final UserRepository userRepository;
+    private final MailService mailService;
+    private final VerificationTokenService verificationTokenService;
+
 
     /**
-     * Authentificats a user/
+     * Authenticates a user/
      *
      * @param authRequest The email of the user to retrieve.
      * @return The UserDto representing the found user.
@@ -77,13 +86,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public void registerUserWithVerify(CreateUserDto userDto) {
         if (userService.ifUserExists(userDto.email()))
             throw new EmailAlreadyRegisteredException(userDto.email());
-
-        UserDto user = userService.createUser(userDto);
-        VerificationToken token = new VerificationToken(userService.findUserByEmail(user.email()),tokenExpiryTimeInMinutes);
+        userService.createUser(userDto);
+        VerificationToken token =
+                new VerificationToken(userService.findUserByEmail(userDto.email()),
+                        tokenExpiryTimeInMinutes);
 
         verificationTokenRepository.save(token);
 
-        emailService.sendVerificationEmail(user.email(), token);
+        mailService.sendVerificationEmail(userDto.email(), token.getToken());
     }
 
     @Override
@@ -105,21 +115,24 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public AuthResponse verifyEmail(String token) {
-        if (!unverifiedUserService.existByToken(token)) throw new EmailVerificationTokenNotFoundOrExpiredException();
-        UnverifiedUser unverifiedUser = unverifiedUserService.getByToken(token);
+    public Boolean verifyEmail(String token) {
+        //checks:
+        //  if user exists and enabled and no token for the email - throw EmailAlreadyRegisteredException
+        //  if user exists and there is token (not expired) for the email - throw ConfirmationEmailAlreadySentException
+        //  if user exists and there is expired token for the email - for this not to happen each check should call
+        //       function to clear expired tokens and assigned user records
+        //  if user doesn't exist
 
-//        Optional<UnverifiedUser> unverifiedUser = unverifiedUserRepository.findByVerificationToken(token);
-
-        if ( unverifiedUser.getRegistrationTimestamp().isBefore(LocalDateTime.now())) {
-            // Verification complete, creating user
-            UserDto userDto = userService.createUser(unverifiedUser);
-             return authenticate(new AuthRequest(unverifiedUser.getEmail(), ""));
-            // Or, you could directly return the unverified user's email if needed on the frontend
-            // return ResponseEntity.ok(Map.of("email", unverifiedUser.getEmail(), "token", token));
-        } else {
+        VerificationToken verificationToken = verificationTokenService.getVerificationToken(token);
+        if (userService.ifUserExists(verificationToken.getUser().getEmail()) ||
+                verificationToken.getExpiryDate().after(Date.from(Instant.now()))) {
             throw new EmailVerificationTokenNotFoundOrExpiredException();
         }
+        User user = verificationToken.getUser();
+        user.setEnabled(true);
+        userRepository.save(user);
+        verificationTokenService.delete(verificationToken.getId());
+        return true;
     }
 
     public boolean hasId(Long id) {

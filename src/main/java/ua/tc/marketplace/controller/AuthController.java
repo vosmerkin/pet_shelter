@@ -2,24 +2,21 @@ package ua.tc.marketplace.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ua.tc.marketplace.model.UnverifiedUser;
 import ua.tc.marketplace.model.auth.AuthRequest;
 import ua.tc.marketplace.model.auth.AuthResponse;
 import ua.tc.marketplace.model.dto.user.CreateUserDto;
-import ua.tc.marketplace.model.dto.user.UserDto;
 import ua.tc.marketplace.service.AuthenticationService;
 import ua.tc.marketplace.util.openapi.AuthOpenApi;
 
-import java.util.Optional;
+import static ua.tc.marketplace.config.ApiURLs.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping(AUTH_BASE)
 @RequiredArgsConstructor
 public class AuthController implements AuthOpenApi {
 
@@ -47,8 +44,8 @@ public class AuthController implements AuthOpenApi {
     return ResponseEntity.ok().build();
   }
 
-  @GetMapping("/verify/{token}")
-  public ResponseEntity<AuthResponse> verifyEmail(@PathVariable String token) {
+  @GetMapping(AUTH_VERIFY_EMAIL)
+  public ResponseEntity<Boolean> verifyEmail(@PathVariable String token) {
     log.info("Verify user request: {}", token);
 //    Optional<UnverifiedUser> unverifiedUser = registrationService.findByVerificationToken(token);
 //    if (unverifiedUser.isPresent()) {

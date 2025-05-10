@@ -24,16 +24,16 @@ public interface AuthOpenApi {
   ResponseEntity<AuthResponse> authenticate(@Valid @RequestBody AuthRequest authRequest);
 
   @Operation(
-      summary = "Create a new user",
+      summary = "Creates a new user",
       description = "Creates a new user based on the provided data.")
   @PostMapping("/signup")
   ResponseEntity<AuthResponse> registerUser( @Valid @RequestBody CreateUserDto userDto);
 
   @Operation(
-          summary = "Create a new user",
+          summary = "Creates a new user",
           description = "Creates a new user based on the provided data.")
-  @PostMapping("/signup")
-  ResponseEntity<Void> registerUserWithVerify(@Valid @RequestBody String email);
+  @PostMapping("/signup_verify")
+  ResponseEntity<Void> registerUserWithVerify(@Valid @RequestBody CreateUserDto userDto);
 
   @Operation(
           summary = "Verify user email",

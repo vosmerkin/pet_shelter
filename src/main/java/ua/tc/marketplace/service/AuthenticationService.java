@@ -9,13 +9,13 @@ import ua.tc.marketplace.model.entity.User;
 
 public interface AuthenticationService {
 
-  AuthResponse authenticate(AuthRequest authRequest);
+    AuthResponse authenticate(AuthRequest authRequest);
 
-  AuthResponse registerUser(CreateUserDto userDto);
+    AuthResponse registerUser(CreateUserDto userDto);
 
-  void registerUserWithVerify(CreateUserDto userDto);
+    void registerUserWithVerify(CreateUserDto userDto);
 
-  Optional<User> getAuthenticatedUser();
+    Optional<User> getAuthenticatedUser();
 
-    AuthResponse verifyEmail(String token);
+    Boolean verifyEmail(String token);
 }
