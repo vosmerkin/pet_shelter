@@ -25,5 +25,5 @@ public interface UserService {
 
   void deleteUserById(Long id);
 
-  Boolean ifUserExists(String email);
+  Boolean UserExistsByEmail(String email);
 }

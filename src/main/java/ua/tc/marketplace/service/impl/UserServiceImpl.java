@@ -1,7 +1,5 @@
 package ua.tc.marketplace.service.impl;
 
-import java.util.stream.Collectors;
-
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -12,15 +10,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ua.tc.marketplace.exception.auth.EmailAlreadyRegisteredException;
 import ua.tc.marketplace.exception.user.UserNotFoundException;
-import ua.tc.marketplace.model.UnverifiedUser;
 import ua.tc.marketplace.model.dto.user.CreateUserDto;
 import ua.tc.marketplace.model.dto.user.UpdateUserDto;
 import ua.tc.marketplace.model.dto.user.UserDto;
 import ua.tc.marketplace.model.entity.User;
-import ua.tc.marketplace.model.enums.UserRole;
 import ua.tc.marketplace.repository.UserRepository;
 import ua.tc.marketplace.service.UserService;
 import ua.tc.marketplace.util.mapper.UserMapper;
+
+import java.util.stream.Collectors;
 
 /**
  * Implementation of the {@link UserService} interface. Provides methods for creating, retrieving,
@@ -135,7 +133,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public UserDto createUser(CreateUserDto createUserDto) {
-        if (ifUserExists(createUserDto.email()))
+        if (UserExistsByEmail(createUserDto.email()))
             throw new EmailAlreadyRegisteredException(createUserDto.email());
         User user = userMapper.toEntity(createUserDto);
         user.setPassword(passwordEncoder.encode(createUserDto.password()));
@@ -177,7 +175,7 @@ public class UserServiceImpl implements UserService {
      * @param email The email of the user to check.
      * @return {@code true} if the user exists, {@code false} otherwise.
      */
-    public Boolean ifUserExists(String email) {
+    public Boolean UserExistsByEmail(String email) {
         return userRepository.findByEmail(email).isPresent();
     }
 }

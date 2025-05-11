@@ -39,8 +39,8 @@ import java.util.Optional;
 public class AuthenticationServiceImpl implements AuthenticationService {
 
 
-    @Value("${verification.token.expiryTimeInMinutes}")
-    private final int tokenExpiryTimeInMinutes;
+    @Value("${verification.token.expiryTimeInMinuets}")
+    private int expiryTimeInMinutes;
 
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
@@ -84,12 +84,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public void registerUserWithVerify(CreateUserDto userDto) {
-        if (userService.ifUserExists(userDto.email()))
+        if (userService.UserExistsByEmail(userDto.email()))
             throw new EmailAlreadyRegisteredException(userDto.email());
         userService.createUser(userDto);
         VerificationToken token =
                 new VerificationToken(userService.findUserByEmail(userDto.email()),
-                        tokenExpiryTimeInMinutes);
+                        expiryTimeInMinutes);
 
         verificationTokenRepository.save(token);
 
@@ -116,15 +116,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public Boolean verifyEmail(String token) {
-        //checks:
-        //  if user exists and enabled and no token for the email - throw EmailAlreadyRegisteredException
-        //  if user exists and there is token (not expired) for the email - throw ConfirmationEmailAlreadySentException
-        //  if user exists and there is expired token for the email - for this not to happen each check should call
-        //       function to clear expired tokens and assigned user records
-        //  if user doesn't exist
+        //before verifying clear expired tokens
+        verificationTokenService.clearExpiredTokens();
 
         VerificationToken verificationToken = verificationTokenService.getVerificationToken(token);
-        if (userService.ifUserExists(verificationToken.getUser().getEmail()) ||
+        if (userService.UserExistsByEmail(verificationToken.getUser().getEmail()) ||
                 verificationToken.getExpiryDate().after(Date.from(Instant.now()))) {
             throw new EmailVerificationTokenNotFoundOrExpiredException();
         }

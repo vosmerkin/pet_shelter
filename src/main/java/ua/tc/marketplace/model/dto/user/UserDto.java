@@ -28,7 +28,8 @@ public record UserDto(
     ContactInfo contactInfo,
     List<Long> favoriteAdIds,
     LocalDateTime createdAt,
-    LocalDateTime updatedAt) {
+    LocalDateTime updatedAt,
+    boolean enabled) {
 
   public UserDto {
     // Default values for nullable fields

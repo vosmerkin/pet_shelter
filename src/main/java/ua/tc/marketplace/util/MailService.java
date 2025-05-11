@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MailService {
     @Value("${verification.mail.baseurl}")
-    private final int baseUrl;
+    private String baseUrl;
 
     @Autowired
     private JavaMailSender mailSender;

@@ -11,3 +11,7 @@ google:
   maps:
     api:
       key: ${GOOGLE_MAPS_API_KEY}
+
+verification:
+  mail:
+    baseurl: https://petshelter-production.up.railway.app/

@@ -48,7 +48,7 @@ import ua.tc.marketplace.util.openapi.AdOpenApi;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(ApiURLs.AD_BASE)
-@ConfigurationProperties(prefix = "external.api.ad")
+//@ConfigurationProperties(prefix = "external.api.ad")
 public class AdController implements AdOpenApi {
 
     private final AdFacade adFacade;
