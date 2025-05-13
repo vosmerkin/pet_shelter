@@ -10,6 +10,7 @@ import ua.tc.marketplace.model.auth.AuthRequest;
 import ua.tc.marketplace.model.auth.AuthResponse;
 import ua.tc.marketplace.model.dto.user.CreateUserDto;
 import ua.tc.marketplace.service.AuthenticationService;
+import ua.tc.marketplace.util.MailService;
 import ua.tc.marketplace.util.openapi.AuthOpenApi;
 
 import static ua.tc.marketplace.config.ApiURLs.*;
@@ -21,6 +22,7 @@ import static ua.tc.marketplace.config.ApiURLs.*;
 public class AuthController implements AuthOpenApi {
 
   private final AuthenticationService authenticationService;
+  private final MailService mailService;
 
   @Override
   @PostMapping("/login")
@@ -41,6 +43,14 @@ public class AuthController implements AuthOpenApi {
   public ResponseEntity<Void> registerUserWithVerify(@Valid @RequestBody CreateUserDto userDto) {
     log.info("Register user with verification request: {}", userDto);
     authenticationService.registerUserWithVerify(userDto);
+    return ResponseEntity.ok().build();
+  }
+
+  @GetMapping("/test_email")
+  public ResponseEntity<Void> testEmail() {
+    log.info("Test email: {}", "userDto");
+//    mailService.sendVerificationEmail();
+    mailService.sendVerificationEmail("vosmerkin.evgen1@gmail.com", "sdfsdfsdfsdfs");
     return ResponseEntity.ok().build();
   }
 

@@ -1,5 +1,8 @@
 package ua.tc.marketplace.util;
 
+import com.resend.*;
+import com.resend.services.emails.model.SendEmailRequest;
+import com.resend.services.emails.model.SendEmailResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,19 +13,43 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class MailService {
     @Value("${verification.mail.baseurl}")
     private String baseUrl;
 
-    @Autowired
-    private JavaMailSender mailSender;
+//    @Value("${verification.resend_api_key}")
+//    private String resendApiKey;
+
+    @Value("${verification.mail.from}")
+    private String from;
+
+    @Value("${verification.mail.subject}")
+    private String subject;
+
+
+    private final Resend resend;
+
+    public MailService(@Value("${verification.resend_api_key}") String resendApiKey) {
+        this.resend = new Resend(resendApiKey);
+    }
+//    public void sendVerificationEmail(String to, String token) {
+//        SimpleMailMessage message = new SimpleMailMessage();
+//        message.setTo(to);
+//        message.setSubject("Verify Your Email Address");
+//        message.setText("Click the following link to verify your email: " + baseUrl + "/verify-email?token=" + token);
+//        mailSender.send(message);
+//    }
+
 
     public void sendVerificationEmail(String to, String token) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(to);
-        message.setSubject("Verify Your Email Address");
-        message.setText("Click the following link to verify your email: " + baseUrl + "/verify-email?token=" + token);
-        mailSender.send(message);
+        SendEmailRequest sendEmailRequest = SendEmailRequest.builder()
+                .from(from)
+                .to(to)
+                .subject(subject)
+                .html("Click the following link to verify your email: " + baseUrl + "/verify-email?token=" + token)
+                .build();
+
+        SendEmailResponse data = resend.emails().send(sendEmailRequest);
     }
 }

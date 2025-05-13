@@ -41,6 +41,10 @@ verification:
   token:
     expiryTimeInMinuets: 60
 
+
+#
+#/resendApiKey: re_JM9GyuYo_9r2MytmUUheXfKfLKfALPwFa
+#
 #external:
 #  api:
 #    users:
