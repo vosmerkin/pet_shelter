@@ -1,9 +1,6 @@
 package ua.tc.marketplace.config;
 
 import jakarta.servlet.http.HttpServletResponse;
-
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -13,7 +10,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -30,6 +26,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import ua.tc.marketplace.jwtAuth.JwtAuthorizationFilter;
 import ua.tc.marketplace.service.impl.UserDetailsServiceImpl;
+
+import java.util.List;
 
 @Slf4j
 @EnableWebSecurity
@@ -89,6 +87,8 @@ public class SecurityConfig {
                                                 HttpMethod.GET,
                                                 "/api/v1/auth/signup_verify",
                                                 "/api/v1/auth/test_email",
+                                                "/api/v1/auth/verify-email",
+                                                ApiURLs.AUTH_BASE + ApiURLs.AUTH_VERIFY_EMAIL,
                                                 "/api/v1/ad",
                                                 "/api/v1/ad/{adId}",
                                                 "/api/v1/ad/counted",

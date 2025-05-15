@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import ua.tc.marketplace.config.ApiURLs;
 
 @Slf4j
 @Service
@@ -47,7 +48,10 @@ public class MailService {
                 .from(from)
                 .to(to)
                 .subject(subject)
-                .html("Click the following link to verify your email: " + baseUrl + "/verify-email?token=" + token)
+                .html("Click the following link to verify your email: " +
+                        baseUrl +
+                        ApiURLs.AUTH_BASE +
+                        ApiURLs.AUTH_VERIFY_EMAIL.replace("{token}", token))
                 .build();
 
         SendEmailResponse data = resend.emails().send(sendEmailRequest);

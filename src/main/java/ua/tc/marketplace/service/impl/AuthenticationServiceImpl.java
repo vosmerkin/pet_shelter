@@ -9,6 +9,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ua.tc.marketplace.config.UserDetailsImpl;
 import ua.tc.marketplace.exception.auth.BadCredentialsAuthenticationException;
 import ua.tc.marketplace.exception.auth.EmailAlreadyRegisteredException;
@@ -82,6 +83,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return authenticate(new AuthRequest(userDto.email(), userDto.password()));
     }
 
+    @Transactional
     @Override
     public void registerUserWithVerify(CreateUserDto userDto) {
         if (userService.UserExistsByEmail(userDto.email()))

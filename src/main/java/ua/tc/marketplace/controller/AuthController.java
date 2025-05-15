@@ -54,18 +54,12 @@ public class AuthController implements AuthOpenApi {
     return ResponseEntity.ok().build();
   }
 
-  @GetMapping(AUTH_VERIFY_EMAIL)
-  public ResponseEntity<Boolean> verifyEmail(@PathVariable String token) {
-    log.info("Verify user request: {}", token);
-//    Optional<UnverifiedUser> unverifiedUser = registrationService.findByVerificationToken(token);
-//    if (unverifiedUser.isPresent()) {
-//      // Redirect to a frontend page with a form to complete registration
-//      return ResponseEntity.ok("Email verified. Please complete your registration.");
-//      // Or, you could directly return the unverified user's email if needed on the frontend
-//      // return ResponseEntity.ok(Map.of("email", unverifiedUser.getEmail(), "token", token));
-//    } else {
-//      return ResponseEntity.badRequest().body("Invalid or expired verification token");
-//    }
+//  @GetMapping(AUTH_VERIFY_EMAIL)
+  @GetMapping( "/verify-email")
+  public ResponseEntity<Boolean> verifyEmail(@RequestParam("token") String token) {
+//  public ResponseEntity<Boolean> verifyEmail(@PathVariable String token) {
+    log.info("Verify email request: {}", token);
+    log.debug("Verify email request: {}", token);
     return ResponseEntity.status(HttpStatus.OK).body(authenticationService.verifyEmail(token));
   }
 }

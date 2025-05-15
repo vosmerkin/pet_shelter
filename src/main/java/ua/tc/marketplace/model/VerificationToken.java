@@ -22,9 +22,10 @@ public class VerificationToken {
     private static final int EXPIRATION = 60 * 24;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name="verification_token")
     private String token;
 
     @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
