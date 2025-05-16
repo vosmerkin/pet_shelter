@@ -11,6 +11,8 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
@@ -30,316 +32,398 @@ import ua.tc.marketplace.util.mapper.UserMapper;
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
 
-  @Mock private UserRepository userRepository;
-  @Mock private UserMapper userMapper;
-  @Mock private PasswordEncoder passwordEncoder;
+    @Mock
+    private UserRepository userRepository;
+    @Mock
+    private UserMapper userMapper;
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
-  @InjectMocks private UserServiceImpl userService;
+    @InjectMocks
+    private UserServiceImpl userService;
 
-  @Test
-  void findUserById_shouldFindUser_Dto_whenExists() {
-    // Arrange
-    Long userId = 1L;
-    User user = new User();
-    UserDto userDto =
-        new UserDto(
-            1L,
-            "taras@shevchenko.ua",
-            "password",
-            "USER",
-            "Taras",
-            "Shevchenko",
-            null,
-            null,
-            Collections.emptyList(),
-            LocalDateTime.now(),
-            LocalDateTime.now());
+    private UserDto userDto;
+    private UserDto userDtoAfterUpdate;
+    private User user;
+    private User userAfterUpdate;
 
-    // Mock repository
-    when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+    @BeforeEach
+    public void setUp() {
+        user = User.builder()
+                .id(1L)
+                .email("taras@shevchenko.ua")
+                .password("password")
+                .userRole(UserRole.USER)
+                .firstName("Taras")
+//                .lastName("Shevchenko")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+        userAfterUpdate = User.builder()
+                .id(1L)
+                .email("taras@shevchenko.ua")
+                .password("password")
+                .userRole(UserRole.USER)
+                .firstName("Taras")
+                .lastName("Shevchenko")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+//                new User(
+//                        1L,
+//                        "taras@shevchenko.ua",
+//                        "password",
+//                        UserRole.USER,
+//                        "Taras",
+//                        null,
+//                        null,
+//                        null,
+//                        Collections.emptyList(),
+//                        Collections.emptyList(),
+//                        Collections.emptyList(),
+//                        null,
+//                        null,
+//                        null);
 
-    // Mock mapper
-    when(userMapper.toDto(user)).thenReturn(userDto);
+        userDto = UserDto.builder()
+                .id(1L)
+                .email("taras@shevchenko.ua")
+                .password("password")
+                .userRole(UserRole.USER.toString())
+                .firstName("Taras")
+//                .lastName("Shevchenko")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+        userDtoAfterUpdate = UserDto.builder()
+                .id(1L)
+                .email("taras@shevchenko.ua")
+                .password("password")
+                .userRole(UserRole.USER.toString())
+                .firstName("Taras")
+                .lastName("Shevchenko")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+//        userDto =
+//                new UserDto(
+//                        1L,
+//                        "taras@shevchenko.ua",
+//                        "password",
+//                        "USER",
+//                        "Taras",
+//                        "Shevchenko",
+//                        null,
+//                        null,
+//                        Collections.emptyList(),
+//                        LocalDateTime.now(),
+//                        LocalDateTime.now());
+    }
 
-    // run method
-    UserDto result = userService.findUserDtoById(userId);
+    @Test
+    void findUserById_shouldFindUser_Dto_whenExists() {
+        // Arrange
+        Long userId = 1L;
+        User user = new User();
+//        UserDto userDto =
+//                new UserDto(
+//                        1L,
+//                        "taras@shevchenko.ua",
+//                        "password",
+//                        "USER",
+//                        "Taras",
+//                        "Shevchenko",
+//                        null,
+//                        null,
+//                        Collections.emptyList(),
+//                        LocalDateTime.now(),
+//                        LocalDateTime.now());
 
-    // Assert results
-    assertEquals(userDto, result);
+        // Mock repository
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
-    // Verify that repository method was called with correct argument
-    verify(userRepository, times(1)).findById(userId);
-  }
+        // Mock mapper
+        when(userMapper.toDto(user)).thenReturn(userDto);
 
-  @Test
-  void findUserDtoById_shouldThrow_whenNotExists() {
-    // Arrange
-    Long userId = 1L;
+        // run method
+        UserDto result = userService.findUserDtoById(userId);
 
-    // Mock repository method to return an empty Optional (simulating not found scenario)
-    when(userRepository.findById(userId)).thenReturn(Optional.empty());
+        // Assert results
+        assertEquals(userDto, result);
 
-    // Act and Assert
-    // Use assertThrows to verify that AdNotFoundException is thrown
-    assertThrows(UserNotFoundException.class, () -> userService.findUserDtoById(userId));
+        // Verify that repository method was called with correct argument
+        verify(userRepository, times(1)).findById(userId);
+    }
 
-    // Verify that repository method was called with correct argument
-    verify(userRepository, times(1)).findById(userId);
-  }
+    @Test
+    void findUserDtoById_shouldThrow_whenNotExists() {
+        // Arrange
+        Long userId = 1L;
 
-  @Test
-  void createUser_shouldCreate_whenValidInput() {
-    // createUserDto, received from controller
-    CreateUserDto createUserDto =
-        new CreateUserDto("taras@shevchenko.ua", "password", "USER", "Taras", null, null);
+        // Mock repository method to return an empty Optional (simulating not found scenario)
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
-    // User entity after mapping from createUserDto
-    User user =
-        new User(
-            1L,
-            "taras@shevchenko.ua",
-            "password",
-            UserRole.USER,
-            "Taras",
-            null,
-            null,
-            null,
-            Collections.emptyList(),
-            Collections.emptyList(),
-            Collections.emptyList(),
-            null,
-            null,
-            null);
-    // User Dto after mapping from saved entity
-    UserDto userDto =
-        new UserDto(
-            1L,
-            "taras@shevchenko.ua",
-            "password",
-            "USER",
-            "Taras",
-            null,
-            null,
-            null,
-            Collections.emptyList(),
-            LocalDateTime.now(),
-            null);
+        // Act and Assert
+        // Use assertThrows to verify that AdNotFoundException is thrown
+        assertThrows(UserNotFoundException.class, () -> userService.findUserDtoById(userId));
 
-    // Mock mapper from createUserDto to entity
-    when(userMapper.toEntity(createUserDto)).thenReturn(user);
+        // Verify that repository method was called with correct argument
+        verify(userRepository, times(1)).findById(userId);
+    }
 
-    // Mock password encoding
-    when(passwordEncoder.encode(createUserDto.password())).thenReturn("encoded_password");
+    @Test
+    void createUser_shouldCreate_whenValidInput() {
+        // createUserDto, received from controller
+        CreateUserDto createUserDto =
+                new CreateUserDto("taras@shevchenko.ua", "password", "USER", "Taras", null, null);
 
-    // Mock repository
-    when(userRepository.save(user)).thenReturn(user);
+        // User entity after mapping from createUserDto
+//        User user =
+//                new User(
+//                        1L,
+//                        "taras@shevchenko.ua",
+//                        "password",
+//                        UserRole.USER,
+//                        "Taras",
+//                        null,
+//                        null,
+//                        null,
+//                        Collections.emptyList(),
+//                        Collections.emptyList(),
+//                        Collections.emptyList(),
+//                        null,
+//                        null,
+//                        null);
+        // User Dto after mapping from saved entity
+//        UserDto userDto =
+//                new UserDto(
+//                        1L,
+//                        "taras@shevchenko.ua",
+//                        "password",
+//                        "USER",
+//                        "Taras",
+//                        null,
+//                        null,
+//                        null,
+//                        Collections.emptyList(),
+//                        LocalDateTime.now(),
+//                        null);
 
-    // Mock mapper from entity back to Dto
-    when(userMapper.toDto(user)).thenReturn(userDto);
+        // Mock mapper from createUserDto to entity
+        when(userMapper.toEntity(createUserDto)).thenReturn(user);
 
-    // Act
-    UserDto result = userService.createUser(createUserDto);
+        // Mock password encoding
+        when(passwordEncoder.encode(createUserDto.password())).thenReturn("encoded_password");
 
-    // Assert
-    assertEquals(userDto, result);
+        // Mock repository
+        when(userRepository.save(user)).thenReturn(user);
 
-    // Verify that userMapper method was called with correct argument
-    verify(userMapper, times(1)).toEntity(createUserDto);
+        // Mock mapper from entity back to Dto
+        when(userMapper.toDto(user)).thenReturn(userDto);
 
-    // Verify that passwordEncoder.encode method was called with correct argument
-    verify(passwordEncoder, times(1)).encode(ArgumentMatchers.anyString());
+        // Act
+        UserDto result = userService.createUser(createUserDto);
 
-    // Verify that userRepository method was called with correct argument
-    verify(userRepository, times(1)).save(user);
+        // Assert
+        assertEquals(userDto, result);
 
-    // Verify that userMapper method was called with correct argument
-    verify(userMapper, times(1)).toDto(user);
-  }
+        // Verify that userMapper method was called with correct argument
+        verify(userMapper, times(1)).toEntity(createUserDto);
 
-  @Test
-  void updateUser_shouldUpdate_whenValidInput() {
-    // Arrange
+        // Verify that passwordEncoder.encode method was called with correct argument
+        verify(passwordEncoder, times(1)).encode(ArgumentMatchers.anyString());
 
-    // dto with updated info
-    UpdateUserDto updateUserDto =
-        new UpdateUserDto(
-            1L,
-            "taras@shevchenko.ua",
-            "password",
-            "USER",
-            "Taras",
-            "Shevchenko",
-            null,
-            Collections.emptyList());
+        // Verify that userRepository method was called with correct argument
+        verify(userRepository, times(1)).save(user);
 
-    // entity of existing user, found in database
-    User existingUser =
-        new User(
-            1L,
-            "taras@shevchenko.ua",
-            "password",
-            UserRole.USER,
-            "Taras",
-            null,
-            null,
-            null,
-            Collections.emptyList(),
-            Collections.emptyList(),
-            Collections.emptyList(),
-            null,
-            null,
-            null);
+        // Verify that userMapper method was called with correct argument
+        verify(userMapper, times(1)).toDto(user);
+    }
 
-    // entity of updated user
-    User updatedUser =
-        new User(
-            1L,
-            "taras@shevchenko.ua",
-            "password",
-            UserRole.USER,
-            "Taras",
-            "Shevchenko",
-            null,
-            null,
-            Collections.emptyList(),
-            Collections.emptyList(),
-            Collections.emptyList(),
-            null,
-            null,
-            null);
+    @Test
+    void updateUser_shouldUpdate_whenValidInput() {
+        // Arrange
 
-    // User Dto after mapping from updated entity
-    UserDto updatedUserDto =
-        new UserDto(
-            1L,
-            "taras@shevchenko.ua",
-            "password",
-            "USER",
-            "Taras",
-            "Shevchenko",
-            null,
-            null,
-            Collections.emptyList(),
-            LocalDateTime.now(),
-            null);
+        // dto with updated info
+        UpdateUserDto updateUserDto =
+                new UpdateUserDto(
+                        1L,
+                        "taras@shevchenko.ua",
+                        "password",
+                        "USER",
+                        "Taras",
+                        "Shevchenko",
+                        null,
+                        Collections.emptyList());
 
-    // Mock userRepository to return existingUser when findById is called
-    when(userRepository.findById(updateUserDto.id())).thenReturn(Optional.of(existingUser));
+        // entity of existing user, found in database
+        User existingUser = user;
+//                new User(
+//                        1L,
+//                        "taras@shevchenko.ua",
+//                        "password",
+//                        UserRole.USER,
+//                        "Taras",
+//                        null,
+//                        null,
+//                        null,
+//                        Collections.emptyList(),
+//                        Collections.emptyList(),
+//                        Collections.emptyList(),
+//                        null,
+//                        null,
+//                        null);
 
-    // Mock userMapper to return updatedUser when updateEntityFromDto is called
-    doAnswer(
-            invocation -> {
-              UpdateUserDto dto = invocation.getArgument(1);
-              User userToUpdate = invocation.getArgument(0);
-              userToUpdate.setEmail(dto.email());
-              userToUpdate.setUserRole(UserRole.valueOf(dto.userRole()));
-              userToUpdate.setFirstName(dto.firstName());
-              userToUpdate.setLastName(dto.lastName());
-              userToUpdate.setContactInfo(dto.contactInfo());
-              userToUpdate.setFavorites(dto.favorites()); // Setting the updated category
-              return null;
-            })
-        .when(userMapper)
-        .updateEntityFromDto(existingUser, updateUserDto);
+        // entity of updated user
+        User updatedUser =userAfterUpdate;
+//                new User(
+//                        1L,
+//                        "taras@shevchenko.ua",
+//                        "password",
+//                        UserRole.USER,
+//                        "Taras",
+//                        "Shevchenko",
+//                        null,
+//                        null,
+//                        Collections.emptyList(),
+//                        Collections.emptyList(),
+//                        Collections.emptyList(),
+//                        null,
+//                        null,
+//                        null);
 
-    // Mock repository
-    when(userRepository.save(existingUser)).thenReturn(updatedUser);
+        // User Dto after mapping from updated entity
+        UserDto updatedUserDto =userDtoAfterUpdate;
+//                new UserDto(
+//                        1L,
+//                        "taras@shevchenko.ua",
+//                        "password",
+//                        "USER",
+//                        "Taras",
+//                        "Shevchenko",
+//                        null,
+//                        null,
+//                        Collections.emptyList(),
+//                        LocalDateTime.now(),
+//                        null);
 
-    // Mock mapper
-    when(userMapper.toDto(updatedUser)).thenReturn(updatedUserDto);
+        // Mock userRepository to return existingUser when findById is called
+        when(userRepository.findById(updateUserDto.id())).thenReturn(Optional.of(existingUser));
 
-    // Act
-    UserDto result = userService.updateUser(updateUserDto);
+        // Mock userMapper to return updatedUser when updateEntityFromDto is called
+        doAnswer(
+                invocation -> {
+                    UpdateUserDto dto = invocation.getArgument(1);
+                    User userToUpdate = invocation.getArgument(0);
+                    userToUpdate.setEmail(dto.email());
+                    userToUpdate.setUserRole(UserRole.valueOf(dto.userRole()));
+                    userToUpdate.setFirstName(dto.firstName());
+                    userToUpdate.setLastName(dto.lastName());
+                    userToUpdate.setContactInfo(dto.contactInfo());
+                    userToUpdate.setFavorites(dto.favorites()); // Setting the updated category
+                    return null;
+                })
+                .when(userMapper)
+                .updateEntityFromDto(existingUser, updateUserDto);
 
-    // Assert
-    assertEquals(updatedUserDto, result);
+        // Mock repository
+        when(userRepository.save(existingUser)).thenReturn(updatedUser);
 
-    // Verify that userRepository method was called with correct argument
-    verify(userRepository, times(1)).findById(updatedUserDto.id());
+        // Mock mapper
+        when(userMapper.toDto(updatedUser)).thenReturn(updatedUserDto);
 
-    // Verify that adMapper method was called with correct argument
-    verify(userMapper, times(1)).updateEntityFromDto(existingUser, updateUserDto);
+        // Act
+        UserDto result = userService.updateUser(updateUserDto);
 
-    // Verify that userRepository method was called with correct argument
-    verify(userRepository, times(1)).save(existingUser);
+        // Assert
+        assertEquals(updatedUserDto, result);
 
-    // Verify that adMapper method was called with correct argument
-    verify(userMapper, times(1)).toDto(updatedUser);
-  }
+        // Verify that userRepository method was called with correct argument
+        verify(userRepository, times(1)).findById(updatedUserDto.id());
 
-  @Test
-  void updateUser_shouldThrow_whenUserNotExists() {
-    // Arrange
-    // dto with updated info
-    UpdateUserDto updateUserDto =
-        new UpdateUserDto(
-            1L,
-            "taras@shevchenko.ua",
-            "password",
-            "USER",
-            "Taras",
-            "Shevchenko",
-            null,
-            Collections.emptyList());
+        // Verify that adMapper method was called with correct argument
+        verify(userMapper, times(1)).updateEntityFromDto(existingUser, updateUserDto);
 
-    assertThrows(
-        UserNotFoundException.class, () -> userService.findUserDtoById(updateUserDto.id()));
+        // Verify that userRepository method was called with correct argument
+        verify(userRepository, times(1)).save(existingUser);
 
-    // Verify that repository method was called with correct argument
-    verify(userRepository, times(1)).findById(ArgumentMatchers.anyLong());
-  }
+        // Verify that adMapper method was called with correct argument
+        verify(userMapper, times(1)).toDto(updatedUser);
+    }
 
-  @Test
-  void deleteUser_shouldDelete() {
-    // Arrange
-    Long userId = 1L;
+    @Test
+    void updateUser_shouldThrow_whenUserNotExists() {
+        // Arrange
+        // dto with updated info
+        UpdateUserDto updateUserDto =
+                new UpdateUserDto(
+                        1L,
+                        "taras@shevchenko.ua",
+                        "password",
+                        "USER",
+                        "Taras",
+                        "Shevchenko",
+                        null,
+                        Collections.emptyList());
 
-    // entity of existing user, found in database
-    User existingUser =
-        new User(
-            1L,
-            "taras@shevchenko.ua",
-            "password",
-            UserRole.USER,
-            "Taras",
-            null,
-            null,
-            null,
-            Collections.emptyList(),
-            Collections.emptyList(),
-            Collections.emptyList(),
-            null,
-            null,
-            null);
+        assertThrows(
+                UserNotFoundException.class, () -> userService.findUserDtoById(updateUserDto.id()));
 
-    // Mock userRepository to return existingUser when findById is called
-    when(userRepository.findById(userId)).thenReturn(Optional.of(existingUser));
+        // Verify that repository method was called with correct argument
+        verify(userRepository, times(1)).findById(ArgumentMatchers.anyLong());
+    }
 
-    // Act
-    userService.deleteUserById(userId);
+    @Test
+    void deleteUser_shouldDelete() {
+        // Arrange
+        Long userId = 1L;
 
-    // Verify that userRepository method was called with correct argument
-    verify(userRepository, times(1)).findById(userId);
+        // entity of existing user, found in database
+        User existingUser =user;
+//                new User(
+//                        1L,
+//                        "taras@shevchenko.ua",
+//                        "password",
+//                        UserRole.USER,
+//                        "Taras",
+//                        null,
+//                        null,
+//                        null,
+//                        Collections.emptyList(),
+//                        Collections.emptyList(),
+//                        Collections.emptyList(),
+//                        null,
+//                        null,
+//                        null);
 
-    // Verify that userRepository method was called with correct argument
-    verify(userRepository, times(1)).deleteById(userId);
-  }
+        // Mock userRepository to return existingUser when findById is called
+        when(userRepository.findById(userId)).thenReturn(Optional.of(existingUser));
 
-  @Test
-  public void deleteUser_shouldThrowException_whenUserNotExists() {
-    // Arrange
-    Long userId = 1L;
+        // Act
+        userService.deleteUserById(userId);
 
-    // Mock userRepository to throw AdNotFoundException when findById is called
-    when(userRepository.findById(userId)).thenReturn(Optional.empty());
+        // Verify that userRepository method was called with correct argument
+        verify(userRepository, times(1)).findById(userId);
 
-    // Act
-    assertThrows(UserNotFoundException.class, () -> userService.deleteUserById(userId));
+        // Verify that userRepository method was called with correct argument
+        verify(userRepository, times(1)).deleteById(userId);
+    }
 
-    // Verify that userRepository method was called with correct argument
-    verify(userRepository, times(1)).findById(userId);
+    @Test
+    public void deleteUser_shouldThrowException_whenUserNotExists() {
+        // Arrange
+        Long userId = 1L;
 
-    // Verify that userRepository method was called with correct argument
-    verify(userRepository, never()).deleteById(userId);
-  }
+        // Mock userRepository to throw AdNotFoundException when findById is called
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+
+        // Act
+        assertThrows(UserNotFoundException.class, () -> userService.deleteUserById(userId));
+
+        // Verify that userRepository method was called with correct argument
+        verify(userRepository, times(1)).findById(userId);
+
+        // Verify that userRepository method was called with correct argument
+        verify(userRepository, never()).deleteById(userId);
+    }
 }
