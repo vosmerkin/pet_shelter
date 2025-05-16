@@ -41,6 +41,10 @@ verification:
   token:
     expiryTimeInMinuets: 60
 
+  mail:
+    baseurl: http://localhost:8080
+    from: onboarding@resend.dev
+    subject: Email Verification
 
 #
 #/resendApiKey: re_JM9GyuYo_9r2MytmUUheXfKfLKfALPwFa
