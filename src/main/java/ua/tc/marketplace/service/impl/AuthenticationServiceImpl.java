@@ -122,8 +122,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         verificationTokenService.clearExpiredTokens();
 
         VerificationToken verificationToken = verificationTokenService.getVerificationToken(token);
-        if (userService.UserExistsByEmail(verificationToken.getUser().getEmail()) ||
-                verificationToken.getExpiryDate().after(Date.from(Instant.now()))) {
+        if (!userService.UserExistsByEmail(verificationToken.getUser().getEmail()) ||       //user doesnt exists
+                verificationToken.getExpiryDate().before(Date.from(Instant.now()))) {       //token is expired
             throw new EmailVerificationTokenNotFoundOrExpiredException();
         }
         User user = verificationToken.getUser();

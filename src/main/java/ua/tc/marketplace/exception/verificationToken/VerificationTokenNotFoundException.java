@@ -14,10 +14,14 @@ import ua.tc.marketplace.exception.model.CustomRuntimeException;
  */
 public class VerificationTokenNotFoundException extends CustomRuntimeException {
 
-  private static final String ERROR_MESSAGE = "VerificationToken with id %s is not found.";
+  private static final String ERROR_MESSAGE_BY_ID = "VerificationToken with id %s not found.";
+  private static final String ERROR_MESSAGE_BY_STRING = "VerificationToken with token string %s not found.";
   private static final HttpStatus STATUS = HttpStatus.NOT_FOUND;
 
   public VerificationTokenNotFoundException(Long tokenId) {
-    super(ERROR_MESSAGE.formatted(tokenId), STATUS);
+    super(ERROR_MESSAGE_BY_ID.formatted(tokenId), STATUS);
+  }
+  public VerificationTokenNotFoundException(String token) {
+    super(ERROR_MESSAGE_BY_STRING.formatted(token), STATUS);
   }
 }

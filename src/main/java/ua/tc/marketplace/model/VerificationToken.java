@@ -1,7 +1,9 @@
 package ua.tc.marketplace.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ua.tc.marketplace.model.entity.User;
 
 import java.time.Instant;
@@ -14,8 +16,8 @@ import java.util.UUID;
 
 //@Builder
 @Data
-//@NoArgsConstructor
-//@AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "verification_token")
 public class VerificationToken {
