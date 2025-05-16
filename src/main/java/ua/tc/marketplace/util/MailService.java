@@ -3,12 +3,8 @@ package ua.tc.marketplace.util;
 import com.resend.*;
 import com.resend.services.emails.model.SendEmailRequest;
 import com.resend.services.emails.model.SendEmailResponse;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import ua.tc.marketplace.config.ApiURLs;
 
@@ -23,7 +19,7 @@ public class MailService {
 //    private String resendApiKey;
 
     @Value("${verification.mail.from}")
-    private String from;
+    private String from_email;
 
     @Value("${verification.mail.subject}")
     private String subject;
@@ -43,10 +39,11 @@ public class MailService {
 //    }
 
 
-    public void sendVerificationEmail(String to, String token) {
+    public void sendVerificationEmail(String to_email, String token) {
         SendEmailRequest sendEmailRequest = SendEmailRequest.builder()
-                .from(from)
-                .to(to)
+//                .from("onboarding@resend.dev")
+                .from(from_email)
+                .to(to_email)
                 .subject(subject)
                 .html("Click the following link to verify your email: " +
                         baseUrl +
