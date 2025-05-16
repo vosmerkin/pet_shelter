@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import lombok.Builder;
 import ua.tc.marketplace.model.entity.ContactInfo;
 import ua.tc.marketplace.model.entity.Photo;
 
@@ -15,6 +17,7 @@ import ua.tc.marketplace.model.entity.Photo;
  *
  * <p>Validation constraints are applied to ensure data integrity and consistency.
  */
+@Builder
 public record UserDto(
     Long id,
     @Schema(example = "taras@shevchenko.ua") @NotBlank String email,
@@ -28,7 +31,8 @@ public record UserDto(
     ContactInfo contactInfo,
     List<Long> favoriteAdIds,
     LocalDateTime createdAt,
-    LocalDateTime updatedAt) {
+    LocalDateTime updatedAt,
+    boolean enabled) {
 
   public UserDto {
     // Default values for nullable fields

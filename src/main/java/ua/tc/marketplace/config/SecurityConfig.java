@@ -1,9 +1,6 @@
 package ua.tc.marketplace.config;
 
 import jakarta.servlet.http.HttpServletResponse;
-
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -30,6 +27,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import ua.tc.marketplace.jwtAuth.JwtAuthorizationFilter;
 import ua.tc.marketplace.service.impl.UserDetailsServiceImpl;
 
+import java.util.List;
+
 @Slf4j
 @EnableWebSecurity
 @Configuration
@@ -44,6 +43,7 @@ public class SecurityConfig {
     public static final String GET_ONE_DEMO_URL = "/api/v1/demo";
     private static final String DEFAULT_SUCCESS_PAGE = GET_ONE_DEMO_URL;
     private static final String CREATE_USER_POST_URL = "/api/v1/auth/signup";
+    private static final String CREATE_USER_WITH_VERIFY_POST_URL = "/api/v1/auth/signup_verify";
     public static final String LOGIN_URL = "/api/v1/auth/login";
     public static final String LOGOUT_URL = "/api/v1/auth/logout";
     public static final String GET_ALL_DEMO_URL = "/api/v1/demo/all";
@@ -81,9 +81,14 @@ public class SecurityConfig {
                                 config
                                         .requestMatchers(WHITELIST).permitAll()
                                         .requestMatchers(HttpMethod.POST, CREATE_USER_POST_URL).permitAll()
+                                        .requestMatchers(HttpMethod.POST, CREATE_USER_WITH_VERIFY_POST_URL).permitAll()
 //                                        .requestMatchers(HttpMethod.POST, "/api/v1/ad").authenticated()
                                         .requestMatchers(
                                                 HttpMethod.GET,
+                                                "/api/v1/auth/signup_verify",
+                                                "/api/v1/auth/test_email",
+                                                "/api/v1/auth/verify-email",
+                                                ApiURLs.AUTH_BASE + ApiURLs.AUTH_VERIFY_EMAIL,
                                                 "/api/v1/ad",
                                                 "/api/v1/ad/{adId}",
                                                 "/api/v1/ad/counted",

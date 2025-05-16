@@ -12,7 +12,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ua.tc.marketplace.model.dto.user.UpdateUserDto;
 import ua.tc.marketplace.model.dto.user.UserDto;
-import ua.tc.marketplace.service.SecurityService;
 import ua.tc.marketplace.service.UserService;
 import ua.tc.marketplace.util.openapi.UserOpenApi;
 
@@ -44,7 +43,7 @@ public class UserController implements UserOpenApi {
   @GetMapping("/email/{email}")
   public ResponseEntity<Boolean> getUserById(@PathVariable String email) {
     log.info("Get user by email request: email={}" , email);
-    return ResponseEntity.status(HttpStatus.OK).body(userService.ifUserExists(email));
+    return ResponseEntity.status(HttpStatus.OK).body(userService.UserExistsByEmail(email));
   }
 
     @Override

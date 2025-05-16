@@ -21,7 +21,10 @@ import ua.tc.marketplace.model.auth.AuthResponse;
 import ua.tc.marketplace.model.dto.user.CreateUserDto;
 import ua.tc.marketplace.model.dto.user.UserDto;
 import ua.tc.marketplace.model.entity.User;
+import ua.tc.marketplace.model.enums.UserRole;
 import ua.tc.marketplace.service.UserService;
+
+import java.time.LocalDateTime;
 
 @ExtendWith(MockitoExtension.class)
 class AuthenticationServiceImplTest {
@@ -100,9 +103,18 @@ class AuthenticationServiceImplTest {
         new CreateUserDto("test@example.com", "password", null, null, null, null);
     User user = new User(); // Set up the User object as needed
     Authentication authentication = mock(Authentication.class);
-    UserDto userDto =
-        new UserDto(
-            1L, "test@example.com", "password", null, null, null, null, null, null, null, null);
+    UserDto userDto =UserDto.builder()
+            .id(1L)
+            .email("taras@shevchenko.ua")
+            .password("password")
+            .userRole(UserRole.USER.toString())
+            .firstName("Taras")
+//                .lastName("Shevchenko")
+            .createdAt(LocalDateTime.now())
+            .updatedAt(LocalDateTime.now())
+            .build();
+//        new UserDto(
+//            1L, "test@example.com", "password", null, null, null, null, null, null, null, null);
 
     when(userService.createUser(createUserDto)).thenReturn(userDto);
     when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))

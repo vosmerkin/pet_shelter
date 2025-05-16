@@ -15,9 +15,11 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -40,87 +42,90 @@ import ua.tc.marketplace.model.enums.UserRole;
 @Table(name = "app_user")
 @Entity
 public class User {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @Column(unique=true)
-  private String email;
+    @Column(unique = true)
+    private String email;
 
-  private String password;
+    private String password;
 
-  @Enumerated(EnumType.STRING)
-  private UserRole userRole;
+    @Enumerated(EnumType.STRING)
+    private UserRole userRole;
 
-  private String firstName;
+    private String firstName;
 
-  private String lastName; // optional
+    private String lastName; // optional
 
-  @OneToOne(cascade = CascadeType.ALL)
-  private Photo profilePicture;
+    @OneToOne(cascade = CascadeType.ALL)
+    private Photo profilePicture;
 
-  @OneToOne(cascade = CascadeType.ALL)
-  private ContactInfo contactInfo;
+    @OneToOne(cascade = CascadeType.ALL)
+    private ContactInfo contactInfo;
 
-  @Builder.Default
-  @ManyToMany
-  @JoinTable(
-      name = "user_favorites",
-      joinColumns = @JoinColumn(name = "user_id"),
-      inverseJoinColumns = @JoinColumn(name = "ad_id"))
-  private List<Ad> favorites = new ArrayList<>();
+    @Builder.Default
+    @ManyToMany
+    @JoinTable(
+            name = "user_favorites",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "ad_id"))
+    private List<Ad> favorites = new ArrayList<>();
 
-  @Builder.Default
-  @OneToMany(cascade = CascadeType.ALL)
-  @JoinColumn(name = "shelter_id")
-  private List<Comment> comments = new ArrayList<>();
+    @Builder.Default
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "shelter_id")
+    private List<Comment> comments = new ArrayList<>();
 
-  @Builder.Default
-  @OneToMany(cascade = CascadeType.ALL)
-  @JoinColumn(name = "shelter_id")
-  private List<Rating> ratings = new ArrayList<>();
+    @Builder.Default
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "shelter_id")
+    private List<Rating> ratings = new ArrayList<>();
 
-  @ManyToOne
-  @JoinColumn(name = "location_id")
-  private Location location;
+    @ManyToOne
+    @JoinColumn(name = "location_id")
+    private Location location;
 
-  @CreationTimestamp
-  private LocalDateTime createdAt;
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
-  @UpdateTimestamp
-  private LocalDateTime updatedAt;
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
-  @Override
-  public String toString() {
-    return "User{"
-        + "id="
-        + id
-        + ", email='"
-        + email
-        + '\''
-        + ", password='"
-        + password
-        + '\''
-        + ", userRole="
-        + userRole
-        + ", firstName='"
-        + firstName
-        + '\''
-        + ", lastName='"
-        + lastName
-        + '\''
-        + ", location="
-        + location
-        + ", profilePicture="
-        + profilePicture
-        + ", contactInfo="
-        + contactInfo
-        + ", favoriteAdIds="
-        + (favorites != null ? favorites.stream().map(Ad::getId).toList() : null)
-        + ", createdAt="
-        + createdAt
-        + ", updatedAt="
-        + updatedAt
-        + '}';
-  }
+    @Column(columnDefinition = "boolean default false")
+    private boolean enabled = false;
+
+    @Override
+    public String toString() {
+        return "User{"
+                + "id="
+                + id
+                + ", email='"
+                + email
+                + '\''
+                + ", password='"
+                + password
+                + '\''
+                + ", userRole="
+                + userRole
+                + ", firstName='"
+                + firstName
+                + '\''
+                + ", lastName='"
+                + lastName
+                + '\''
+                + ", location="
+                + location
+                + ", profilePicture="
+                + profilePicture
+                + ", contactInfo="
+                + contactInfo
+                + ", favoriteAdIds="
+                + (favorites != null ? favorites.stream().map(Ad::getId).toList() : null)
+                + ", createdAt="
+                + createdAt
+                + ", updatedAt="
+                + updatedAt
+                + '}';
+    }
 }
