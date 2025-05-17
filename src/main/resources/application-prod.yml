@@ -15,3 +15,7 @@ google:
 verification:
   mail:
     baseurl: https://petshelter-production.up.railway.app/
+
+  resend:
+    api:
+      key: ${VERIFICATION_RESEND_API_KEY}

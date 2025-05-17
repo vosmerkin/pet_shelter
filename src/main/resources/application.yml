@@ -42,7 +42,6 @@ verification:
     expiryTimeInMinuets: 60
 
   mail:
-    baseurl: http://localhost:8080
     from: onboarding@resend.dev
     subject: Email Verification
 

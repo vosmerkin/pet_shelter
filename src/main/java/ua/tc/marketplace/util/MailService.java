@@ -27,7 +27,7 @@ public class MailService {
 
     private final Resend resend;
 
-    public MailService(@Value("${verification.resend_api_key}") String resendApiKey) {
+    public MailService(@Value("${verification.resend.api.key}") String resendApiKey) {
         this.resend = new Resend(resendApiKey);
     }
 //    public void sendVerificationEmail(String to, String token) {
