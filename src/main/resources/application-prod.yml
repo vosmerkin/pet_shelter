@@ -14,7 +14,7 @@ google:
 
 verification:
   mail:
-    baseurl: https://petshelter-production.up.railway.app/
+    baseurl: https://petshelter-production.up.railway.app
 
   resend:
     api:

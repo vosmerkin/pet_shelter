@@ -12,7 +12,7 @@ public class ApiURLs {
 
     //AuthController
     public static final String AUTH_BASE = "/api/v1/auth";
-    public static final String AUTH_VERIFY_EMAIL = "/verify-email/{token}";
+    public static final String AUTH_VERIFY_EMAIL = "/verify-email?token=";
 
 
 }
