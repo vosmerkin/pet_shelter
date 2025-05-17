@@ -15,9 +15,6 @@ public class MailService {
     @Value("${verification.mail.baseurl}")
     private String baseUrl;
 
-//    @Value("${verification.resend_api_key}")
-//    private String resendApiKey;
-
     @Value("${verification.mail.from}")
     private String from_email;
 
@@ -27,7 +24,7 @@ public class MailService {
 
     private final Resend resend;
 
-    public MailService(@Value("${verification.resend_api_key}") String resendApiKey) {
+    public MailService(@Value("${verification.resend.api.key}") String resendApiKey) {
         this.resend = new Resend(resendApiKey);
     }
 //    public void sendVerificationEmail(String to, String token) {
@@ -48,7 +45,8 @@ public class MailService {
                 .html("Click the following link to verify your email: " +
                         baseUrl +
                         ApiURLs.AUTH_BASE +
-                        ApiURLs.AUTH_VERIFY_EMAIL.replace("{token}", token))
+                        ApiURLs.AUTH_VERIFY_EMAIL+
+                        token)
                 .build();
 
         SendEmailResponse data = resend.emails().send(sendEmailRequest);
