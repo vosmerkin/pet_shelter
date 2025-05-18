@@ -1,8 +1,10 @@
 package ua.tc.marketplace.service.impl;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,6 +12,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import ua.tc.marketplace.config.UserDetailsImpl;
 import ua.tc.marketplace.exception.auth.BadCredentialsAuthenticationException;
 import ua.tc.marketplace.exception.auth.EmailAlreadyRegisteredException;
@@ -22,6 +26,7 @@ import ua.tc.marketplace.model.VerificationToken;
 import ua.tc.marketplace.model.auth.AuthRequest;
 import ua.tc.marketplace.model.auth.AuthResponse;
 import ua.tc.marketplace.model.dto.user.CreateUserDto;
+import ua.tc.marketplace.model.dto.user.UserDto;
 import ua.tc.marketplace.model.entity.User;
 import ua.tc.marketplace.repository.UserRepository;
 import ua.tc.marketplace.repository.VerificationTokenRepository;
@@ -29,6 +34,7 @@ import ua.tc.marketplace.service.AuthenticationService;
 import ua.tc.marketplace.service.UserService;
 import ua.tc.marketplace.service.VerificationTokenService;
 import ua.tc.marketplace.util.MailService;
+import ua.tc.marketplace.util.OnRegistrationCompleteEvent;
 
 import java.time.Instant;
 import java.util.Date;
@@ -51,6 +57,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserRepository userRepository;
     private final MailService mailService;
     private final VerificationTokenService verificationTokenService;
+    private final ApplicationEventPublisher eventPublisher;
 
 
     /**
@@ -86,15 +93,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Transactional
     @Override
     public void registerUserWithVerify(CreateUserDto userDto) {
-        if (userService.UserExistsByEmail(userDto.email()))
-            throw new EmailAlreadyRegisteredException(userDto.email());
-        userService.createUser(userDto);
+        HttpServletRequest request =
+                ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
+                        .getRequest();
+        log.info("request.getContextPath() = {}", request.getContextPath());
+
+        UserDto newUserDto = userService.createUser(userDto);
         VerificationToken token =
                 new VerificationToken(userService.findUserByEmail(userDto.email()),
                         expiryTimeInMinutes);
 
         verificationTokenRepository.save(token);
 
+        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(newUserDto,
+                token.getToken()));
         mailService.sendVerificationEmail(userDto.email(), token.getToken());
     }
 
