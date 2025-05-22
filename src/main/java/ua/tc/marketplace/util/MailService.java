@@ -73,6 +73,8 @@ public class MailService {
         email.setText(message );
         log.info("Host - {}" ,((JavaMailSenderImpl) mailSender).getHost());
         log.info("Port - {}" ,((JavaMailSenderImpl) mailSender).getPort());
+        log.info("Username - {}" ,((JavaMailSenderImpl) mailSender).getUsername());
+        log.info("Password - {}" ,((JavaMailSenderImpl) mailSender).getPassword());
         mailSender.send(email);
     }
 }

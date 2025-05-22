@@ -91,7 +91,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Transactional
     @Override
-    public void registerUserWithVerify(CreateUserDto userDto) {
+    public String registerUserWithVerify(CreateUserDto userDto) {
         HttpServletRequest request =
                 ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
                         .getRequest();
@@ -107,6 +107,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         eventPublisher.publishEvent(new OnRegistrationCompleteEvent(newUserDto,
                 token.getToken()));
         mailService.sendVerificationEmailResend(userDto.email(), token.getToken());
+        return token.getToken();
     }
 
     @Override

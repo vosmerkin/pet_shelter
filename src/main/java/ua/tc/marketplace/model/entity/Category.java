@@ -2,6 +2,7 @@ package ua.tc.marketplace.model.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,10 +28,11 @@ public class Category {
 
   private String name;
 
+  @Builder.Default
   @ManyToMany
   @JoinTable(
       name = "category_attributes",
       joinColumns = @JoinColumn(name = "category_id"),
       inverseJoinColumns = @JoinColumn(name = "attribute_id"))
-  private List<Attribute> attributes;
+  private List<Attribute> attributes=new ArrayList<>();
 }

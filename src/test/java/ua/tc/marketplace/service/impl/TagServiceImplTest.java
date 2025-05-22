@@ -95,7 +95,7 @@ class TagServiceImplTest {
   @Test
   void createTag_shouldCreate_whenValidInput() {
     // Mock TagRepository to return existingTag when getByName is called
-    when(tagRepository.getByName(createTagDto.name())).thenReturn(Optional.ofNullable(null));
+    when(tagRepository.getByName(createTagDto.name())).thenReturn(Optional.empty());
 
     // Mock mapper from createTagDto to entity
     when(tagMapper.toEntity(createTagDto)).thenReturn(tag);
