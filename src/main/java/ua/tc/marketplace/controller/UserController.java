@@ -15,9 +15,11 @@ import ua.tc.marketplace.model.dto.user.UserDto;
 import ua.tc.marketplace.service.UserService;
 import ua.tc.marketplace.util.openapi.UserOpenApi;
 
+import static ua.tc.marketplace.config.ApiURLs.*;
+
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/user")
+@RequestMapping(USER_BASE)
 @Slf4j
 public class UserController implements UserOpenApi {
 
@@ -27,27 +29,27 @@ public class UserController implements UserOpenApi {
 
   @Override
   @PreAuthorize("hasAuthority('ADMIN')")
-  @GetMapping("/all")
+  @GetMapping(USER_GET_ALL )
   public ResponseEntity<Page<UserDto>> getAllUsers(@PageableDefault Pageable pageable) {
     log.info("Get all users request: {}" , pageable);
     return ResponseEntity.status(HttpStatus.OK).body(userService.findAll(pageable));
   }
 
   @Override
-  @GetMapping("/{id}")
+  @GetMapping(USER_GET_BY_ID)
   public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
     log.info("Get user by id request: id={}" , id);
     return ResponseEntity.status(HttpStatus.OK).body(userService.findUserDtoById(id));
   }
 
-  @GetMapping("/email/{email}")
+  @GetMapping(USER_GET_BY_EMAIL)
   public ResponseEntity<Boolean> getUserById(@PathVariable String email) {
     log.info("Get user by email request: email={}" , email);
     return ResponseEntity.status(HttpStatus.OK).body(userService.UserExistsByEmail(email));
   }
 
     @Override
-  @PutMapping()
+  @PutMapping(USER_UPDATE)
   @PreAuthorize("@securityService.hasAnyRoleAndOwnership(#userDto.id)")
   public ResponseEntity<UserDto> updateUser(@RequestBody @Valid UpdateUserDto userDto) {
     log.info("Update user request: {}" , userDto);
@@ -56,7 +58,7 @@ public class UserController implements UserOpenApi {
 
   @Override
   @PreAuthorize("hasAuthority('ADMIN') or @securityService.hasAnyRoleAndOwnership(#id)")
-  @DeleteMapping("/{id}")
+  @DeleteMapping(USER_DELETE)
   public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
     log.info("Delete user request: id={}" , id);
     userService.deleteUserById(id);
