@@ -5,8 +5,8 @@ spring:
     password: ${POSTGRES_PASSWORD}
 
   mail:
-    username: vosmerkinjavatest@gmail.com
-    password: _Qazxsw123
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
 
 file:
   upload-dir: ${PHOTO_PATH}

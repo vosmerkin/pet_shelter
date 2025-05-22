@@ -50,7 +50,8 @@ public class AuthController implements AuthOpenApi {
   public ResponseEntity<Void> testEmail() {
     log.info("Test email: {}", "userDto");
 //    mailService.sendVerificationEmail();
-    mailService.sendVerificationEmail("vosmerkin.evgen1@gmail.com", "sdfsdfsdfsdfs");
+    mailService.sendVerificationEmailResend("vosmerkin.evgen1@gmail.com", "resend_sdfsdfsdfsdfs");
+    mailService.sendVerificationEmailJavaMailSender("vosmerkin.evgen1@gmail.com", "JavaMailSender_sdfsdfsdfsdfs");
     return ResponseEntity.ok().build();
   }
 

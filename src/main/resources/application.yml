@@ -25,6 +25,7 @@ spring:
           auth: true
           starttls:
             enable: true # for TLS
+        debug: true
           # socketFactory:
           #   class: javax.net.ssl.SSLSocketFactory # for SSL (uncomment if using port 465)
           #   port: 465 # for SSL (uncomment if using port 465)

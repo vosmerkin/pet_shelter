@@ -16,7 +16,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import ua.tc.marketplace.config.UserDetailsImpl;
 import ua.tc.marketplace.exception.auth.BadCredentialsAuthenticationException;
-import ua.tc.marketplace.exception.auth.EmailAlreadyRegisteredException;
 import ua.tc.marketplace.exception.auth.EmailVerificationTokenNotFoundOrExpiredException;
 import ua.tc.marketplace.exception.auth.GeneralAuthenticationException;
 import ua.tc.marketplace.exception.user.UserNotFoundException;
@@ -107,7 +106,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         eventPublisher.publishEvent(new OnRegistrationCompleteEvent(newUserDto,
                 token.getToken()));
-        mailService.sendVerificationEmail(userDto.email(), token.getToken());
+        mailService.sendVerificationEmailResend(userDto.email(), token.getToken());
     }
 
     @Override

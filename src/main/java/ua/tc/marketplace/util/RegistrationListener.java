@@ -1,5 +1,7 @@
 package ua.tc.marketplace.util;
 
+import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 import ua.tc.marketplace.model.dto.user.UserDto;
@@ -14,11 +16,12 @@ public class RegistrationListener implements
 //    @Autowired
 //    private MessageSource messages;
 //
-//    @Autowired
+    @Autowired
+    private MailService mailService;
 //    private JavaMailSender mailSender;
 
     @Override
-    public void onApplicationEvent(OnRegistrationCompleteEvent event) {
+    public void onApplicationEvent(@NotNull OnRegistrationCompleteEvent event) {
         this.confirmRegistration(event);
     }
 
@@ -26,16 +29,18 @@ public class RegistrationListener implements
         UserDto user = event.getUser();
         String token = event.getToken();
 
-        String recipientAddress = user.email();
-        String subject = "Registration Confirmation";
-        String confirmationUrl
-                = event.getAppUrl() + "/regitrationConfirm?token=" + token;
-        String message = messages.getMessage("message.regSucc", null, event.getLocale());
+        mailService.sendVerificationEmailJavaMailSender(user.email(), token);
 
-        SimpleMailMessage email = new SimpleMailMessage();
-        email.setTo(recipientAddress);
-        email.setSubject(subject);
-        email.setText(message + "\r\n" + confirmationUrl);
-        mailSender.send(email);
+//        String recipientAddress = user.email();
+//        String subject = "Registration Confirmation";
+//        String confirmationUrl
+//                = event.getAppUrl() + "/regitrationConfirm?token=" + token;
+//        String message = messages.getMessage("message.regSucc", null, event.getLocale());
+//
+//        SimpleMailMessage email = new SimpleMailMessage();
+//        email.setTo(recipientAddress);
+//        email.setSubject(subject);
+//        email.setText(message + "\r\n" + confirmationUrl);
+//        mailSender.send(email);
     }
 }

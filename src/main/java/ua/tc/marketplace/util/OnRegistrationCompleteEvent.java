@@ -1,19 +1,23 @@
 package ua.tc.marketplace.util;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.context.ApplicationEvent;
 import ua.tc.marketplace.model.dto.user.UserDto;
 
-@Data
+
+@Setter
+@Getter
 public class OnRegistrationCompleteEvent extends ApplicationEvent {
 
     private String token;
-//    private Locale locale;
+    //    private Locale locale;
     private UserDto user;
-    public OnRegistrationCompleteEvent(UserDto user,String token) {
+
+    public OnRegistrationCompleteEvent(UserDto user, String token) {
         super(user);
-        this.user=user;
-        this.token=token;
+        this.user = user;
+        this.token = token;
     }
 
 }
