@@ -29,6 +29,8 @@ import ua.tc.marketplace.service.impl.UserDetailsServiceImpl;
 
 import java.util.List;
 
+import static ua.tc.marketplace.config.ApiURLs.*;
+
 @Slf4j
 @EnableWebSecurity
 @Configuration
@@ -88,7 +90,7 @@ public class SecurityConfig {
                                                 "/api/v1/auth/signup_verify",
                                                 "/api/v1/auth/test_email",
                                                 "/api/v1/auth/verify-email",
-                                                ApiURLs.AUTH_BASE + ApiURLs.AUTH_VERIFY_EMAIL,
+                                                AUTH_BASE + AUTH_VERIFY_EMAIL,
                                                 "/api/v1/ad",
                                                 "/api/v1/ad/{adId}",
                                                 "/api/v1/ad/counted",
@@ -106,6 +108,7 @@ public class SecurityConfig {
                                                 "/api/v1/tag",
                                                 "/api/v1/tag/{id}",
 //                                                "/api/v1/user/{id}",
+                                                USER_BASE + USER_GET_BY_ID,
                                                 "/api/v1/category",
                                                 "/api/v1/category/counted").permitAll()
                                         .anyRequest().authenticated()
