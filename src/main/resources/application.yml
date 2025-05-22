@@ -48,16 +48,13 @@ verification:
 #
 #/resendApiKey: re_JM9GyuYo_9r2MytmUUheXfKfLKfALPwFa
 #
-#external:
-#  api:
-#    users:
-#      base-url: /api/v1/users
+# SMTP server connection
+#  spring.mail.host=smtp.yourmailserver.com  # SMTP server hostname
+#  spring.mail.port=587                      # SMTP server port (587 for TLS, 465 for SSL)
+#  spring.mail.username=your-email@example.com  # Login username
+#  spring.mail.password=your-email-password     # Login password
 #
-#    ad:
-#      base-url: /api/v1/ad
-#      get-all-url:
-#      get-all-counted-url: /counted
-#      get-by-id-url: /{adId}
-#      create-url:
-#      update-url: /{adId}
-#      delete-url: /{adId}
+#  # Additional JavaMail properties
+#  spring.mail.properties.mail.smtp.auth=true          # Enable authentication
+#  spring.mail.properties.mail.smtp.starttls.enable=true  # Enable STARTTLS
+#  spring.mail.properties.mail.debug=true             # Enable debug output

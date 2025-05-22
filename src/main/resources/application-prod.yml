@@ -4,6 +4,10 @@ spring:
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
 
+  mail:
+    username: vosmerkinjavatest@gmail.com
+    password: _Qazxsw123
+
 file:
   upload-dir: ${PHOTO_PATH}
 
@@ -19,3 +23,7 @@ verification:
   resend:
     api:
       key: ${VERIFICATION_RESEND_API_KEY}
+
+#
+#  spring.mail.host=smtp.prod.example.com
+#  spring.mail.port=587
