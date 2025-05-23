@@ -2,6 +2,7 @@ package ua.tc.marketplace.util;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.log4j.Log4j;
 import org.springframework.context.ApplicationEvent;
 import ua.tc.marketplace.model.dto.user.UserDto;
 

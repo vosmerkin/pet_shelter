@@ -54,13 +54,12 @@ public class AuthController implements AuthOpenApi {
             ApiURLs.AUTH_BASE +
             ApiURLs.AUTH_VERIFY_EMAIL+
             token;
-    return ResponseEntity.status(HttpStatus.OK).body(token);
+    return ResponseEntity.status(HttpStatus.OK).body(message);
   }
 
   @GetMapping("/test_email")
   public ResponseEntity<Void> testEmail() {
     log.info("Test email: {}", "userDto");
-//    mailService.sendVerificationEmail();
     mailService.sendVerificationEmailResend("vosmerkin.evgen1@gmail.com", "resend_sdfsdfsdfsdfs");
     mailService.sendVerificationEmailJavaMailSender("vosmerkin.evgen1@gmail.com", "JavaMailSender_sdfsdfsdfsdfs");
     return ResponseEntity.ok().build();

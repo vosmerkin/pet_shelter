@@ -106,7 +106,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         eventPublisher.publishEvent(new OnRegistrationCompleteEvent(newUserDto,
                 token.getToken()));
-        mailService.sendVerificationEmailResend(userDto.email(), token.getToken());
+//        mailService.sendVerificationEmailResend(userDto.email(), token.getToken());
         return token.getToken();
     }
 
