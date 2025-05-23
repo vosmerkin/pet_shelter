@@ -7,11 +7,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ua.tc.marketplace.exception.article.ArticleNotFoundException;
-import ua.tc.marketplace.exception.tag.TagNotFoundException;
 import ua.tc.marketplace.model.dto.article.ArticleDto;
 import ua.tc.marketplace.model.dto.article.CreateArticleDto;
 import ua.tc.marketplace.model.dto.category.CategoryDto;
-import ua.tc.marketplace.model.dto.tag.TagDto;
 import ua.tc.marketplace.model.entity.Article;
 import ua.tc.marketplace.model.entity.Category;
 import ua.tc.marketplace.model.entity.User;
@@ -20,7 +18,6 @@ import ua.tc.marketplace.model.enums.UserRole;
 import ua.tc.marketplace.repository.ArticleRepository;
 import ua.tc.marketplace.util.mapper.ArticleMapper;
 
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -148,13 +145,13 @@ public class ArticleServiceImplTest {
         verify(articleMapper, times(1)).toDto(article);
     }
 
-    @Test
-    void createTag_shouldReturnExistingTag_whenTagNameExists() {
-        // Mock repository
-        when(articleRepository.findBySlug(newArticle.slug())).thenReturn(Optional.empty());
-
-
-
-    }
+//    @Test
+//    void createTag_shouldReturnExistingTag_whenTagNameExists() {
+//        // Mock repository
+//        when(articleRepository.findBySlug(newArticle.slug())).thenReturn(Optional.empty());
+//
+//
+//
+//    }
 
 }
