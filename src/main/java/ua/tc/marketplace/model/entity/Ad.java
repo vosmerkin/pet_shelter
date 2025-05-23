@@ -58,6 +58,7 @@ public class Ad {
   @JoinColumn(name = "category_id")
   private Category category;
 
+  @Builder.Default
   @OneToMany(mappedBy = "ad", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<AdAttribute> adAttributes = new ArrayList<>();
 

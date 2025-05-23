@@ -33,7 +33,7 @@ public interface AuthOpenApi {
           summary = "Creates a new user",
           description = "Creates a new user based on the provided data.")
   @PostMapping("/signup_verify")
-  ResponseEntity<Void> registerUserWithVerify(@Valid @RequestBody CreateUserDto userDto);
+  ResponseEntity<String> registerUserWithVerify(@Valid @RequestBody CreateUserDto userDto);
 
   @Operation(
           summary = "Verify user email",

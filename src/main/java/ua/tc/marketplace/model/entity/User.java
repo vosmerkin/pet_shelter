@@ -92,6 +92,7 @@ public class User {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    @Builder.Default
     @Column(columnDefinition = "boolean default false")
     private boolean enabled = false;
 

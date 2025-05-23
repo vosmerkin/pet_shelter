@@ -69,21 +69,6 @@ class UserServiceImplTest {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
-//                new User(
-//                        1L,
-//                        "taras@shevchenko.ua",
-//                        "password",
-//                        UserRole.USER,
-//                        "Taras",
-//                        null,
-//                        null,
-//                        null,
-//                        Collections.emptyList(),
-//                        Collections.emptyList(),
-//                        Collections.emptyList(),
-//                        null,
-//                        null,
-//                        null);
 
         userDto = UserDto.builder()
                 .id(1L)
@@ -105,19 +90,6 @@ class UserServiceImplTest {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
-//        userDto =
-//                new UserDto(
-//                        1L,
-//                        "taras@shevchenko.ua",
-//                        "password",
-//                        "USER",
-//                        "Taras",
-//                        "Shevchenko",
-//                        null,
-//                        null,
-//                        Collections.emptyList(),
-//                        LocalDateTime.now(),
-//                        LocalDateTime.now());
     }
 
     @Test
@@ -125,19 +97,7 @@ class UserServiceImplTest {
         // Arrange
         Long userId = 1L;
         User user = new User();
-//        UserDto userDto =
-//                new UserDto(
-//                        1L,
-//                        "taras@shevchenko.ua",
-//                        "password",
-//                        "USER",
-//                        "Taras",
-//                        "Shevchenko",
-//                        null,
-//                        null,
-//                        Collections.emptyList(),
-//                        LocalDateTime.now(),
-//                        LocalDateTime.now());
+
 
         // Mock repository
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
