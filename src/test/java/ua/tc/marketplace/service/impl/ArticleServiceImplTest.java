@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ua.tc.marketplace.exception.article.ArticleNotFoundException;
+import ua.tc.marketplace.exception.article.ArticleSlugInUseException;
 import ua.tc.marketplace.model.dto.article.ArticleDto;
 import ua.tc.marketplace.model.dto.article.CreateArticleDto;
 import ua.tc.marketplace.model.dto.category.CategoryDto;
@@ -143,6 +144,37 @@ public class ArticleServiceImplTest {
         verify(articleMapper, times(1)).toEntity(newArticle);
         verify(articleRepository, times(1)).save(article);
         verify(articleMapper, times(1)).toDto(article);
+    }
+
+    @Test
+    void createTag_shouldThrow_whenSlugInUse() {
+        // Mock repository
+        when(articleRepository.findBySlug(newArticle.slug())).thenReturn(Optional.of(article));
+
+//        // Mock mapper
+//        when(articleMapper.toEntity(newArticle)).thenReturn(article);
+//
+//        // Mock repository
+//        when(articleRepository.save(article)).thenReturn(article);
+//
+//        // Mock mapper from entity back to Dto
+//        when(articleMapper.toDto(article)).thenReturn(articleDto);
+//
+//        // Act
+//        ArticleDto result = articleService.create(newArticle);
+//
+//        // Assert
+//        assertEquals(articleDto, result);
+
+        // Act and Assert
+        // Use assertThrows to verify that TagNotFoundException is thrown
+        assertThrows(ArticleSlugInUseException.class, () -> articleService.create(newArticle));
+
+        // Verify method calls
+        verify(articleRepository, times(1)).findBySlug(newArticle.slug());
+        verify(articleMapper, times(0)).toEntity(any(CreateArticleDto.class));
+        verify(articleRepository, times(0)).save(any(Article.class));
+        verify(articleMapper, times(0)).toDto(any(Article.class));
     }
 
 //    @Test
