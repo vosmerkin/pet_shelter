@@ -14,11 +14,10 @@ import ua.tc.marketplace.model.dto.article.CreateArticleDto;
 import ua.tc.marketplace.model.dto.article.UpdateArticleDto;
 import ua.tc.marketplace.model.entity.Article;
 import ua.tc.marketplace.repository.ArticleRepository;
-import ua.tc.marketplace.repository.CategoryRepository;
-import ua.tc.marketplace.repository.UserRepository;
 import ua.tc.marketplace.service.ArticleService;
 import ua.tc.marketplace.util.mapper.ArticleMapper;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -32,8 +31,6 @@ public class ArticleServiceImpl implements ArticleService {
 
     private final ArticleRepository articleRepository;
     private final ArticleMapper articleMapper;
-    private final UserRepository userRepository;
-    private final CategoryRepository categoryRepository;
 
     /**
      * Retrieves a paginated list of all articles.
@@ -95,7 +92,8 @@ public class ArticleServiceImpl implements ArticleService {
     public ArticleDto update(Long id, @NonNull UpdateArticleDto updateArticleDto) {
         Article existingArticle = getArticlebyId(id);
         Optional<Article> sameSlugArticle = articleRepository.findBySlug(updateArticleDto.slug());
-        if (sameSlugArticle.isPresent()) throw new ArticleSlugInUseException(updateArticleDto.slug());
+        if (sameSlugArticle.isPresent() && !Objects.equals(sameSlugArticle.get().getId(), existingArticle.getId()))
+            throw new ArticleSlugInUseException(updateArticleDto.slug());
         articleMapper.updateEntityFromDto(existingArticle, updateArticleDto);
         return articleMapper.toDto(articleRepository.save(existingArticle));
     }
