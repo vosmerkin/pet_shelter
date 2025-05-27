@@ -15,4 +15,12 @@ public class ApiURLs {
     public static final String AUTH_VERIFY_EMAIL = "/verify-email?token=";
 
 
+    //UserController
+
+    public static final String USER_BASE = "/api/v1/user";
+    public static final String USER_GET_ALL = "/all";
+    public static final String USER_GET_BY_ID = "/{id}";
+    public static final String USER_GET_BY_EMAIL = "/email/{email}";
+    public static final String USER_UPDATE = "";
+    public static final String USER_DELETE = "/{id}";
 }
