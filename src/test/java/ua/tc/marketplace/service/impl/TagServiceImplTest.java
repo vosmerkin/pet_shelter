@@ -158,8 +158,8 @@ class TagServiceImplTest {
     doAnswer(
             invocation -> {
               UpdateTagDto dto = invocation.getArgument(1);
-              Tag TagToUpdate = invocation.getArgument(0);
-              TagToUpdate.setName(dto.name());
+              Tag entityToUpdate = invocation.getArgument(0);
+              entityToUpdate.setName(dto.name());
               return null;
             })
         .when(tagMapper)
