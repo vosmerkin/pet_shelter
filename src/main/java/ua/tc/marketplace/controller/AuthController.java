@@ -70,7 +70,9 @@ public class AuthController implements AuthOpenApi {
   public ResponseEntity<Boolean> verifyEmail(@RequestParam("token") String token) {
 //  public ResponseEntity<Boolean> verifyEmail(@PathVariable String token) {
     log.info("Verify email request: {}", token);
-    log.debug("Verify email request: {}", token);
     return ResponseEntity.status(HttpStatus.OK).body(authenticationService.verifyEmail(token));
   }
+
+
+
 }
