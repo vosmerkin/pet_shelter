@@ -25,7 +25,12 @@ public class RegistrationListener implements
         UserDto user = event.getUser();
         String token = event.getToken();
 
-        mailService.sendVerificationEmailJavaMailSender(user.email(), token);
+        mailService.sendRegistrationVerificationEmail(user.email(), token);
+    }
 
+    private  void confirmPasswordReset(OnForgetPasswordEvent event){
+        log.info("ConfirmPasswordReset - sending verification email to {}" , event.getToken().getUser().getEmail());
+
+        mailService.sendPaswwordResetEmail(event.getToken().getUser().getEmail(), event.getToken().getToken());
     }
 }

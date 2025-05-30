@@ -8,5 +8,6 @@ public interface VerificationTokenService {
   void clearExpiredTokens();
   VerificationToken getVerificationToken(String token);
   void delete(Long id);
+  boolean verifyToken(VerificationToken token, VerificationToken.TokenType tokenType);
 }
 

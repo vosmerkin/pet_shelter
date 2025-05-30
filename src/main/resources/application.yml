@@ -38,9 +38,9 @@ jwt:
   token-prefix: Bearer
   token-expiration-after-days: 14
 
-verification:
-  token:
-    expiryTimeInMinuets: 60
+#verification:
+#  token:
+#    expiryTimeInMinuets: 60
 
   mail:
     from: onboarding@resend.dev

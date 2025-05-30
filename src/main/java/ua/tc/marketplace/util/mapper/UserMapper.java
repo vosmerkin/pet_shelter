@@ -1,9 +1,6 @@
 package ua.tc.marketplace.util.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.Named;
+import org.mapstruct.*;
 import ua.tc.marketplace.config.MapperConfig;
 import ua.tc.marketplace.model.dto.user.CreateUserDto;
 import ua.tc.marketplace.model.dto.user.UpdateUserDto;
@@ -22,7 +19,9 @@ import java.util.stream.Collectors;
  * for converting User to UserDto, creating User from UserDto or CreateUserDto, and updating an
  * existing User entity with fields from UpdateUserDto.
  */
-@Mapper(componentModel = "spring", config = MapperConfig.class)
+@Mapper(componentModel = "spring",
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
+        config = MapperConfig.class)
 public interface UserMapper {
 
     @Mapping(target = "favoriteAdIds", source = "favorites", qualifiedByName = "mapAdsToIds")
@@ -59,7 +58,7 @@ public interface UserMapper {
             target = "userRole",
             source = "userRole",
             qualifiedByName = "mapUserRoleFromStringToEnum")
-    @Mapping(target = "password", ignore = true)
+//    @Mapping(target = "password", ignore = true)
     @Mapping(target = "comments", ignore = true)
     @Mapping(target = "ratings", ignore = true)
     @Mapping(target = "location", ignore = true)

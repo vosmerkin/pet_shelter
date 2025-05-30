@@ -1,6 +1,7 @@
 package ua.tc.marketplace.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,25 +22,46 @@ import java.util.UUID;
 @Entity
 @Table(name = "verification_token")
 public class VerificationToken {
-    private static final int EXPIRATION = 60 * 24;
+    public enum TokenType {
+        REGISTRATION,
+        PASSWORD_RESET,
+        EMAIL_CHANGE,
+        TWO_FACTOR
+    }
+    private static final int EXPIRATION = 15;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name="verification_token")
+    @NotNull
     private String token;
 
-    @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING)
+    @Column(name="token_type")
+    @NotNull
+    private TokenType type;
+
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "user_id")
+    @NotNull
     private User user;
 
+    @NotNull
     private Date expiryDate;
 
     public VerificationToken(User user, int tokenExpiryTimeInMinutes) {
         this.user = user;
         this.token = UUID.randomUUID().toString();
         this.expiryDate = calculateExpiryDate(tokenExpiryTimeInMinutes);
+        this.type=TokenType.REGISTRATION;
+    }
+
+    public VerificationToken( User user, TokenType type) {
+        this.type = type;
+        this.user = user;
+        this.expiryDate = calculateExpiryDate(EXPIRATION);
     }
 
     private Date calculateExpiryDate(int tokenExpiryTimeInMinutes) {

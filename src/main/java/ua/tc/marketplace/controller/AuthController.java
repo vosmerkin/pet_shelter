@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import ua.tc.marketplace.config.ApiURLs;
 import ua.tc.marketplace.model.auth.AuthRequest;
 import ua.tc.marketplace.model.auth.AuthResponse;
+import ua.tc.marketplace.model.auth.PasswordChangeRequest;
 import ua.tc.marketplace.model.dto.user.CreateUserDto;
 import ua.tc.marketplace.service.AuthenticationService;
 import ua.tc.marketplace.util.MailService;
@@ -61,7 +62,7 @@ public class AuthController implements AuthOpenApi {
   public ResponseEntity<Void> testEmail() {
     log.info("Test email: {}", "userDto");
     mailService.sendVerificationEmailResend("vosmerkin.evgen1@gmail.com", "resend_sdfsdfsdfsdfs");
-    mailService.sendVerificationEmailJavaMailSender("vosmerkin.evgen1@gmail.com", "JavaMailSender_sdfsdfsdfsdfs");
+    mailService.sendRegistrationVerificationEmail("vosmerkin.evgen1@gmail.com", "JavaMailSender_sdfsdfsdfsdfs");
     return ResponseEntity.ok().build();
   }
 
@@ -73,6 +74,29 @@ public class AuthController implements AuthOpenApi {
     return ResponseEntity.status(HttpStatus.OK).body(authenticationService.verifyEmail(token));
   }
 
+  @GetMapping(AUTH_FORGET_PASSWORD)
+  @Override
+  public ResponseEntity<String> forgetPassword(String email) {
+    log.info("Request to reset password from {}", email);
+//    return ResponseEntity.ok().build();
+    authenticationService.forgetPasswordRequest(email);
+    String message = "Password reset message sent to email " +email;
+    return ResponseEntity.status(HttpStatus.OK).body(message);
+  }
+
+  @GetMapping(AUTH_RESET_PASSWORD)
+  @Override
+  public ResponseEntity<Boolean> reset_password(@Valid @RequestBody PasswordChangeRequest request) {
+    log.info("Request change password from {}", request.email());
+    return ResponseEntity.status(HttpStatus.OK).body(authenticationService.resetPassword(request));
+  }
+
+  @GetMapping(AUTH_VERIFY_PASSWORD_RESET)
+  @Override
+  public ResponseEntity<Boolean> confirmPasswordReset(@RequestParam("token") String token) {
+    log.info("Verify password reset from {}", request.email());
+    return ResponseEntity.status(HttpStatus.OK).body(authenticationService.verifyResetPasswordToken().resetPassword(request));
+  }
 
 
 }

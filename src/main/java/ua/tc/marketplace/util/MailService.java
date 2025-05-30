@@ -3,6 +3,7 @@ package ua.tc.marketplace.util;
 import com.resend.*;
 import com.resend.services.emails.model.SendEmailRequest;
 import com.resend.services.emails.model.SendEmailResponse;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -60,8 +61,9 @@ public class MailService {
         SendEmailResponse data = resend.emails().send(sendEmailRequest);
     }
 
-    public void sendVerificationEmailJavaMailSender(String to_email, String token){
-        log.info("JavaMailSender to send to {}", to_email);
+    public void sendRegistrationVerificationEmail(String to_email, String token){
+
+        log.info("Sending registration verification email to {}", to_email);
         String message = "Click the following link to verify your email: " +
                 baseUrl +
                 ApiURLs.AUTH_BASE +
@@ -76,5 +78,15 @@ public class MailService {
         log.info("Username - {}" ,((JavaMailSenderImpl) mailSender).getUsername());
         log.info("Password - {}" ,((JavaMailSenderImpl) mailSender).getPassword());
         mailSender.send(email);
+    }
+
+    public void sendPaswwordResetEmail(String to_email, @NotNull String token) {
+        log.info("Sending password reset verification email to {}", to_email);
+        String message = "Click the following link to reset password: " +
+                baseUrl +
+                ApiURLs.AUTH_BASE +
+                ApiURLs.AUTH_VERIFY_PASSWORD_RESET +
+//                ApiURLs.AUTH_RESET_PASSWORD +
+                token;
     }
 }
