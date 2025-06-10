@@ -18,7 +18,7 @@ public class ApiURLs {
     //AuthController
     public static final String AUTH_BASE = "/api/v1/auth";
     public static final String AUTH_VERIFY_EMAIL = "/verify-email?token=";
-    public static final String AUTH_FORGET_PASSWORD="/reset_password";
+    public static final String AUTH_FORGET_PASSWORD="/forget_password";
     public static final String AUTH_VERIFY_PASSWORD_RESET="/verify-email?token=";
     public static final String AUTH_RESET_PASSWORD="/reset_password";
 

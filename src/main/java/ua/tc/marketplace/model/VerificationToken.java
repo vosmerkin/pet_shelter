@@ -61,6 +61,7 @@ public class VerificationToken {
     public VerificationToken( User user, TokenType type) {
         this.type = type;
         this.user = user;
+        this.token = UUID.randomUUID().toString();
         this.expiryDate = calculateExpiryDate(EXPIRATION);
     }
 

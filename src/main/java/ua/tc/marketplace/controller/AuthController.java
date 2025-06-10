@@ -3,6 +3,7 @@ package ua.tc.marketplace.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,79 +25,79 @@ import static ua.tc.marketplace.config.ApiURLs.*;
 @RequiredArgsConstructor
 public class AuthController implements AuthOpenApi {
 
-  @Value("${verification.mail.baseurl}")
-  private String baseUrl;
+    @Value("${verification.mail.baseurl}")
+    private String baseUrl;
 
-  private final AuthenticationService authenticationService;
-  private final MailService mailService;
+    private final AuthenticationService authenticationService;
+    private final MailService mailService;
 
-  @Override
-  @PostMapping("/login")
-  public ResponseEntity<AuthResponse> authenticate(@Valid @RequestBody AuthRequest authRequest) {
-    log.info("Login request: {}", authRequest);
-    return ResponseEntity.ok(authenticationService.authenticate(authRequest));
-  }
+    @Override
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponse> authenticate(@Valid @RequestBody AuthRequest authRequest) {
+        log.info("Login request: {}", authRequest);
+        return ResponseEntity.ok(authenticationService.authenticate(authRequest));
+    }
 
-  @Override
-  @PostMapping("/signup")
-  public ResponseEntity<AuthResponse> registerUser(@Valid @RequestBody CreateUserDto userDto) {
-    log.info("Register user request: {}", userDto);
-    return ResponseEntity.status(HttpStatus.OK).body(authenticationService.registerUser(userDto));
-  }
+    @Override
+    @PostMapping("/signup")
+    public ResponseEntity<AuthResponse> registerUser(@Valid @RequestBody CreateUserDto userDto) {
+        log.info("Register user request: {}", userDto);
+        return ResponseEntity.status(HttpStatus.OK).body(authenticationService.registerUser(userDto));
+    }
 
-  @Override
-  @PostMapping("/signup_verify")
-  public ResponseEntity<String> registerUserWithVerify(@Valid @RequestBody CreateUserDto userDto) {
-    log.info("Register user with verification request: {}", userDto);
-    String token=authenticationService.registerUserWithVerify(userDto);
+    @Override
+    @PostMapping("/signup_verify")
+    public ResponseEntity<String> registerUserWithVerify(@Valid @RequestBody CreateUserDto userDto) {
+        log.info("Register user with verification request: {}", userDto);
+        String token = authenticationService.registerUserWithVerify(userDto);
 //    return ResponseEntity.ok().build();
-    String message = "Click the following link to verify your email: " +
-            baseUrl +
-            ApiURLs.AUTH_BASE +
-            ApiURLs.AUTH_VERIFY_EMAIL+
-            token;
-    return ResponseEntity.status(HttpStatus.OK).body(message);
-  }
+        String message = "Click the following link to verify your email: " +
+                baseUrl +
+                ApiURLs.AUTH_BASE +
+                ApiURLs.AUTH_VERIFY_EMAIL +
+                token;
+        return ResponseEntity.status(HttpStatus.OK).body(message);
+    }
 
-  @GetMapping("/test_email")
-  public ResponseEntity<Void> testEmail() {
-    log.info("Test email: {}", "userDto");
-    mailService.sendVerificationEmailResend("vosmerkin.evgen1@gmail.com", "resend_sdfsdfsdfsdfs");
-    mailService.sendRegistrationVerificationEmail("vosmerkin.evgen1@gmail.com", "JavaMailSender_sdfsdfsdfsdfs");
-    return ResponseEntity.ok().build();
-  }
+    @GetMapping("/test_email")
+    public ResponseEntity<Void> testEmail() {
+        log.info("Test email: {}", "userDto");
+        mailService.sendVerificationEmailResend("vosmerkin.evgen1@gmail.com", "resend_sdfsdfsdfsdfs");
+        mailService.sendRegistrationVerificationEmail("vosmerkin.evgen1@gmail.com", "JavaMailSender_sdfsdfsdfsdfs");
+        return ResponseEntity.ok().build();
+    }
 
-//  @GetMapping(AUTH_VERIFY_EMAIL)
-  @GetMapping( "/verify-email")
-  public ResponseEntity<Boolean> verifyEmail(@RequestParam("token") String token) {
+    //  @GetMapping(AUTH_VERIFY_EMAIL)
+    @GetMapping("/verify-email")
+    public ResponseEntity<Boolean> verifyEmail(@RequestParam("token") String token) {
 //  public ResponseEntity<Boolean> verifyEmail(@PathVariable String token) {
-    log.info("Verify email request: {}", token);
-    return ResponseEntity.status(HttpStatus.OK).body(authenticationService.verifyEmail(token));
-  }
+        log.info("Verify email request: {}", token);
+        return ResponseEntity.status(HttpStatus.OK).body(authenticationService.verifyEmail(token));
+    }
 
-  @GetMapping(AUTH_FORGET_PASSWORD)
-  @Override
-  public ResponseEntity<String> forgetPassword(String email) {
-    log.info("Request to reset password from {}", email);
+    @GetMapping(AUTH_FORGET_PASSWORD)
+    @Override
+    public ResponseEntity<String> forgetPassword(@NotNull @RequestParam("email") String email) {
+        log.info("Request to reset password from {}", email);
 //    return ResponseEntity.ok().build();
-    authenticationService.forgetPasswordRequest(email);
-    String message = "Password reset message sent to email " +email;
-    return ResponseEntity.status(HttpStatus.OK).body(message);
-  }
+        authenticationService.forgetPasswordRequest(email);
+        String message = "Password reset message sent to email " + email;
+        return ResponseEntity.status(HttpStatus.OK).body(message);
+    }
 
-  @GetMapping(AUTH_RESET_PASSWORD)
-  @Override
-  public ResponseEntity<Boolean> reset_password(@Valid @RequestBody PasswordChangeRequest request) {
-    log.info("Request change password from {}", request.email());
-    return ResponseEntity.status(HttpStatus.OK).body(authenticationService.resetPassword(request));
-  }
+    @GetMapping(AUTH_VERIFY_PASSWORD_RESET)
+    @Override
+    public ResponseEntity<Boolean> confirmPasswordReset(@NotNull @RequestParam("token") String token) {
+        log.info("Verify password reset token - {}", token);
+        return ResponseEntity.status(HttpStatus.OK).body(authenticationService.verifyResetPasswordToken(token));
+    }
 
-  @GetMapping(AUTH_VERIFY_PASSWORD_RESET)
-  @Override
-  public ResponseEntity<Boolean> confirmPasswordReset(@RequestParam("token") String token) {
-    log.info("Verify password reset from {}", request.email());
-    return ResponseEntity.status(HttpStatus.OK).body(authenticationService.verifyResetPasswordToken().resetPassword(request));
-  }
+    @PatchMapping(AUTH_RESET_PASSWORD)
+    @Override
+    public ResponseEntity<Boolean> reset_password(@NotNull @Valid @RequestBody PasswordChangeRequest request) {
+        log.info("Request change password from {}", request.email());
+        return ResponseEntity.status(HttpStatus.OK).body(authenticationService.resetPassword(request));
+    }
 
 
 }

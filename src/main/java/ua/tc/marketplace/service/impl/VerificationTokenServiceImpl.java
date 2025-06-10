@@ -32,6 +32,7 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     @Transactional
     @Override
     public void clearExpiredTokens() {
+        log.info("Clearing expired tokens");
         List<VerificationToken> tokenList = verificationTokenRepository.findAll();
         if (!tokenList.isEmpty()) {
             for (VerificationToken token : tokenList) {
@@ -39,9 +40,9 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
                     log.debug("Expiry date - {}", token.getExpiryDate());
                     log.debug("Current date - {}", Date.from(Instant.now()));
                     User user = token.getUser();
-                    if (userService.UserExistsByEmail(user.getEmail()))
-                        userService.deleteUserById(user.getId());
                     delete(token.getId());
+                    if (token.getType()== VerificationToken.TokenType.REGISTRATION)
+                        userService.deleteUserById(user.getId());
                 }
             }
         }

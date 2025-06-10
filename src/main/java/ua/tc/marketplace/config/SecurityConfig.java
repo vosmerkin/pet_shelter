@@ -84,6 +84,7 @@ public class SecurityConfig {
                                         .requestMatchers(WHITELIST).permitAll()
                                         .requestMatchers(HttpMethod.POST, CREATE_USER_POST_URL).permitAll()
                                         .requestMatchers(HttpMethod.POST, CREATE_USER_WITH_VERIFY_POST_URL).permitAll()
+                                        .requestMatchers(HttpMethod.PATCH, AUTH_BASE + AUTH_RESET_PASSWORD).permitAll()
 //                                        .requestMatchers(HttpMethod.POST, "/api/v1/ad").authenticated()
                                         .requestMatchers(
                                                 HttpMethod.GET,
@@ -91,6 +92,8 @@ public class SecurityConfig {
                                                 "/api/v1/auth/test_email",
                                                 "/api/v1/auth/verify-email",
                                                 AUTH_BASE + AUTH_VERIFY_EMAIL,
+                                                AUTH_BASE + AUTH_FORGET_PASSWORD,
+                                                AUTH_BASE + AUTH_VERIFY_PASSWORD_RESET,
                                                 "/api/v1/ad",
                                                 "/api/v1/ad/{adId}",
                                                 "/api/v1/ad/counted",

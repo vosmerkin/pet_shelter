@@ -80,7 +80,7 @@ public class MailService {
         mailSender.send(email);
     }
 
-    public void sendPaswwordResetEmail(String to_email, @NotNull String token) {
+    public void sendPasswordResetEmail(String to_email, @NotNull String token) {
         log.info("Sending password reset verification email to {}", to_email);
         String message = "Click the following link to reset password: " +
                 baseUrl +

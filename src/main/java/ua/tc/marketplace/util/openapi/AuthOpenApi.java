@@ -4,9 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import ua.tc.marketplace.controller.UserController;
 import ua.tc.marketplace.model.auth.AuthRequest;
 import ua.tc.marketplace.model.auth.AuthResponse;
@@ -43,25 +41,25 @@ public interface AuthOpenApi {
   @Operation(
           summary = "Verify user email",
           description = "Verifies email of the user willing to register.")
-  @PostMapping("/verify")
+  @GetMapping("/verify")
   ResponseEntity<?> verifyEmail(@RequestParam("token") String token);
 
 
   @Operation(
           summary = "Initiate password reset",
           description = "Sends a password reset token to the user's email address to start the password recovery process.")
-  @PostMapping(AUTH_FORGET_PASSWORD)
+  @GetMapping(AUTH_FORGET_PASSWORD)
   ResponseEntity<String> forgetPassword(@RequestParam("email") String email);
 
   @Operation(
           summary = "Reset user password",
           description = "Resets the user's password using the provided email, password reset token, and new password.")
-  @PostMapping(AUTH_RESET_PASSWORD)
-  ResponseEntity<Boolean> reset_password(@RequestBody PasswordChangeRequest request);
+  @GetMapping(AUTH_VERIFY_PASSWORD_RESET)
+  ResponseEntity<Boolean> confirmPasswordReset(String token);
 
   @Operation(
           summary = "Reset user password",
           description = "Resets the user's password using the provided email, password reset token, and new password.")
-  @PostMapping(AUTH_VERIFY_PASSWORD_RESET)
-  ResponseEntity<Boolean> confirmPasswordReset(PasswordChangeRequest request);
+  @PatchMapping(AUTH_RESET_PASSWORD)
+  ResponseEntity<Boolean> reset_password(@RequestBody PasswordChangeRequest request);
 }

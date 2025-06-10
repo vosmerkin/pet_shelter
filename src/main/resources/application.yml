@@ -38,12 +38,12 @@ jwt:
   token-prefix: Bearer
   token-expiration-after-days: 14
 
-#verification:
+verification:
 #  token:
 #    expiryTimeInMinuets: 60
 
   mail:
-    from: onboarding@resend.dev
+    from: info@pet.shelter
     subject: Email Verification
 
 #
