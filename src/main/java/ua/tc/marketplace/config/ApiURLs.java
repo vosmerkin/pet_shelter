@@ -12,8 +12,12 @@ public class ApiURLs {
 
     //AuthController
     public static final String AUTH_BASE = "/api/v1/auth";
-    public static final String AUTH_VERIFY_EMAIL = "/verify-email?token=";
-
+    public static final String AUTH_VERIFY_EMAIL = "/verify-email";
+    public static final String AUTH_VERIFY_EMAIL_WITH_TOKEN = "/verify-email?token=";
+    public static final String AUTH_FORGET_PASSWORD = "/forget_password";
+    public static final String AUTH_VERIFY_PASSWORD_RESET = "/verify-reset";
+    public static final String AUTH_VERIFY_PASSWORD_RESET_WITH_TOKEN = "/verify-reset?token=";
+    public static final String AUTH_RESET_PASSWORD = "/reset_password";
 
     //UserController
 

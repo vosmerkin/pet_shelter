@@ -39,11 +39,11 @@ jwt:
   token-expiration-after-days: 14
 
 verification:
-  token:
-    expiryTimeInMinuets: 60
+#  token:
+#    expiryTimeInMinuets: 60
 
   mail:
-    from: onboarding@resend.dev
+    from: info@pet.shelter
     subject: Email Verification
 
 #

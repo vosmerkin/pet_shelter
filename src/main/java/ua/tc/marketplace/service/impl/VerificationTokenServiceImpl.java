@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ua.tc.marketplace.exception.auth.VerificationTokenNotFoundOrExpiredException;
 import ua.tc.marketplace.exception.verificationToken.VerificationTokenNotFoundException;
 import ua.tc.marketplace.model.VerificationToken;
 import ua.tc.marketplace.model.entity.User;
@@ -31,6 +32,7 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     @Transactional
     @Override
     public void clearExpiredTokens() {
+        log.info("Clearing expired tokens");
         List<VerificationToken> tokenList = verificationTokenRepository.findAll();
         if (!tokenList.isEmpty()) {
             for (VerificationToken token : tokenList) {
@@ -38,9 +40,9 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
                     log.debug("Expiry date - {}", token.getExpiryDate());
                     log.debug("Current date - {}", Date.from(Instant.now()));
                     User user = token.getUser();
-                    if (userService.UserExistsByEmail(user.getEmail()))
-                        userService.deleteUserById(user.getId());
                     delete(token.getId());
+                    if (token.getType()== VerificationToken.TokenType.REGISTRATION)
+                        userService.deleteUserById(user.getId());
                 }
             }
         }
@@ -48,8 +50,9 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
 
     @Override
     public VerificationToken getVerificationToken(String token) {
-        log.info("Requested VerificationToken by token {}", token);
-        return verificationTokenRepository.findByToken(token).orElseThrow(()->new VerificationTokenNotFoundException(token));
+        log.info("Requested VerificationToken by token  {}", token);
+        return verificationTokenRepository.findByToken(token)
+                .orElseThrow(() -> new VerificationTokenNotFoundException(token));
     }
 
     @Override
@@ -57,5 +60,18 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
         log.info("Deleting verificationToken with id={}", id);
         VerificationToken existingToken = getById(id);
         verificationTokenRepository.deleteById(existingToken.getId());
+    }
+
+    public boolean verifyToken(VerificationToken token, VerificationToken.TokenType tokenType) {
+        log.debug("Verifying token {}", token);
+        clearExpiredTokens();
+
+        if (token == null || token.getUser() == null) {
+            return false;
+        }
+
+        return tokenType == token.getType() &&                                   //needed token type
+                userService.UserExistsByEmail(token.getUser().getEmail()) &&     //user  exists
+                !token.getExpiryDate().before(Date.from(Instant.now()));        //token is not expired
     }
 }

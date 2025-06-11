@@ -2,6 +2,7 @@ package ua.tc.marketplace.model.dto.user;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 import ua.tc.marketplace.model.entity.Ad;
 import ua.tc.marketplace.model.entity.ContactInfo;
 
@@ -13,22 +14,23 @@ import java.util.List;
  *
  * <p>Validation constraints are applied to ensure data integrity and consistency.
  */
+@Builder
 public record UpdateUserDto(
     Long id,
     @Schema(example = "taras@shevchenko.ua")
-    @NotBlank
+//    @NotBlank
     String email,
 
     @Schema(example = "strong_secure_password_with_bigAndSmallLetters_and_digits_and_symbols")
-    @NotBlank
+//    @NotBlank
     String password,
 
     @Schema(example = "USER")
-    @NotBlank
+//    @NotBlank
     String userRole,
 
     @Schema(example = "Taras")
-    @NotBlank
+//    @NotBlank
     String firstName,
 
     @Schema(example = "Shevchenko")
