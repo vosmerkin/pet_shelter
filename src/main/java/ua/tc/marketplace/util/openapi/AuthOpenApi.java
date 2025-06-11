@@ -60,6 +60,6 @@ public interface AuthOpenApi {
   @Operation(
           summary = "Reset user password",
           description = "Resets the user's password using the provided email, password reset token, and new password.")
-  @PatchMapping(AUTH_RESET_PASSWORD)
+  @PutMapping(AUTH_RESET_PASSWORD)
   ResponseEntity<Boolean> reset_password(@RequestBody PasswordChangeRequest request);
 }

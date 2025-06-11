@@ -59,13 +59,13 @@ public class AuthController implements AuthOpenApi {
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }
 
-    @GetMapping("/test_email")
-    public ResponseEntity<Void> testEmail() {
-        log.info("Test email: {}", "userDto");
-        mailService.sendVerificationEmailResend("vosmerkin.evgen1@gmail.com", "resend_sdfsdfsdfsdfs");
-        mailService.sendRegistrationVerificationEmail("vosmerkin.evgen1@gmail.com", "JavaMailSender_sdfsdfsdfsdfs");
-        return ResponseEntity.ok().build();
-    }
+//    @GetMapping("/test_email")
+//    public ResponseEntity<Void> testEmail() {
+//        log.info("Test email: {}", "userDto");
+////        mailService.sendVerificationEmailResend("vosmerkin.evgen1@gmail.com", "resend_sdfsdfsdfsdfs");
+//        mailService.sendRegistrationVerificationEmail("vosmerkin.evgen1@gmail.com", "JavaMailSender_sdfsdfsdfsdfs");
+//        return ResponseEntity.ok().build();
+//    }
 
     //  @GetMapping(AUTH_VERIFY_EMAIL)
     @GetMapping("/verify-email")
@@ -92,7 +92,7 @@ public class AuthController implements AuthOpenApi {
         return ResponseEntity.status(HttpStatus.OK).body(authenticationService.verifyResetPasswordToken(token));
     }
 
-    @PatchMapping(AUTH_RESET_PASSWORD)
+    @PutMapping(AUTH_RESET_PASSWORD)
     @Override
     public ResponseEntity<Boolean> reset_password(@NotNull @Valid @RequestBody PasswordChangeRequest request) {
         log.info("Request change password from {}", request.email());

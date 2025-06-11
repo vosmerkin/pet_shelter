@@ -42,24 +42,24 @@ public class MailService {
 //    }
 
 
-    public void sendVerificationEmailResend(String to_email, String token) {
-        log.info("Resend to send to {}", to_email);
-        String message = "Click the following link to verify your email: " +
-                baseUrl +
-                ApiURLs.AUTH_BASE +
-                ApiURLs.AUTH_VERIFY_EMAIL+
-                token;
-
-        SendEmailRequest sendEmailRequest = SendEmailRequest.builder()
-//                .from("onboarding@resend.dev")
-                .from(from_email)
-                .to(to_email)
-                .subject(subject)
-                .html(message)
-                .build();
-
-        SendEmailResponse data = resend.emails().send(sendEmailRequest);
-    }
+//    public void sendVerificationEmailResend(String to_email, String token) {
+//        log.info("Resend to send to {}", to_email);
+//        String message = "Click the following link to verify your email: " +
+//                baseUrl +
+//                ApiURLs.AUTH_BASE +
+//                ApiURLs.AUTH_VERIFY_EMAIL+
+//                token;
+//
+//        SendEmailRequest sendEmailRequest = SendEmailRequest.builder()
+////                .from("onboarding@resend.dev")
+//                .from(from_email)
+//                .to(to_email)
+//                .subject(subject)
+//                .html(message)
+//                .build();
+//
+//        SendEmailResponse data = resend.emails().send(sendEmailRequest);
+//    }
 
     public void sendRegistrationVerificationEmail(String to_email, String token){
 
@@ -67,7 +67,7 @@ public class MailService {
         String message = "Click the following link to verify your email: " +
                 baseUrl +
                 ApiURLs.AUTH_BASE +
-                ApiURLs.AUTH_VERIFY_EMAIL+
+                ApiURLs.AUTH_VERIFY_EMAIL_WITH_TOKEN+
                 token;
         SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(to_email);
@@ -85,8 +85,12 @@ public class MailService {
         String message = "Click the following link to reset password: " +
                 baseUrl +
                 ApiURLs.AUTH_BASE +
-                ApiURLs.AUTH_VERIFY_PASSWORD_RESET +
-//                ApiURLs.AUTH_RESET_PASSWORD +
+                ApiURLs.AUTH_VERIFY_PASSWORD_RESET_WITH_TOKEN +
                 token;
+        SimpleMailMessage email = new SimpleMailMessage();
+        email.setTo(to_email);
+        email.setSubject(subject);
+        email.setText(message );
+        mailSender.send(email);
     }
 }

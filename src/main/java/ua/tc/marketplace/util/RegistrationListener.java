@@ -21,7 +21,7 @@ public class RegistrationListener implements
     }
 
     private void confirmRegistration(OnRegistrationCompleteEvent event) {
-        log.info("ConfirmRegistration - sending verification email to {}" , event.getUser().email());
+        log.info("ConfirmRegistration - sending verification email to {}", event.getUser().email());
         UserDto user = event.getUser();
         String token = event.getToken();
 
