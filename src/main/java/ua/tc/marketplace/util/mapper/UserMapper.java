@@ -29,7 +29,7 @@ public interface UserMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "profilePicture", ignore = true)
+//    @Mapping(target = "profilePicture", ignore = true)
     @Mapping(target = "favorites", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "comments", ignore = true)
@@ -52,7 +52,7 @@ public interface UserMapper {
 //    User toEntity(UnverifiedUser user);
 
     @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "profilePicture", ignore = true)
+//    @Mapping(target = "profilePicture", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(
             target = "userRole",

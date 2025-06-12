@@ -3,6 +3,7 @@ package ua.tc.marketplace.model.dto.user;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
+import org.springframework.web.multipart.MultipartFile;
 import ua.tc.marketplace.model.entity.Ad;
 import ua.tc.marketplace.model.entity.ContactInfo;
 
@@ -35,6 +36,8 @@ public record UpdateUserDto(
 
     @Schema(example = "Shevchenko")
     String lastName, // optional
+
+    MultipartFile profilePicture,
 
     ContactInfo contactInfo,
 

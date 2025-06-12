@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import org.springframework.web.multipart.MultipartFile;
 import ua.tc.marketplace.model.entity.ContactInfo;
 
 /**
@@ -33,6 +34,8 @@ public record CreateUserDto(
 
     @Schema(example = "Shevchenko")
     String lastName, // optional
+
+    MultipartFile profilePicture,
 
     ContactInfo contactInfo
 ) {
