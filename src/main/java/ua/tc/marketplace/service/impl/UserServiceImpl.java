@@ -15,6 +15,7 @@ import ua.tc.marketplace.model.dto.user.UpdateUserDto;
 import ua.tc.marketplace.model.dto.user.UserDto;
 import ua.tc.marketplace.model.entity.User;
 import ua.tc.marketplace.repository.UserRepository;
+import ua.tc.marketplace.service.PhotoStorageService;
 import ua.tc.marketplace.service.UserService;
 import ua.tc.marketplace.util.mapper.UserMapper;
 
@@ -31,6 +32,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final PhotoStorageService photoService;
 
 
     /**
@@ -137,7 +139,11 @@ public class UserServiceImpl implements UserService {
             throw new EmailAlreadyRegisteredException(createUserDto.email());
         User user = userMapper.toEntity(createUserDto);
         user.setPassword(passwordEncoder.encode(createUserDto.password()));
-        return userMapper.toDto(userRepository.save(user));
+        user=userRepository.save(user);
+        photoService.saveUserPhoto(user.getId(), createUserDto.profilePicture());
+        user = getUser(user.getId());
+
+        return userMapper.toDto(user);
     }
 
 //    @Override

@@ -73,45 +73,15 @@ public class FileStorageRepositoryImpl implements FileStorageRepository {
 
     @Override
     public Photo writeFile(MultipartFile file, Path path) {
-
-//      String originalFilename = file.getOriginalFilename();
-//      String extension = FilenameUtils.getExtension(originalFilename);
-//      String uniqueFilename = UUID.randomUUID() + DOT + extension;
-        Photo photo = multiPartToPhoto(file);
-        try {
-            File destinationFile = path.resolve(photo.getFilename()).toFile();
-            file.transferTo(destinationFile);
-//
-////      ImageInfo imageInfo = Imaging.getImageInfo(destinationFile);
-//      ImageInfo imageInfo = Imaging.getImageInfo(file.getBytes());
-//
-//      int width = imageInfo.getWidth();
-//      int height = imageInfo.getHeight();
-//      float size = (float) file.getSize();
-//
-//      PhotoMetadata metadata =
-//          PhotoMetadata.builder()
-//              .width(width)
-//              .height(height)
-//              .extension(extension)
-//              .size(size)
-//              .build();
-//
-//      return Photo.builder().filename(uniqueFilename).metadata(metadata).build();
-        } catch (IOException e) {
-            throw new FailedStoreFileException(file.getOriginalFilename(), e);
-        }
-        return photo;
-    }
-
-
-    public Photo multiPartToPhoto(MultipartFile file) {
         try {
             String originalFilename = file.getOriginalFilename();
             String extension = FilenameUtils.getExtension(originalFilename);
             String uniqueFilename = UUID.randomUUID() + DOT + extension;
 
-            ImageInfo imageInfo = Imaging.getImageInfo(file.getBytes());
+            File destinationFile = path.resolve(uniqueFilename).toFile();
+            file.transferTo(destinationFile);
+
+            ImageInfo imageInfo = Imaging.getImageInfo(destinationFile);
 
             int width = imageInfo.getWidth();
             int height = imageInfo.getHeight();
