@@ -76,7 +76,8 @@ public class PhotoStorageServiceImpl implements PhotoStorageService {
 
         user.setProfilePicture(photo);
         user = userRepository.save(user);
-        return user.getProfilePicture();
+//        return user.getProfilePicture();
+        return photo;
     }
 
     @Transactional(readOnly = true)

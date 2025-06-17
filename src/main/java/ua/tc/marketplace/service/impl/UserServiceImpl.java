@@ -13,6 +13,7 @@ import ua.tc.marketplace.exception.user.UserNotFoundException;
 import ua.tc.marketplace.model.dto.user.CreateUserDto;
 import ua.tc.marketplace.model.dto.user.UpdateUserDto;
 import ua.tc.marketplace.model.dto.user.UserDto;
+import ua.tc.marketplace.model.entity.Photo;
 import ua.tc.marketplace.model.entity.User;
 import ua.tc.marketplace.repository.UserRepository;
 import ua.tc.marketplace.service.PhotoStorageService;
@@ -139,9 +140,13 @@ public class UserServiceImpl implements UserService {
             throw new EmailAlreadyRegisteredException(createUserDto.email());
         User user = userMapper.toEntity(createUserDto);
         user.setPassword(passwordEncoder.encode(createUserDto.password()));
-        user=userRepository.save(user);
-        photoService.saveUserPhoto(user.getId(), createUserDto.profilePicture());
-        user = getUser(user.getId());
+        user = userRepository.save(user);
+        if (createUserDto.profilePicture() != null) {
+            Photo photo = photoService.saveUserPhoto(user.getId(), createUserDto.profilePicture());
+            user.setProfilePicture(photo);
+            user = userRepository.save(user);
+        }
+//        user = getUser(user.getId());
 
         return userMapper.toDto(user);
     }

@@ -40,7 +40,7 @@ public class AuthController implements AuthOpenApi {
 
     @Override
     @PostMapping("/signup")
-    public ResponseEntity<AuthResponse> registerUser(@Valid @RequestBody CreateUserDto userDto) {
+    public ResponseEntity<AuthResponse> registerUser(@Valid @ModelAttribute  CreateUserDto userDto) {
         log.info("Register user request: {}", userDto);
         return ResponseEntity.status(HttpStatus.OK).body(authenticationService.registerUser(userDto));
     }
