@@ -1,5 +1,19 @@
 package ua.tc.marketplace.repository.impl;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.imaging.ImageInfo;
+import org.apache.commons.imaging.Imaging;
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Repository;
+import org.springframework.web.multipart.MultipartFile;
+import ua.tc.marketplace.exception.photo.*;
+import ua.tc.marketplace.model.entity.Photo;
+import ua.tc.marketplace.model.entity.PhotoMetadata;
+import ua.tc.marketplace.repository.FileStorageRepository;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
@@ -11,23 +25,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.imaging.ImageInfo;
-import org.apache.commons.imaging.Imaging;
-import org.apache.commons.io.FilenameUtils;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Repository;
-import org.springframework.web.multipart.MultipartFile;
-import ua.tc.marketplace.exception.photo.FailedRetrieveFileException;
-import ua.tc.marketplace.exception.photo.FailedStoreFileException;
-import ua.tc.marketplace.exception.photo.FailedToListFilesInDirectoryException;
-import ua.tc.marketplace.exception.photo.PhotoFileNotFoundException;
-import ua.tc.marketplace.exception.photo.WrongFilePathException;
-import ua.tc.marketplace.model.entity.Photo;
-import ua.tc.marketplace.model.entity.PhotoMetadata;
-import ua.tc.marketplace.repository.FileStorageRepository;
 
 /**
  * Implementation of {@link FileStorageRepository} that provides methods to handle file storage
@@ -68,7 +65,6 @@ public class FileStorageRepositoryImpl implements FileStorageRepository {
       throw new WrongFilePathException(path.toString(), e);
     }
   }
-
 
   @Override
   public Photo writeFile(MultipartFile file, Path path) {

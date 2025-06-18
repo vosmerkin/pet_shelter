@@ -37,5 +37,4 @@ public record AdDto(
     List<AdAttributeDto> adAttributes,
     LocalDateTime createdAt,
     LocalDateTime updatedAt,
-    @NotNull Boolean isHot) {
-}
+    @NotNull Boolean isHot) {}

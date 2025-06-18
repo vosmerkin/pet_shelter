@@ -135,7 +135,7 @@ class UserServiceImplTest {
     void createUser_shouldCreate_whenValidInput() {
         // createUserDto, received from controller
         CreateUserDto createUserDto =
-                new CreateUserDto("taras@shevchenko.ua", "password", "USER", "Taras", null, null);
+                new CreateUserDto("taras@shevchenko.ua", "password", "USER", "Taras", null, null, null);
 
         // User entity after mapping from createUserDto
 //        User user =
@@ -235,7 +235,7 @@ class UserServiceImplTest {
 //                        null);
 
         // entity of updated user
-        User updatedUser =userAfterUpdate;
+        User updatedUser = userAfterUpdate;
 //                new User(
 //                        1L,
 //                        "taras@shevchenko.ua",
@@ -253,7 +253,7 @@ class UserServiceImplTest {
 //                        null);
 
         // User Dto after mapping from updated entity
-        UserDto updatedUserDto =userDtoAfterUpdate;
+        UserDto updatedUserDto = userDtoAfterUpdate;
 //                new UserDto(
 //                        1L,
 //                        "taras@shevchenko.ua",
@@ -339,7 +339,7 @@ class UserServiceImplTest {
         Long userId = 1L;
 
         // entity of existing user, found in database
-        User existingUser =user;
+        User existingUser = user;
 //                new User(
 //                        1L,
 //                        "taras@shevchenko.ua",

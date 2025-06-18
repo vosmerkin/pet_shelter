@@ -1,6 +1,7 @@
 package ua.tc.marketplace.service.impl;
 
 import jakarta.validation.constraints.NotNull;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -8,12 +9,18 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
+
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.imaging.ImageInfo;
+import org.apache.commons.imaging.Imaging;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ua.tc.marketplace.exception.ad.AdNotFoundException;
+import ua.tc.marketplace.exception.photo.FailedStoreFileException;
 import ua.tc.marketplace.exception.photo.PhotoFileNotFoundException;
 import ua.tc.marketplace.exception.photo.PhotoNotFoundException;
 import ua.tc.marketplace.exception.user.UserNotFoundException;
@@ -21,11 +28,13 @@ import ua.tc.marketplace.model.dto.photo.FileResponse;
 import ua.tc.marketplace.model.dto.photo.FilesResponse;
 import ua.tc.marketplace.model.entity.Ad;
 import ua.tc.marketplace.model.entity.Photo;
+import ua.tc.marketplace.model.entity.PhotoMetadata;
 import ua.tc.marketplace.model.entity.User;
 import ua.tc.marketplace.repository.AdRepository;
 import ua.tc.marketplace.repository.FileStorageRepository;
 import ua.tc.marketplace.repository.PhotoRepository;
 import ua.tc.marketplace.repository.UserRepository;
+import ua.tc.marketplace.repository.impl.FileStorageRepositoryImpl;
 import ua.tc.marketplace.service.PhotoStorageService;
 
 /**
@@ -67,7 +76,8 @@ public class PhotoStorageServiceImpl implements PhotoStorageService {
 
     user.setProfilePicture(photo);
     user = userRepository.save(user);
-    return user.getProfilePicture();
+    //        return user.getProfilePicture();
+    return photo;
   }
 
   @Transactional(readOnly = true)

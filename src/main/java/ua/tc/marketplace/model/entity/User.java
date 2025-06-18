@@ -59,6 +59,7 @@ public class User {
     private String lastName; // optional
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "profile_picture_id")
     private Photo profilePicture;
 
     @OneToOne(cascade = CascadeType.ALL)
