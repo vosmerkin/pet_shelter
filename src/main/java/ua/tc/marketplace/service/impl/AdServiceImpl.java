@@ -47,15 +47,15 @@ public class AdServiceImpl implements AdService {
     adRepository.delete(ad);
   }
 
-    @Transactional(readOnly = true)
-    @Override
-    public Ad findAdById(Long adId) {
-        return adRepository.findById(adId).orElseThrow(() -> new AdNotFoundException(adId));
-    }
+  @Transactional(readOnly = true)
+  @Override
+  public Ad findAdById(Long adId) {
+    return adRepository.findById(adId).orElseThrow(() -> new AdNotFoundException(adId));
+  }
 
-    public Map<AttributeValueKey, Long> countAdsByAdAttribute(Specification<Ad> specification) {
-        return adRepository.countAdsGroupedByAttribute(specification);
-    }
+  public Map<AttributeValueKey, Long> countAdsByAdAttribute(Specification<Ad> specification) {
+    return adRepository.countAdsGroupedByAttribute(specification);
+  }
 
   @Override
   public Long countAdsByCategory(Category category) {

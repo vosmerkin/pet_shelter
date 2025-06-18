@@ -51,217 +51,217 @@ import ua.tc.marketplace.service.PhotoStorageService;
 @RequiredArgsConstructor
 public class PhotoStorageServiceImpl implements PhotoStorageService {
 
-    private final AdRepository adRepository;
-    private final UserRepository userRepository;
-    private final FileStorageRepository fileStorageRepository;
-    private final PhotoRepository photoRepository;
+  private final AdRepository adRepository;
+  private final UserRepository userRepository;
+  private final FileStorageRepository fileStorageRepository;
+  private final PhotoRepository photoRepository;
 
-    private static final String USER = "user";
-    private static final String AD = "ad";
-    private static final String SLASH = File.separator;
+  private static final String USER = "user";
+  private static final String AD = "ad";
+  private static final String SLASH = File.separator;
 
-    @Override
-    public Photo saveUserPhoto(Long userId, MultipartFile file) {
-        User user = findUserById(userId);
+  @Override
+  public Photo saveUserPhoto(Long userId, MultipartFile file) {
+    User user = findUserById(userId);
 
-        if (user.getProfilePicture() != null) {
-            deleteUserProfilePicture(userId);
-        }
-
-        String folder = getUserFolder(userId);
-        Path path = getPath(folder);
-        fileStorageRepository.createDirectory(path);
-
-        Photo photo = fileStorageRepository.writeFile(file, path);
-
-        user.setProfilePicture(photo);
-        user = userRepository.save(user);
-//        return user.getProfilePicture();
-        return photo;
+    if (user.getProfilePicture() != null) {
+      deleteUserProfilePicture(userId);
     }
 
-    @Transactional(readOnly = true)
-    @Override
-    public Photo findUserProfilePicture(Long userId) {
-        User user = findUserById(userId);
-        return user.getProfilePicture();
+    String folder = getUserFolder(userId);
+    Path path = getPath(folder);
+    fileStorageRepository.createDirectory(path);
+
+    Photo photo = fileStorageRepository.writeFile(file, path);
+
+    user.setProfilePicture(photo);
+    user = userRepository.save(user);
+    //        return user.getProfilePicture();
+    return photo;
+  }
+
+  @Transactional(readOnly = true)
+  @Override
+  public Photo findUserProfilePicture(Long userId) {
+    User user = findUserById(userId);
+    return user.getProfilePicture();
+  }
+
+  @Override
+  public List<Photo> saveAdPhotos(Long adId, MultipartFile[] files) {
+    Ad ad = findAdById(adId);
+
+    String folder = getAdFolder(adId);
+    Path path = getPath(folder);
+    fileStorageRepository.createDirectory(path);
+
+    List<Photo> photos =
+        Arrays.stream(files).map(file -> fileStorageRepository.writeFile(file, path)).toList();
+
+    ad.getPhotos().addAll(photos);
+    if (!photos.isEmpty()) {
+      ad.setThumbnail(photos.getFirst());
+    }
+    ad = adRepository.save(ad);
+    return ad.getPhotos();
+  }
+
+  @Transactional(readOnly = true)
+  @Override
+  public List<Photo> findAllPhotosByAdId(Long adId) {
+    Ad ad = findAdById(adId);
+    return ad.getPhotos();
+  }
+
+  @Transactional(readOnly = true)
+  @Override
+  public FilesResponse findAllAdPhotoFiles(Long adId) {
+    String folder = getAdFolder(adId);
+    Path path = getPath(folder);
+    List<byte[]> fileContents = fileStorageRepository.readFilesList(path);
+    return new FilesResponse(fileContents, getHeaders(path));
+  }
+
+  @Transactional(readOnly = true)
+  @Override
+  public FileResponse findUserProfilePictureFile(Long userId) {
+    User user = findUserById(userId);
+    String folder = getUserFolder(userId);
+    Path path = getPath(folder);
+    byte[] bytes = new byte[0];
+    if (user.getProfilePicture() != null) {
+      bytes = fileStorageRepository.readFile(user.getProfilePicture().getFilename(), path);
+    }
+    return new FileResponse(bytes, getHeaders(path));
+  }
+
+  @Transactional(readOnly = true)
+  @Override
+  public FileResponse findAdPhotoFileById(Long adId, Long photoId) {
+    Photo photo = findPhotoById(photoId);
+
+    String folder = getAdFolder(adId);
+    Path path = getPath(folder);
+
+    byte[] bytes = fileStorageRepository.readFile(photo.getFilename(), path);
+    return new FileResponse(bytes, getHeaders(path));
+  }
+
+  @Override
+  public String deleteUserProfilePicture(Long userId) {
+    String folder = getUserFolder(userId);
+
+    User user = findUserById(userId);
+
+    Photo photo = user.getProfilePicture();
+
+    user.setProfilePicture(null);
+
+    photoRepository.delete(photo);
+    userRepository.save(user);
+
+    Path filePath = Paths.get(fileStorageRepository.getUploadDir(), folder, photo.getFilename());
+
+    if (Files.exists(filePath) && Files.isRegularFile(filePath)) {
+      fileStorageRepository.deleteFile(filePath); // Perform the delete action here
+      return filePath.toString();
+    } else {
+      throw new PhotoFileNotFoundException(filePath.toString());
+    }
+  }
+
+  @Override
+  public void deleteAllAdPhotos(Ad ad) {
+    String folder = getAdFolder(ad.getId());
+    Path basePath = getPath(folder);
+    fileStorageRepository.deleteFolder(basePath);
+  }
+
+  @Override
+  public List<String> deleteAdPhotos(Long adId, List<Long> photoIds) {
+    String folder = getAdFolder(adId);
+    Path basePath = getPath(folder);
+
+    Ad ad = findAdById(adId);
+
+    List<Photo> photos = ad.getPhotos();
+
+    List<Photo> photosToDelete =
+        photos.stream().filter(photo -> photoIds.contains(photo.getId())).toList();
+
+    ad.getPhotos().removeAll(photosToDelete);
+    boolean deleteThumbnail = false;
+    if (ad.getThumbnail() != null) {
+      deleteThumbnail = photosToDelete.stream().anyMatch(photo -> ad.getThumbnail().equals(photo));
+    }
+    if (deleteThumbnail) {
+      ad.setThumbnail(null);
+    }
+    adRepository.save(ad);
+    photoRepository.deleteAll(photosToDelete);
+    if (!ad.getPhotos().isEmpty() && deleteThumbnail) {
+      ad.setThumbnail(ad.getPhotos().getFirst());
     }
 
-    @Override
-    public List<Photo> saveAdPhotos(Long adId, MultipartFile[] files) {
-        Ad ad = findAdById(adId);
+    List<String> paths =
+        photosToDelete.stream()
+            .map(
+                photo ->
+                    fileStorageRepository.getUploadDir()
+                        + SLASH
+                        + folder
+                        + SLASH
+                        + photo.getFilename())
+            .toList();
 
-        String folder = getAdFolder(adId);
-        Path path = getPath(folder);
-        fileStorageRepository.createDirectory(path);
+    return paths.stream()
+        .map(basePath::resolve)
+        .map(
+            filePath -> {
+              if (Files.exists(filePath) && Files.isRegularFile(filePath)) {
+                fileStorageRepository.deleteFile(filePath); // Perform the delete action here
+                return filePath;
+              } else {
+                throw new PhotoFileNotFoundException(filePath.toString());
+              }
+            })
+        .map(Path::toString)
+        .toList();
+  }
 
-        List<Photo> photos =
-                Arrays.stream(files).map(file -> fileStorageRepository.writeFile(file, path)).toList();
+  private Ad findAdById(Long adId) {
+    return adRepository.findById(adId).orElseThrow(() -> new AdNotFoundException(adId));
+  }
 
-        ad.getPhotos().addAll(photos);
-        if (!photos.isEmpty()) {
-            ad.setThumbnail(photos.getFirst());
-        }
-        ad = adRepository.save(ad);
-        return ad.getPhotos();
+  @NotNull
+  private HttpHeaders getHeaders(Path filePath) {
+    HttpHeaders headers = new HttpHeaders();
+    headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filePath.getFileName());
+    try {
+      headers.add(HttpHeaders.CONTENT_TYPE, Files.probeContentType(filePath));
+    } catch (IOException e) {
+      throw new PhotoFileNotFoundException(filePath.toString(), e);
     }
+    return headers;
+  }
 
-    @Transactional(readOnly = true)
-    @Override
-    public List<Photo> findAllPhotosByAdId(Long adId) {
-        Ad ad = findAdById(adId);
-        return ad.getPhotos();
-    }
+  private User findUserById(Long userId) {
+    return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+  }
 
-    @Transactional(readOnly = true)
-    @Override
-    public FilesResponse findAllAdPhotoFiles(Long adId) {
-        String folder = getAdFolder(adId);
-        Path path = getPath(folder);
-        List<byte[]> fileContents = fileStorageRepository.readFilesList(path);
-        return new FilesResponse(fileContents, getHeaders(path));
-    }
+  private Photo findPhotoById(Long photoId) {
+    return photoRepository.findById(photoId).orElseThrow(() -> new PhotoNotFoundException(photoId));
+  }
 
-    @Transactional(readOnly = true)
-    @Override
-    public FileResponse findUserProfilePictureFile(Long userId) {
-        User user = findUserById(userId);
-        String folder = getUserFolder(userId);
-        Path path = getPath(folder);
-        byte[] bytes = new byte[0];
-        if (user.getProfilePicture() != null) {
-            bytes = fileStorageRepository.readFile(user.getProfilePicture().getFilename(), path);
-        }
-        return new FileResponse(bytes, getHeaders(path));
-    }
+  private String getAdFolder(Long adId) {
+    return AD + SLASH + adId;
+  }
 
-    @Transactional(readOnly = true)
-    @Override
-    public FileResponse findAdPhotoFileById(Long adId, Long photoId) {
-        Photo photo = findPhotoById(photoId);
+  private String getUserFolder(Long userId) {
+    return USER + SLASH + userId;
+  }
 
-        String folder = getAdFolder(adId);
-        Path path = getPath(folder);
-
-        byte[] bytes = fileStorageRepository.readFile(photo.getFilename(), path);
-        return new FileResponse(bytes, getHeaders(path));
-    }
-
-    @Override
-    public String deleteUserProfilePicture(Long userId) {
-        String folder = getUserFolder(userId);
-
-        User user = findUserById(userId);
-
-        Photo photo = user.getProfilePicture();
-
-        user.setProfilePicture(null);
-
-        photoRepository.delete(photo);
-        userRepository.save(user);
-
-        Path filePath = Paths.get(fileStorageRepository.getUploadDir(), folder, photo.getFilename());
-
-        if (Files.exists(filePath) && Files.isRegularFile(filePath)) {
-            fileStorageRepository.deleteFile(filePath); // Perform the delete action here
-            return filePath.toString();
-        } else {
-            throw new PhotoFileNotFoundException(filePath.toString());
-        }
-    }
-
-    @Override
-    public void deleteAllAdPhotos(Ad ad) {
-        String folder = getAdFolder(ad.getId());
-        Path basePath = getPath(folder);
-        fileStorageRepository.deleteFolder(basePath);
-    }
-
-    @Override
-    public List<String> deleteAdPhotos(Long adId, List<Long> photoIds) {
-        String folder = getAdFolder(adId);
-        Path basePath = getPath(folder);
-
-        Ad ad = findAdById(adId);
-
-        List<Photo> photos = ad.getPhotos();
-
-        List<Photo> photosToDelete =
-                photos.stream().filter(photo -> photoIds.contains(photo.getId())).toList();
-
-        ad.getPhotos().removeAll(photosToDelete);
-        boolean deleteThumbnail = false;
-        if (ad.getThumbnail() != null) {
-            deleteThumbnail = photosToDelete.stream().anyMatch(photo -> ad.getThumbnail().equals(photo));
-        }
-        if (deleteThumbnail) {
-            ad.setThumbnail(null);
-        }
-        adRepository.save(ad);
-        photoRepository.deleteAll(photosToDelete);
-        if (!ad.getPhotos().isEmpty() && deleteThumbnail) {
-            ad.setThumbnail(ad.getPhotos().getFirst());
-        }
-
-        List<String> paths =
-                photosToDelete.stream()
-                        .map(
-                                photo ->
-                                        fileStorageRepository.getUploadDir()
-                                                + SLASH
-                                                + folder
-                                                + SLASH
-                                                + photo.getFilename())
-                        .toList();
-
-        return paths.stream()
-                .map(basePath::resolve)
-                .map(
-                        filePath -> {
-                            if (Files.exists(filePath) && Files.isRegularFile(filePath)) {
-                                fileStorageRepository.deleteFile(filePath); // Perform the delete action here
-                                return filePath;
-                            } else {
-                                throw new PhotoFileNotFoundException(filePath.toString());
-                            }
-                        })
-                .map(Path::toString)
-                .toList();
-    }
-
-    private Ad findAdById(Long adId) {
-        return adRepository.findById(adId).orElseThrow(() -> new AdNotFoundException(adId));
-    }
-
-    @NotNull
-    private HttpHeaders getHeaders(Path filePath) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filePath.getFileName());
-        try {
-            headers.add(HttpHeaders.CONTENT_TYPE, Files.probeContentType(filePath));
-        } catch (IOException e) {
-            throw new PhotoFileNotFoundException(filePath.toString(), e);
-        }
-        return headers;
-    }
-
-    private User findUserById(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
-    }
-
-    private Photo findPhotoById(Long photoId) {
-        return photoRepository.findById(photoId).orElseThrow(() -> new PhotoNotFoundException(photoId));
-    }
-
-    private String getAdFolder(Long adId) {
-        return AD + SLASH + adId;
-    }
-
-    private String getUserFolder(Long userId) {
-        return USER + SLASH + userId;
-    }
-
-    private Path getPath(String folder) {
-        return Paths.get(fileStorageRepository.getUploadDir()).resolve(folder);
-    }
+  private Path getPath(String folder) {
+    return Paths.get(fileStorageRepository.getUploadDir()).resolve(folder);
+  }
 }
