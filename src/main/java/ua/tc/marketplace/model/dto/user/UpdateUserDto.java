@@ -37,8 +37,6 @@ public record UpdateUserDto(
     @Schema(example = "Shevchenko")
     String lastName, // optional
 
-    MultipartFile profilePicture,
-
     ContactInfo contactInfo,
 
     List<Ad> favorites

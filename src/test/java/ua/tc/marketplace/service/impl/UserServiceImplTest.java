@@ -214,7 +214,6 @@ class UserServiceImplTest {
                         "Taras",
                         "Shevchenko",
                         null,
-                        null,
                         Collections.emptyList());
 
         // entity of existing user, found in database
@@ -324,7 +323,6 @@ class UserServiceImplTest {
                         "USER",
                         "Taras",
                         "Shevchenko",
-                        null,
                         null,
                         Collections.emptyList());
 
