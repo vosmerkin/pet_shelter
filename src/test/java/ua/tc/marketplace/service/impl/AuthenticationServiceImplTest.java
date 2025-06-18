@@ -100,7 +100,7 @@ class AuthenticationServiceImplTest {
   void registerUser_shouldReturnAuthResponse_whenUserIsSuccessfullyRegistered() {
     // Arrange
     CreateUserDto createUserDto =
-        new CreateUserDto("test@example.com", "password", null, null, null, null);
+        new CreateUserDto("test@example.com", "password", null, null, null, null, null);
     User user = new User(); // Set up the User object as needed
     Authentication authentication = mock(Authentication.class);
     UserDto userDto =UserDto.builder()
