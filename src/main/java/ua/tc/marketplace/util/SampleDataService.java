@@ -3,11 +3,10 @@ package ua.tc.marketplace.util;
 import com.github.javafaker.Faker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ua.tc.marketplace.model.entity.Ad;
-import ua.tc.marketplace.model.entity.AdAttribute;
-import ua.tc.marketplace.model.entity.Category;
-import ua.tc.marketplace.model.entity.User;
+import ua.tc.marketplace.model.entity.*;
 import ua.tc.marketplace.model.enums.UserRole;
+import ua.tc.marketplace.model.enums.ValueType;
+import ua.tc.marketplace.repository.AttributeRepository;
 import ua.tc.marketplace.repository.CategoryRepository;
 import ua.tc.marketplace.repository.UserRepository;
 import ua.tc.marketplace.service.CategoryService;
@@ -26,7 +25,8 @@ public class SampleDataService {
     private List<Long> categoryIds;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
-    private final AdAttribute categoryRepository;
+    private final AttributeRepository attributeRepository;
+//    private final AdAttribute a;
     private final UserService userService;
     private final CategoryService categoryService;
     private final Faker faker = new Faker(new Locale("en"));
@@ -66,27 +66,36 @@ public class SampleDataService {
     }
 
     private void addSampleCategories(){
-        categoryRepository.save(new(Category("dog")));
-        INSERT INTO category (name)
-        VALUES ('dog'),
-                ('cat'),
-                ('rodent'),
-                ('bird'),
-                ('fish'),
-                ('other');
+        categoryRepository.save(new Category(null,"dog",null) );
+        categoryRepository.save(new Category(null,"cat",null) );
+        categoryRepository.save(new Category(null,"rodent",null) );
+        categoryRepository.save(new Category(null,"bird",null) );
+        categoryRepository.save(new Category(null,"fish",null) );
+        categoryRepository.save(new Category(null,"other",null) );
+    }
+    private void addSampleAttributes(){
+ attributeRepository.save(new Attribute( null,"breed" , ValueType.STRING));
+        ('breed', 'STRING'),
+        ('age', 'STRING'),
+        ('size', 'STRING'),
+        ('gender', 'STRING'),
+        ('coat_length', 'STRING'),
+        ('color', 'STRING'),
+        ('health_condition', 'STRING'),
+        ('pet_name', 'STRING');
     }
 
-    public void addSampleAds(int count){
-        setUserIds();
-        setCategoryIds();
-
-        List<AdAttribute> adAttributes =
-        Ad ad= Ad.builder()
-                .author(userService.findUserById(faker.options().nextElement(userIds)))
-                .title(faker.animal().name())
-                .description(faker.lorem().sentence())
-                .price(BigDecimal.valueOf(faker.random().nextDouble()))
-                .category(categoryService.findCategoryById(faker.options().nextElement(categoryIds)))
-                        .              build();
-    }
+//    public void addSampleAds(int count){
+//        setUserIds();
+//        setCategoryIds();
+//
+//        List<AdAttribute> adAttributes =
+//        Ad ad= Ad.builder()
+//                .author(userService.findUserById(faker.options().nextElement(userIds)))
+//                .title(faker.animal().name())
+//                .description(faker.lorem().sentence())
+//                .price(BigDecimal.valueOf(faker.random().nextDouble()))
+//                .category(categoryService.findCategoryById(faker.options().nextElement(categoryIds)))
+//                        .              build();
+//    }
 }
