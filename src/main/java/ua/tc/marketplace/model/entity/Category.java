@@ -29,7 +29,7 @@ public class Category {
   private String name;
 
   @Builder.Default
-  @ManyToMany
+  @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(
       name = "category_attributes",
       joinColumns = @JoinColumn(name = "category_id"),

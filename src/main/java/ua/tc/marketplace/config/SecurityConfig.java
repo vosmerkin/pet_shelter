@@ -84,6 +84,7 @@ public class SecurityConfig {
                                         .requestMatchers(WHITELIST).permitAll()
                                         .requestMatchers(HttpMethod.POST, CREATE_USER_POST_URL).permitAll()
                                         .requestMatchers(HttpMethod.POST, CREATE_USER_WITH_VERIFY_POST_URL).permitAll()
+                                        .requestMatchers(HttpMethod.POST, SAMPLE_DATA_BASE + SAMPLE_DATA_ADD_ADS).permitAll()
                                         .requestMatchers(HttpMethod.PUT, AUTH_BASE + AUTH_RESET_PASSWORD).permitAll()
 //                                        .requestMatchers(HttpMethod.POST, "/api/v1/ad").authenticated()
                                         .requestMatchers(
