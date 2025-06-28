@@ -20,11 +20,15 @@ public class ApiURLs {
     public static final String AUTH_RESET_PASSWORD = "/reset_password";
 
     //UserController
-
     public static final String USER_BASE = "/api/v1/user";
     public static final String USER_GET_ALL = "/all";
     public static final String USER_GET_BY_ID = "/{id}";
     public static final String USER_GET_BY_EMAIL = "/email/{email}";
     public static final String USER_UPDATE = "";
     public static final String USER_DELETE = "/{id}";
+
+
+    //SampleDataController
+    public static final String SAMPLE_DATA_BASE = "/api/v1/sample_data";
+    public static final String SAMPLE_DATA_ADD_ADS = "/add_ads";
 }
