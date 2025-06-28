@@ -1,7 +1,7 @@
 package ua.tc.marketplace.util;
 
 import com.github.javafaker.Faker;
-import jakarta.annotation.PostConstruct;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Locale;
@@ -41,6 +41,7 @@ public class SampleDataService {
 //  }
 
   private void setUserIds() {
+    log.info("setting userIds list");
     if (userIds == null || userIds.isEmpty()) {
       userIds = userRepository.findAll().stream().map(User::getId).toList();
     }
@@ -50,6 +51,7 @@ public class SampleDataService {
   }
 
   private void setCategoryIds() {
+    log.info("setting categoryIds list");
     if (categoryIds == null ||categoryIds.isEmpty()) {
       categoryIds = categoryRepository.findAll().stream().map(Category::getId).toList();
     }
@@ -58,7 +60,8 @@ public class SampleDataService {
     }
   }
 
-  private void setAttribute() {
+  private void setAttributes() {
+    log.info("setting attributes list");
     if (attributes == null|| attributes.isEmpty()) {
       attributes = attributeRepository.findAll();
     }
@@ -67,11 +70,11 @@ public class SampleDataService {
     }
   }
 
-  public void addSampleData() {
-    addSampleUsers(100);
+  public void addSampleData(int count) {
+    addSampleUsers(count);
     addSampleAttributes();
     addSampleCategories();
-    addSampleAds(1000);
+    addSampleAds(count);
   }
 
   public void addSampleUsers(int count) {
@@ -93,13 +96,14 @@ public class SampleDataService {
   }
 
   private void addSampleCategories() {
-    setAttribute();
+    setAttributes();
     categoryRepository.save(new Category(null, "dog", attributes));
     categoryRepository.save(new Category(null, "cat", attributes));
     categoryRepository.save(new Category(null, "rodent", attributes));
     categoryRepository.save(new Category(null, "bird", attributes));
     categoryRepository.save(new Category(null, "fish", attributes));
     categoryRepository.save(new Category(null, "other", attributes));
+    log.info("✅ Added sample categories to the database.");
   }
 
   private void addSampleAttributes() {
@@ -111,6 +115,7 @@ public class SampleDataService {
     attributeRepository.save(new Attribute(null, "color", ValueType.STRING));
     attributeRepository.save(new Attribute(null, "health_condition", ValueType.STRING));
     attributeRepository.save(new Attribute(null, "pet_name", ValueType.STRING));
+    log.info("✅ Added sample attributes to the database.");
   }
 
   public void addSampleAds(int count) {
