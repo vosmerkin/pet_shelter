@@ -35,4 +35,6 @@ public class Category {
       joinColumns = @JoinColumn(name = "category_id"),
       inverseJoinColumns = @JoinColumn(name = "attribute_id"))
   private List<Attribute> attributes=new ArrayList<>();
+
+  private List <CategoryAttribute>
 }
