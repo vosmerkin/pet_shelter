@@ -24,9 +24,9 @@ import java.util.Set;
 @Table(name = "category_attributes")
 @Entity
 public class CategoryAttribute {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+//  @Id
+//  @GeneratedValue(strategy = GenerationType.IDENTITY)
+//  private Long id;
 
   @JoinColumn(name = "category_id")
   private Category category;

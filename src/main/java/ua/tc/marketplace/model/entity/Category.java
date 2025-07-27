@@ -28,18 +28,11 @@ public class Category {
 
   private String name;
 
-//  @Builder.Default
-//  @ManyToMany(fetch = FetchType.EAGER)
-//  @JoinTable(
-//      name = "category_attributes",
-//      joinColumns = @JoinColumn(name = "category_id"),
-//      inverseJoinColumns = @JoinColumn(name = "attribute_id"))
-//  private List<Attribute> attributes=new ArrayList<>();
-
+  @Builder.Default
   @ManyToMany(fetch = FetchType.EAGER)
-  @JoinColumn(name = "category_id")
-  private List <CategoryAttribute> attributes;
-
-
-
+  @JoinTable(
+          name = "category_attributes",
+          joinColumns = @JoinColumn(name = "category_id"),
+          inverseJoinColumns = @JoinColumn(name = "attribute_id"))
+  private List<Attribute> attributes=new ArrayList<>();
 }
