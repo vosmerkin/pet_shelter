@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 /**
  * Entity class representing a categoryId.
  *
- * <p>This class defines the structure of a categoryId stored in the database. It includes properties
- * such as ID, name, and a list of classification attributes.
+ * <p>This class defines the structure of a categoryId stored in the database. It includes
+ * properties such as ID, name, and a list of classification attributes.
  */
 @Builder
 @Data
@@ -31,8 +31,8 @@ public class Category {
   @Builder.Default
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(
-          name = "category_attributes",
-          joinColumns = @JoinColumn(name = "category_id"),
-          inverseJoinColumns = @JoinColumn(name = "attribute_id"))
-  private List<Attribute> attributes=new ArrayList<>();
+      name = "category_attributes",
+      joinColumns = @JoinColumn(name = "category_id"),
+      inverseJoinColumns = @JoinColumn(name = "attribute_id"))
+  private List<Attribute> attributes = new ArrayList<>();
 }
