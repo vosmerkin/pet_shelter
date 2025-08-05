@@ -1,6 +1,6 @@
 package ua.tc.marketplace.util;
 
-import com.resend.*;
+//import com.resend.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ public class MailService {
   @Value("${verification.mail.subject}")
   private String subject;
 
-  private final Resend resend;
+//  private final Resend resend;
 
   private final JavaMailSender mailSender;
 
@@ -69,6 +69,7 @@ public class MailService {
             + token;
     SimpleMailMessage email = new SimpleMailMessage();
     email.setTo(to_email);
+    email.setFrom(from_email);
     email.setSubject(subject);
     email.setText(message);
     mailSender.send(email);
