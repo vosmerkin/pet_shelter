@@ -46,7 +46,8 @@ public class AuthController implements AuthOpenApi {
   }
 
   @Override
-  @PostMapping("/signup_verify")
+//  @PostMapping("/signup_verify")
+  @PostMapping(AUTH_SIGNUP_WITH_VERIFY)
   public ResponseEntity<String> registerUserWithVerify(@Valid @RequestBody CreateUserDto userDto) {
     log.info("Register user with verification request: {}", userDto);
     String token = authenticationService.registerUserWithVerify(userDto);
