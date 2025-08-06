@@ -1,8 +1,12 @@
 package ua.tc.marketplace.model.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -12,26 +16,29 @@ import java.util.Set;
  * includes properties such as ID, name, and value type.
  */
 //@Builder
-//@Data
-//@NoArgsConstructor
+@Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "category_attributes")
 @Entity
 public class CategoryAttribute {
-//  @Id
-//  @GeneratedValue(strategy = GenerationType.IDENTITY)
-//  private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "category_id", nullable = false)
+  private Category category;
 
-  @EmbeddedId
-  private CategoryAttributeId id;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "attribute_id", nullable = false)
+  private Attribute attribute;
 
-//  @JoinColumn(name = "category_id")
-//  private Category category;
-//
-//  @JoinColumn(name = "attribute_id")
-//  private Attribute attribute;
-
-  @OneToMany(mappedBy = "category_attributes", cascade = CascadeType.ALL, orphanRemoval = true)
-  private Set<CategoryAttributeValue> values;
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(
+          name = "category_attribute_option",
+          joinColumns = @JoinColumn(name = "category_attribute_id")
+  )
+  @Column(name = "value", nullable = false)
+  private Set<String> values = new HashSet<>();
 }
