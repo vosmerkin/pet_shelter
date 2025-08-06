@@ -1,8 +1,9 @@
 package ua.tc.marketplace.model.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
-import ua.tc.marketplace.model.enums.ValueType;
+import lombok.Data;
 
 /**
  * Entity class representing a classification attribute for a category.
@@ -11,18 +12,20 @@ import ua.tc.marketplace.model.enums.ValueType;
  * includes properties such as ID, name, and value type.
  */
 //@Builder
-//@Data
-//@NoArgsConstructor
+@Data
 @AllArgsConstructor
-@Table(name = "category_attribute_values")
+@Table(name = "category_attribute_value")
 @Entity
 public class CategoryAttributeValue {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+//  @Id
+//  @GeneratedValue(strategy = GenerationType.IDENTITY)
+//  private Long id;
 
-  @Column(name = "category_attribute_id")
-  private CategoryAttribute categoryAttribute;
+  @EmbeddedId
+  private CategoryAttributeId id;
 
+//  @Column(name = "category_attribute_id")
+//  private CategoryAttribute categoryAttribute;
+  @NotEmpty
   private String value;
 }

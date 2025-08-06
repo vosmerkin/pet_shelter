@@ -2,13 +2,7 @@ package ua.tc.marketplace.model.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import ua.tc.marketplace.model.enums.ValueType;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -28,11 +22,15 @@ public class CategoryAttribute {
 //  @GeneratedValue(strategy = GenerationType.IDENTITY)
 //  private Long id;
 
-  @JoinColumn(name = "category_id")
-  private Category category;
 
-  @JoinColumn(name = "attribute_id")
-  private Attribute attribute;
+  @EmbeddedId
+  private CategoryAttributeId id;
+
+//  @JoinColumn(name = "category_id")
+//  private Category category;
+//
+//  @JoinColumn(name = "attribute_id")
+//  private Attribute attribute;
 
   @OneToMany(mappedBy = "category_attributes", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<CategoryAttributeValue> values;

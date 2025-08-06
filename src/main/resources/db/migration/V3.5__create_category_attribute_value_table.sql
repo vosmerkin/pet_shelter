@@ -1,6 +1,3 @@
-category_attribute_values
-
-
 CREATE TABLE category_attribute_value (
     category_id                 BIGINT NOT NULL,
     attribute_id                BIGINT NOT NULL,
