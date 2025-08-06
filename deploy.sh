@@ -19,10 +19,11 @@ ssh evgen@192.168.31.61 << EOF
   #fi
 
   echo run app
-  pkill -f marketplace-0.0.1-SNAPSHOT.jar || echo "No running Java app found, continuing..."
-  nohup java -jar marketplace-0.0.1-SNAPSHOT.jar > app.log 2>&1 &
+  #pkill -f marketplace-0.0.1-SNAPSHOT.jar || echo "No running Java app found, continuing..."
+  #nohup java -jar -Dspring.profiles.active=prod marketplace-0.0.1-SNAPSHOT.jar > app.log 2>&1 &
 
-  #sh rerun_in_normal.sh
+  . env_vars.sh
+  sh rerun_in_normal.sh
 
   echo "✅ Deployment complete! App is running in the background."
 EOF

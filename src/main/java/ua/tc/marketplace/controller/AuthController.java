@@ -25,8 +25,8 @@ import ua.tc.marketplace.util.openapi.AuthOpenApi;
 @RequiredArgsConstructor
 public class AuthController implements AuthOpenApi {
 
-  @Value("${verification.mail.baseurl}")
-  private String baseUrl;
+  @Value("${verification.mail.verify-email-url}")
+  private String verifyEmailUrl;
 
   private final AuthenticationService authenticationService;
   private final MailService mailService;
@@ -53,11 +53,9 @@ public class AuthController implements AuthOpenApi {
     String token = authenticationService.registerUserWithVerify(userDto);
     //    return ResponseEntity.ok().build();
     String message =
-        "Click the following link to verify your email: "
-            + baseUrl
-            + ApiURLs.AUTH_BASE
-            + ApiURLs.AUTH_VERIFY_EMAIL
-            + token;
+            "Click the following link to verify your email: "
+                    + verifyEmailUrl
+                    + token;
     return ResponseEntity.status(HttpStatus.OK).body(message);
   }
 
