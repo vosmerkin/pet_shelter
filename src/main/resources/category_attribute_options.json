@@ -1,0 +1,342 @@
+[
+  {
+    "attributeName": "breed",
+    "categoryName": "dog",
+    "uaOptions": [
+      "Лабрадор-ретривер",
+      "Німецька вівчарка",
+      "Золотистий ретривер",
+      "Французький бульдог",
+      "Бульдог",
+      "Пудель",
+      "Бігль",
+      "Йоркширський тер’єр",
+      "Чихуахуа",
+      "Сибірський хаскі",
+      "Ротвейлер",
+      "Боксер",
+      "Далматин",
+      "Мопс",
+      "Австралійська вівчарка",
+      "Ші-тцу",
+      "Джек-рассел-тер’єр",
+      "Кавалер-кінг-чарльз-спанієль",
+      "Доберман",
+      "Вельш-коргі"
+    ],
+    "enOptions": [
+      "Labrador Retriever",
+      "German Shepherd",
+      "Golden Retriever",
+      "French Bulldog",
+      "Bulldog",
+      "Poodle",
+      "Beagle",
+      "Yorkshire Terrier",
+      "Chihuahua",
+      "Siberian Husky",
+      "Rottweiler",
+      "Boxer",
+      "Dalmatian",
+      "Pug",
+      "Australian Shepherd",
+      "Shih Tzu",
+      "Jack Russell Terrier",
+      "Cavalier King Charles Spaniel",
+      "Doberman",
+      "Welsh Corgi"
+    ]
+  },
+  {
+    "attributeName": "breed",
+    "categoryName": "cat",
+    "uaOptions": [
+      "Мейн-кун",
+      "Британська короткошерста",
+      "Сіамська",
+      "Бенгальська",
+      "Шотландська висловуха",
+      "Персидська",
+      "Сфінкс",
+      "Рагдолл",
+      "Норвезька лісова",
+      "Абіссінська"
+    ],
+    "enOptions": [
+      "Maine Coon",
+      "British Shorthair",
+      "Siamese",
+      "Bengal",
+      "Scottish Fold",
+      "Persian",
+      "Sphynx",
+      "Ragdoll",
+      "Norwegian Forest",
+      "Abyssinian"
+    ]
+  },
+  {
+    "attributeName": "breed",
+    "categoryName": "fish",
+    "uaOptions": [
+      "Гуппі",
+      "Золоті рибки",
+      "Неон",
+      "Скалярія",
+      "Барбус",
+      "Дискус",
+      "Бета (півник)",
+      "Коридорас",
+      "Тетра",
+      "Моллінезія"
+    ],
+    "enOptions": [
+      "Guppy",
+      "Goldfish",
+      "Neon Tetra",
+      "Angelfish",
+      "Barb",
+      "Discus",
+      "Betta (Siamese Fighting Fish)",
+      "Corydoras",
+      "Tetra",
+      "Molly"
+    ]
+  },
+  {
+    "attributeName": "breed",
+    "categoryName": "bird",
+    "uaOptions": [
+      "Хвилястий папуга",
+      "Корелла",
+      "Амадіна",
+      "Канарка",
+      "Нерозлучник",
+      "Ара",
+      "Какаду",
+      "Жако",
+      "Сенегальський папуга",
+      "Голуб"
+    ],
+    "enOptions": [
+      "Budgerigar",
+      "Cockatiel",
+      "Zebra Finch",
+      "Canary",
+      "Lovebird",
+      "Macaw",
+      "Cockatoo",
+      "African Grey Parrot",
+      "Senegal Parrot",
+      "Dove"
+    ]
+  },
+  {
+    "attributeName": "breed",
+    "categoryName": "rodent",
+    "uaOptions": [
+      "Хом’як сирійський",
+      "Хом’як джунгарський",
+      "Морська свинка",
+      "Дегу",
+      "Шиншила",
+      "Щур декоративний",
+      "Миша декоративна",
+      "Кролик карликовий",
+      "Бурундук",
+      "Гербіл"
+    ],
+    "enOptions": [
+      "Syrian Hamster",
+      "Djungarian Hamster",
+      "Guinea Pig",
+      "Degu",
+      "Chinchilla",
+      "Fancy Rat",
+      "Fancy Mouse",
+      "Dwarf Rabbit",
+      "Chipmunk",
+      "Gerbil"
+    ]
+  },
+  {
+    "attributeName": "age",
+    "categoryName": "dog",
+    "uaOptions": ["0-1 р", "1-3 р", "3-5 р", "більше 5 р"],
+    "enOptions": ["0-1 y", "1-3 y", "3-5 y", "older 5 y"]
+  },
+  {
+    "attributeName": "age",
+    "categoryName": "cat",
+    "uaOptions": ["0-1 р", "1-3 р", "3-5 р", "більше 5 р"],
+    "enOptions": ["0-1 y", "1-3 y", "3-5 y", "older 5 y"]
+  },
+  {
+    "attributeName": "age",
+    "categoryName": "fish",
+    "uaOptions": ["0-1 р", "1-3 р", "3-5 р", "більше 5 р"],
+    "enOptions": ["0-1 y", "1-3 y", "3-5 y", "older 5 y"]
+  },
+  {
+    "attributeName": "age",
+    "categoryName": "bird",
+    "uaOptions": ["0-1 р", "1-3 р", "3-5 р", "більше 5 р"],
+    "enOptions": ["0-1 y", "1-3 y", "3-5 y", "older 5 y"]
+  },
+  {
+    "attributeName": "age",
+    "categoryName": "rodent",
+    "uaOptions": ["0-1 р", "1-3 р", "3-5 р", "більше 5 р"],
+    "enOptions": ["0-1 y", "1-3 y", "3-5 y", "older 5 y"]
+  },
+  {
+    "attributeName": "size",
+    "categoryName": "dog",
+    "uaOptions": ["маленький", "середній", "великий"],
+    "enOptions": ["Small", "Middle", "Big"]
+  },
+  {
+    "attributeName": "size",
+    "categoryName": "cat",
+    "uaOptions": ["маленький", "середній", "великий"],
+    "enOptions": ["Small", "Middle", "Big"]
+  },
+  {
+    "attributeName": "size",
+    "categoryName": "fish",
+    "uaOptions": ["маленький", "середній", "великий"],
+    "enOptions": ["Small", "Middle", "Big"]
+  },
+  {
+    "attributeName": "size",
+    "categoryName": "bird",
+    "uaOptions": ["маленький", "середній", "великий"],
+    "enOptions": ["Small", "Middle", "Big"]
+  },
+  {
+    "attributeName": "size",
+    "categoryName": "rodent",
+    "uaOptions": ["маленький", "середній", "великий"],
+    "enOptions": ["Small", "Middle", "Big"]
+  },
+  {
+    "attributeName": "gender",
+    "categoryName": "dog",
+    "uaOptions": ["він", "вона"],
+    "enOptions": ["Male", "Female"]
+  },
+  {
+    "attributeName": "gender",
+    "categoryName": "cat",
+    "uaOptions": ["він", "вона"],
+    "enOptions": ["Male", "Female"]
+  },
+  {
+    "attributeName": "gender",
+    "categoryName": "fish",
+    "uaOptions": ["він", "вона"],
+    "enOptions": ["Male", "Female"]
+  },
+  {
+    "attributeName": "gender",
+    "categoryName": "bird",
+    "uaOptions": ["він", "вона"],
+    "enOptions": ["Male", "Female"]
+  },
+  {
+    "attributeName": "gender",
+    "categoryName": "rodent",
+    "uaOptions": ["він", "вона"],
+    "enOptions": ["Male", "Female"]
+  },
+  {
+    "attributeName": "coat length",
+    "categoryName": "dog",
+    "uaOptions": ["немає шерсті", "маленька", "середня", "довга"],
+    "enOptions": ["Hairless", "Short", "Medium", "Long"]
+  },
+  {
+    "attributeName": "coat length",
+    "categoryName": "cat",
+    "uaOptions": ["немає шерсті", "маленька", "середня", "довга"],
+    "enOptions": ["Hairless", "Short", "Medium", "Long"]
+  },
+  {
+    "attributeName": "coat length",
+    "categoryName": "fish",
+    "uaOptions": [],
+    "enOptions": []
+  },
+  {
+    "attributeName": "coat length",
+    "categoryName": "bird",
+    "uaOptions": [],
+    "enOptions": []
+  },
+  {
+    "attributeName": "coat length",
+    "categoryName": "rodent",
+    "uaOptions": ["немає шерсті", "маленька", "середня", "довга"],
+    "enOptions": ["Hairless", "Short", "Medium", "Long"]
+  },
+  {
+    "attributeName": "color",
+    "categoryName": "dog",
+    "uaOptions": ["білий", "чорний", "рудий", "плямистий", "смугастий"],
+    "enOptions": ["White", "Black", "Red", "Spotted", "Striped"]
+  },
+  {
+    "attributeName": "color",
+    "categoryName": "cat",
+    "uaOptions": ["білий", "чорний", "рудий", "плямистий", "смугастий"],
+    "enOptions": ["White", "Black", "Red", "Spotted", "Striped"]
+  },
+  {
+    "attributeName": "color",
+    "categoryName": "fish",
+    "uaOptions": ["білий", "чорний", "рудий", "плямистий", "смугастий"],
+    "enOptions": ["White", "Black", "Red", "Spotted", "Striped"]
+  },
+  {
+    "attributeName": "color",
+    "categoryName": "bird",
+    "uaOptions": ["білий", "чорний", "рудий", "плямистий", "смугастий"],
+    "enOptions": ["White", "Black", "Red", "Spotted", "Striped"]
+  },
+  {
+    "attributeName": "color",
+    "categoryName": "rodent",
+    "uaOptions": ["білий", "чорний", "рудий", "плямистий", "смугастий"],
+    "enOptions": ["White", "Black", "Red", "Spotted", "Striped"]
+  },
+  {
+    "attributeName": "health condition",
+    "categoryName": "dog",
+    "uaOptions": ["Вакцинований", "Кастрований", "Інвалід"],
+    "enOptions": ["Vaccinated", "Emasculate", "Handicap"]
+  },
+  {
+    "attributeName": "health condition",
+    "categoryName": "cat",
+    "uaOptions": ["Вакцинований", "Кастрований", "Інвалід"],
+    "enOptions": ["Vaccinated", "Emasculate", "Handicap"]
+  },
+  {
+    "attributeName": "health condition",
+    "categoryName": "fish",
+    "uaOptions": [],
+    "enOptions": []
+  },
+  {
+    "attributeName": "health condition",
+    "categoryName": "bird",
+    "uaOptions": [],
+    "enOptions": []
+  },
+  {
+    "attributeName": "health condition",
+    "categoryName": "rodent",
+    "uaOptions": ["Вакцинований", "Кастрований", "Інвалід"],
+    "enOptions": ["Vaccinated", "Emasculate", "Handicap"]
+  }
+]

@@ -5,6 +5,9 @@ import org.springframework.stereotype.Repository;
 import ua.tc.marketplace.model.entity.Category;
 import ua.tc.marketplace.model.entity.CategoryAttribute;
 
+import java.util.Optional;
+import java.util.Set;
+
 /**
  * Repository interface for managing {@link CategoryAttribute} entities.
  *
@@ -19,4 +22,6 @@ import ua.tc.marketplace.model.entity.CategoryAttribute;
  */
 @Repository
 public interface CategoryAttributeRepository extends JpaRepository<CategoryAttribute, Long> {
+    Optional<CategoryAttribute> findByCategory_IdAndAttribute_Id(Long categoryId, Long attributeId);
+    Optional<Set<CategoryAttribute>> findByCategory_Id(Long categoryId);
 }

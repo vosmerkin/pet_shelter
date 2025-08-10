@@ -8,10 +8,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ua.tc.marketplace.model.dto.category.CategoryCountedDto;
-import ua.tc.marketplace.model.dto.category.CategoryDto;
-import ua.tc.marketplace.model.dto.category.CreateCategoryDto;
-import ua.tc.marketplace.model.dto.category.UpdateCategoryDto;
+import ua.tc.marketplace.model.dto.category.*;
+
+import java.util.Set;
 
 /**
  * This interface defines the OpenAPI annotations for the {@link ua.tc.marketplace.controller.CategoryController} class.
@@ -56,7 +55,7 @@ public interface CategoryOpenApi {
           description = "Retrieves all category attributes by its unique identifier."
   )
   @GetMapping("/{categoryId}/attributes")
-  ResponseEntity<Set<CategoryAttributeDto>> getAttributesByCategoryId(@PathVariable Long categoryId);
+  ResponseEntity<Set<CategoryAttributeDto>> getCategoryAttributesByCategoryId(@PathVariable Long categoryId);
 
 
 

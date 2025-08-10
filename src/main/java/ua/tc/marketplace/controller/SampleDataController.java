@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.tc.marketplace.config.ApiURLs;
-import ua.tc.marketplace.util.SampleDataService;
+import ua.tc.marketplace.util.sampledata.SampleDataService;
 
 /**
 

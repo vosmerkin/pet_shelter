@@ -86,6 +86,7 @@ public class SecurityConfig {
                                         .requestMatchers(HttpMethod.POST, CREATE_USER_WITH_VERIFY_POST_URL).permitAll()
                                         .requestMatchers(HttpMethod.POST, SAMPLE_DATA_BASE + SAMPLE_DATA_ADD_ADS).permitAll()
                                         .requestMatchers(HttpMethod.PUT, AUTH_BASE + AUTH_RESET_PASSWORD).permitAll()
+                                        .requestMatchers(HttpMethod.PUT, CATEGORY_BASE + CATEGORY_ATTRIBUTE_UPDATE).permitAll()
 //                                        .requestMatchers(HttpMethod.POST, "/api/v1/ad").authenticated()
                                         .requestMatchers(
                                                 HttpMethod.GET,
@@ -104,16 +105,21 @@ public class SecurityConfig {
                                                 "/api/v1/photo/ad/{adId}",
                                                 "/api/v1/file/ad/{adId}",
                                                 "/api/v1/file/ad/{adId}/photo/{photoId}",
+                                                CATEGORY_BASE + CATEGORY_GET_ALL,
+                                                CATEGORY_BASE + CATEGORY_BY_ID,
+                                                CATEGORY_BASE + CATEGORY_GET_ALL_COUNTED,
+                                                CATEGORY_BASE + CATEGORY_ATTRIBUTE_BY_IDS,
+                                                CATEGORY_BASE + CATEGORY_ATTRIBUTES_BY_CATEGORY_ID,
                                                 "/api/v1/category",
                                                 "/api/v1/category/{id}",
+                                                "/api/v1/category/{categoryId}/attribute/{attributeId}",
+                                                "/api/v1/category/{categoryId}/attribute",
                                                 "/api/v1/comment",
                                                 "/api/v1/comment/{id}",
                                                 "/api/v1/tag",
                                                 "/api/v1/tag/{id}",
 //                                                "/api/v1/user/{id}",
-                                                USER_BASE + USER_GET_BY_ID,
-                                                "/api/v1/category",
-                                                "/api/v1/category/counted").permitAll()
+                                                USER_BASE + USER_GET_BY_ID).permitAll()
                                         .anyRequest().authenticated()
                 )
                 .logout(
