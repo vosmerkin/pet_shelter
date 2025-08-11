@@ -78,6 +78,8 @@ public class SampleDataService {
 
   public void addSampleData(int count) {
     addSampleUsers(count);
+    setUserIds();
+    setCategoryIds();
     //    addSampleAttributes();
     //    addSampleCategories();
     addCategoryAttributeOptions();
@@ -235,6 +237,9 @@ public class SampleDataService {
 
   private String generateAdAttribute(Category category, Attribute attribute) {
     // get AdAttribute from one of possible values, to be implemented later
+    if (attribute.getName().equals("pet name")){
+      return faker.animal().name();
+    }
     List<String> options = null;
     CategoryAttribute categoryAttribute =
         categoryAttributeRepository
