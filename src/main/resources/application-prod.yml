@@ -18,7 +18,8 @@ google:
 
 verification:
   mail:
-    baseurl: https://petshelter-production.up.railway.app
+    verify-email-url: https://project-pet-shelter-new.netlify.app/verify-email?token=
+    verify-password-reset: https://project-pet-shelter-new.netlify.app/verify-reset?token=
 
   resend:
     api:

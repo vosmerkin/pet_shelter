@@ -1,6 +1,6 @@
 package ua.tc.marketplace.util;
 
-import com.resend.*;
+//import com.resend.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,8 +14,12 @@ import ua.tc.marketplace.config.ApiURLs;
 @Service
 @RequiredArgsConstructor
 public class MailService {
-  @Value("${verification.mail.baseurl}")
-  private String baseUrl;
+//  @Value("${verification.mail.baseurl}")
+//  private String baseUrl;
+  @Value("${verification.mail.verify-email-url}")
+  private String verifyEmailUrl;
+  @Value("${verification.mail.verify-password-reset}")
+  private String verifyPasswordReset;
 
   @Value("${verification.mail.from}")
   private String from_email;
@@ -23,7 +27,7 @@ public class MailService {
   @Value("${verification.mail.subject}")
   private String subject;
 
-  private final Resend resend;
+//  private final Resend resend;
 
   private final JavaMailSender mailSender;
 
@@ -63,12 +67,11 @@ public class MailService {
     log.info("Sending registration verification email to {}", to_email);
     String message =
         "Click the following link to verify your email: "
-            + baseUrl
-            + ApiURLs.AUTH_BASE
-            + ApiURLs.AUTH_VERIFY_EMAIL_WITH_TOKEN
+            + verifyEmailUrl
             + token;
     SimpleMailMessage email = new SimpleMailMessage();
     email.setTo(to_email);
+    email.setFrom(from_email);
     email.setSubject(subject);
     email.setText(message);
     mailSender.send(email);
@@ -78,9 +81,7 @@ public class MailService {
     log.info("Sending password reset verification email to {}", to_email);
     String message =
         "Click the following link to reset password: "
-            + baseUrl
-            + ApiURLs.AUTH_BASE
-            + ApiURLs.AUTH_VERIFY_PASSWORD_RESET_WITH_TOKEN
+            + verifyPasswordReset
             + token;
     SimpleMailMessage email = new SimpleMailMessage();
     email.setTo(to_email);
