@@ -11,8 +11,6 @@ import ua.tc.marketplace.service.CategoryService;
     uses = {AttributeMapper.class, CategoryService.class})
 public interface CategoryAttributeMapper {
 
-  //    @Mapping(source = "attributes", target = "attribute")
-  //  @Mapping(target = "id", ignore = true)
   @Mapping(target = "categoryId", source = "category.id")
   @Mapping(target = "attributeId", source = "attribute.id")
   CategoryAttributeDto toDto(CategoryAttribute entity);
