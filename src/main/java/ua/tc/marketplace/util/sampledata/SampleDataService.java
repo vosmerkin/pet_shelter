@@ -1,19 +1,11 @@
 package ua.tc.marketplace.util.sampledata;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.*;
-
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ua.tc.marketplace.exception.category.CategoryAttributeNotFoundException;
 import ua.tc.marketplace.model.entity.*;
 import ua.tc.marketplace.model.enums.UserRole;
 import ua.tc.marketplace.model.enums.ValueType;
@@ -36,7 +28,7 @@ public class SampleDataService {
   private final AdRepository adRepository;
   private final UserService userService;
   private final CategoryService categoryService;
-  private final Faker faker = new Faker(new Locale("en"));
+  private final Faker faker = new Faker(java.util.Locale.ENGLISH);
 
   //  @PostConstruct
   //  public void generateTestData() {
@@ -82,7 +74,6 @@ public class SampleDataService {
     setCategoryIds();
     //    addSampleAttributes();
     //    addSampleCategories();
-    addCategoryAttributeOptions();
     addSampleAds(count);
   }
 
@@ -127,81 +118,6 @@ public class SampleDataService {
     log.info("✅ Added sample attributes to the database.");
   }
 
-  private void addCategoryAttributeOptions() {
-    List<Category> categories = categoryRepository.findAll();
-    List<Attribute> attributes = attributeRepository.findAll();
-    List<CategoryAttributeByNames> categoryAttributesByNames = getFromJson();
-    List<CategoryAttribute> categoryAttributes =
-        categoryAttributesByNames.stream()
-            .map(
-                byName ->
-                    findByNames(
-                        byName.getCategoryName(),
-                        byName.getAttributeName(),
-                        categories,
-                        attributes,
-                        byName.uaOptions)
-                //                    new CategoryAttribute(
-                //                        null,
-                //                        findByName(categories, byName.categoryName),
-                //                        findByName(attributes, byName.attributeName),
-                //                        new HashSet<String>(byName.uaOptions))
-                )
-            .toList();
-    //    for (CategoryAttribute categoryAttribute : categoryAttributes) {
-    //      if (categoryAttribute.getAttribute() == null)
-    //        System.out.println(categoryAttributes.indexOf(categoryAttribute));
-    //    }
-    categoryAttributeRepository.saveAll(categoryAttributes);
-    //    for (CategoryAttribute categoryAttribute: categoryAttributes){
-    //      categoryAttribute = categoryAttributeRepository.save
-    //    }
-  }
-
-  private CategoryAttribute findByNames(
-      String categoryName,
-      String attributeName,
-      List<Category> categories,
-      List<Attribute> attributes,
-      List<String> options) {
-    Category category = findByName(categories, categoryName);
-    Attribute attribute = findByName(attributes, attributeName);
-    Long catId = category != null ? category.getId() : null;
-    Long attrId = attribute != null ? attribute.getId() : null;
-
-    CategoryAttribute categoryAttribute =
-        categoryAttributeRepository.findByCategory_IdAndAttribute_Id(catId, attrId).orElse(null);
-    if (categoryAttribute != null) {
-      categoryAttribute.setValues(new HashSet<String>(options));
-    }
-    return categoryAttribute;
-  }
-
-  private <K> K findByName(List<K> list, String name) {
-    if (list == null || name == null) {
-      System.out.println("NULL!!!!!!!!!!!!!");
-      return null;
-    }
-    for (K item : list) {
-      if (item != null && name.equals(extractName(item))) {
-        if (item == null) System.out.println("NULL!!!!!!!!!!!!!");
-        return item;
-      }
-    }
-    System.out.println("NULL!!!!!!!!!!!!!");
-    return null;
-  }
-
-  private String extractName(Object item) {
-    if (item instanceof Category category) {
-      return category.getName();
-    }
-    if (item instanceof Attribute attribute) {
-      return attribute.getName();
-    }
-    return null;
-  }
-
   public void addSampleAds(int count) {
     setUserIds();
     setCategoryIds();
@@ -231,13 +147,12 @@ public class SampleDataService {
 
       adRepository.save(ad);
     }
-
     log.info("✅ Added {}  sample ads to the database.", count);
   }
 
   private String generateAdAttribute(Category category, Attribute attribute) {
     // get AdAttribute from one of possible values, to be implemented later
-    if (attribute.getName().equals("pet name")){
+    if (attribute.getName().equals("pet name") || attribute.getName().equals("pet_name")){
       return faker.animal().name();
     }
     List<String> options = null;
@@ -250,45 +165,5 @@ public class SampleDataService {
     }
     String atrValue = faker.options().nextElement(options);
     return atrValue;
-  }
-
-  private List<CategoryAttributeByNames> getFromJson() {
-    ObjectMapper mapper = new ObjectMapper();
-    List<CategoryAttributeByNames> categoryAttributes = new ArrayList<>();
-    //    File file = new File("/src/main/resources/category_attribute_options.json");
-    //    System.out.println(file.getAbsolutePath());
-    //    try {
-    //      // Read JSON file and convert to Java object
-    //      categoryAttributes =
-    //          mapper.readValue(
-    //              new File("/src/main/resources/category_attribute_options.json"),
-    //              new TypeReference<List<CategoryAttributeByNames>>() {});
-    //    } catch (Exception e) {
-    //      e.printStackTrace();
-    //    }
-
-    try (InputStream inputStream =
-        getClass().getClassLoader().getResourceAsStream("category_attribute_options.json")) {
-
-      if (inputStream == null) {
-        throw new IllegalArgumentException(
-            "File not found! Make sure category_attribute_options.json");
-      }
-
-      categoryAttributes =
-          mapper.readValue(inputStream, new TypeReference<List<CategoryAttributeByNames>>() {});
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-
-    return categoryAttributes;
-  }
-
-  @Data
-  private static class CategoryAttributeByNames {
-    private String attributeName;
-    private String categoryName;
-    private List<String> uaOptions;
-    private List<String> enOptions;
   }
 }
