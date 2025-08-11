@@ -1,20 +1,15 @@
-package ua.tc.marketplace.util;
+package ua.tc.marketplace.util.sampledata;
 
 import com.github.javafaker.Faker;
-
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ua.tc.marketplace.model.entity.*;
 import ua.tc.marketplace.model.enums.UserRole;
 import ua.tc.marketplace.model.enums.ValueType;
-import ua.tc.marketplace.repository.AdRepository;
-import ua.tc.marketplace.repository.AttributeRepository;
-import ua.tc.marketplace.repository.CategoryRepository;
-import ua.tc.marketplace.repository.UserRepository;
+import ua.tc.marketplace.repository.*;
 import ua.tc.marketplace.service.CategoryService;
 import ua.tc.marketplace.service.UserService;
 
@@ -29,16 +24,17 @@ public class SampleDataService {
   private final UserRepository userRepository;
   private final CategoryRepository categoryRepository;
   private final AttributeRepository attributeRepository;
+  private final CategoryAttributeRepository categoryAttributeRepository;
   private final AdRepository adRepository;
   private final UserService userService;
   private final CategoryService categoryService;
-  private final Faker faker = new Faker(new Locale("en"));
+  private final Faker faker = new Faker(java.util.Locale.ENGLISH);
 
-//  @PostConstruct
-//  public void generateTestData() {
-//
-//    addSampleData();
-//  }
+  //  @PostConstruct
+  //  public void generateTestData() {
+  //
+  //    addSampleData();
+  //  }
 
   private void setUserIds() {
     log.info("setting userIds list");
@@ -52,28 +48,32 @@ public class SampleDataService {
 
   private void setCategoryIds() {
     log.info("setting categoryIds list");
-    if (categoryIds == null ||categoryIds.isEmpty()) {
+    if (categoryIds == null || categoryIds.isEmpty()) {
       categoryIds = categoryRepository.findAll().stream().map(Category::getId).toList();
     }
     if (categoryIds.isEmpty()) {
       addSampleCategories();
+      categoryIds = categoryRepository.findAll().stream().map(Category::getId).toList();
     }
   }
 
   private void setAttributes() {
     log.info("setting attributes list");
-    if (attributes == null|| attributes.isEmpty()) {
+    if (attributes == null || attributes.isEmpty()) {
       attributes = attributeRepository.findAll();
     }
     if (attributes.isEmpty()) {
       addSampleAttributes();
+      attributes = attributeRepository.findAll();
     }
   }
 
   public void addSampleData(int count) {
     addSampleUsers(count);
-    addSampleAttributes();
-    addSampleCategories();
+    setUserIds();
+    setCategoryIds();
+    //    addSampleAttributes();
+    //    addSampleCategories();
     addSampleAds(count);
   }
 
@@ -111,10 +111,10 @@ public class SampleDataService {
     attributeRepository.save(new Attribute(null, "age", ValueType.STRING));
     attributeRepository.save(new Attribute(null, "size", ValueType.STRING));
     attributeRepository.save(new Attribute(null, "gender", ValueType.STRING));
-    attributeRepository.save(new Attribute(null, "coat_length", ValueType.STRING));
+    attributeRepository.save(new Attribute(null, "coat length", ValueType.STRING));
     attributeRepository.save(new Attribute(null, "color", ValueType.STRING));
-    attributeRepository.save(new Attribute(null, "health_condition", ValueType.STRING));
-    attributeRepository.save(new Attribute(null, "pet_name", ValueType.STRING));
+    attributeRepository.save(new Attribute(null, "health condition", ValueType.STRING));
+    attributeRepository.save(new Attribute(null, "pet name", ValueType.STRING));
     log.info("✅ Added sample attributes to the database.");
   }
 
@@ -147,14 +147,23 @@ public class SampleDataService {
 
       adRepository.save(ad);
     }
-
     log.info("✅ Added {}  sample ads to the database.", count);
   }
 
-  String generateAdAttribute(Category category, Attribute attribute) {
+  private String generateAdAttribute(Category category, Attribute attribute) {
     // get AdAttribute from one of possible values, to be implemented later
-    //    faker.options().nextElement(getCategoryAttributeValues(Category category, Attribute
-    // attribute));
-    return "some_value";
+    if (attribute.getName().equals("pet name") || attribute.getName().equals("pet_name")){
+      return faker.animal().name();
+    }
+    List<String> options = null;
+    CategoryAttribute categoryAttribute =
+        categoryAttributeRepository
+            .findByCategory_IdAndAttribute_Id(category.getId(), attribute.getId())
+            .orElse(null);
+    if (categoryAttribute != null) {
+      options = new ArrayList<>(categoryAttribute.getValues());
+    }
+    String atrValue = faker.options().nextElement(options);
+    return atrValue;
   }
 }

@@ -8,10 +8,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ua.tc.marketplace.model.dto.category.CategoryCountedDto;
-import ua.tc.marketplace.model.dto.category.CategoryDto;
-import ua.tc.marketplace.model.dto.category.CreateCategoryDto;
-import ua.tc.marketplace.model.dto.category.UpdateCategoryDto;
+import ua.tc.marketplace.model.dto.category.*;
+
+import java.util.Set;
 
 /**
  * This interface defines the OpenAPI annotations for the {@link ua.tc.marketplace.controller.CategoryController} class.
@@ -41,6 +40,26 @@ public interface CategoryOpenApi {
   @GetMapping("/{id}")
   ResponseEntity<CategoryDto> getCategoryById(@PathVariable Long id);
 
+
+  @Operation(
+          summary = "Get category attribute by category ID and attribute ID",
+          description = "Retrieves a category attribute by its unique identifiers."
+  )
+  @GetMapping("/{categoryId}/attribute{attributeId}")
+  ResponseEntity<CategoryAttributeDto> getCategoryAttributeByIds(
+          @PathVariable Long categoryId,
+          @PathVariable Long attributeId);
+
+  @Operation(
+          summary = "Get category attributes by category ID",
+          description = "Retrieves all category attributes by its unique identifier."
+  )
+  @GetMapping("/{categoryId}/attributes")
+  ResponseEntity<Set<CategoryAttributeDto>> getCategoryAttributesByCategoryId(@PathVariable Long categoryId);
+
+
+
+
   @Operation(
           summary = "Create a new category",
           description = "Creates a new category based on the provided data."
@@ -59,9 +78,22 @@ public interface CategoryOpenApi {
   );
 
   @Operation(
+          summary = "Update an existing category attribute options ",
+          description = "Updates an existing category attribute options with the provided data."
+  )
+  @PutMapping("/{categoryId}/attribute{attributeId}")
+  ResponseEntity<CategoryAttributeDto> updateCategoryAttribute(
+          @PathVariable Long categoryId,
+          @PathVariable Long attributeId,
+          @RequestBody UpdateCategoryAttributeDto categoryDto
+  );
+
+  @Operation(
           summary = "Delete a category",
           description = "Deletes a category by its unique identifier."
   )
   @DeleteMapping("/{id}")
   ResponseEntity<Void> deleteCategory(@PathVariable Long id);
+
+
 }

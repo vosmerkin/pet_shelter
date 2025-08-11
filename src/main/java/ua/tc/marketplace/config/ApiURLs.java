@@ -29,6 +29,18 @@ public class ApiURLs {
     public static final String USER_UPDATE = "";
     public static final String USER_DELETE = "/{id}";
 
+    //CategoryController
+    public static final String CATEGORY_BASE = "/api/v1/category";
+    public static final String CATEGORY_GET_ALL = "";
+    public static final String CATEGORY_GET_ALL_COUNTED = "/counted";
+    public static final String CATEGORY_BY_ID = "/{id}";
+    public static final String CATEGORY_ATTRIBUTE_BY_IDS = "/{categoryId}/attribute/{attributeId}";
+    public static final String CATEGORY_ATTRIBUTES_BY_CATEGORY_ID = "/{categoryId}/attribute";
+    public static final String CATEGORY_CREATE = "";
+    public static final String CATEGORY_UPDATE = "/{id}";
+    public static final String CATEGORY_ATTRIBUTE_UPDATE = "/{categoryId}/attribute/{attributeId}";
+    public static final String CATEGORY_DELETE = "/{id}";
+
 
     //SampleDataController
     public static final String SAMPLE_DATA_BASE = "/api/v1/sample_data";
