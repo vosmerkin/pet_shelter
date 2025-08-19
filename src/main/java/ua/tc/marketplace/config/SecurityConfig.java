@@ -119,6 +119,7 @@ public class SecurityConfig {
                                                 "/api/v1/tag",
                                                 "/api/v1/tag/{id}",
 //                                                "/api/v1/user/{id}",
+                                                USER_BASE + USER_GET_BY_EMAIL,
                                                 USER_BASE + USER_GET_BY_ID).permitAll()
                                         .anyRequest().authenticated()
                 )

@@ -28,7 +28,7 @@ public class VerificationToken {
         EMAIL_CHANGE,
         TWO_FACTOR
     }
-    private static final int EXPIRATION = 15;
+    private static final int EXPIRATION = 2;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
