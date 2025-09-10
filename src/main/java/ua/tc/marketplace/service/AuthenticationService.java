@@ -20,6 +20,8 @@ public interface AuthenticationService {
 
     boolean verifyEmail(String token);
 
+    AuthResponse verifyEmailWithLogin(String token);
+
     void forgetPasswordRequest(String email);
 
     boolean resetPassword(PasswordChangeRequest request);

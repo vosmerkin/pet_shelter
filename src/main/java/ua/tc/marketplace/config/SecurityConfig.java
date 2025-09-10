@@ -93,6 +93,7 @@ public class SecurityConfig {
                                                 "/api/v1/auth/signup_verify",
                                                 "/api/v1/auth/test_email",
                                                 AUTH_BASE + AUTH_VERIFY_EMAIL,
+                                                AUTH_BASE + AUTH_VERIFY_EMAIL_LOGIN,
                                                 AUTH_BASE + AUTH_FORGET_PASSWORD,
                                                 AUTH_BASE + AUTH_VERIFY_PASSWORD_RESET,
                                                 "/api/v1/ad",

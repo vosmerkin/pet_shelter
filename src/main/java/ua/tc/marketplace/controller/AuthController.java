@@ -69,12 +69,18 @@ public class AuthController implements AuthOpenApi {
   //        return ResponseEntity.ok().build();
   //    }
 
-  //  @GetMapping(AUTH_VERIFY_EMAIL)
-  @GetMapping("/verify-email")
+    @GetMapping(AUTH_VERIFY_EMAIL)
   public ResponseEntity<Boolean> verifyEmail(@RequestParam("token") String token) {
-    //  public ResponseEntity<Boolean> verifyEmail(@PathVariable String token) {
     log.info("Verify email request: {}", token);
     return ResponseEntity.status(HttpStatus.OK).body(authenticationService.verifyEmail(token));
+  }
+
+  @GetMapping(AUTH_VERIFY_EMAIL_LOGIN)
+  public ResponseEntity<AuthResponse> verifyEmailLogin(@RequestParam("token") String token) {
+    log.info("Verify email request: {}", token);
+    return ResponseEntity.ok(authenticationService.verifyEmailWithLogin(token));
+
+//    return ResponseEntity.status(HttpStatus.OK).body(authenticationService.verifyEmail(token));
   }
 
   @GetMapping(AUTH_FORGET_PASSWORD)

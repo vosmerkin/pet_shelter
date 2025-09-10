@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -47,141 +48,172 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-    private final AuthenticationManager authenticationManager;
-    private final JwtUtil jwtUtil;
-    private final JwtConfig jwtConfig;
-    private final UserService userService;
-    private final VerificationTokenRepository verificationTokenRepository;
-    private final UserRepository userRepository;
-    private final VerificationTokenService verificationTokenService;
-    private final ApplicationEventPublisher eventPublisher;
-    private final PasswordEncoder passwordEncoder;
+  private final AuthenticationManager authenticationManager;
+  private final JwtUtil jwtUtil;
+  private final JwtConfig jwtConfig;
+  private final UserService userService;
+  private final VerificationTokenRepository verificationTokenRepository;
+  private final UserRepository userRepository;
+  private final VerificationTokenService verificationTokenService;
+  private final ApplicationEventPublisher eventPublisher;
+  private final PasswordEncoder passwordEncoder;
+  private final UserDetailsImpl userDetails;
 
-
-    /**
-     * Authenticates a user/
-     *
-     * @param authRequest The email of the user to retrieve.
-     * @return The UserDto representing the found user.
-     * @throws UserNotFoundException If the user is not found.
-     */
-    @Override
-    public AuthResponse authenticate(AuthRequest authRequest) {
-        try {
-            Authentication authentication =
-                    authenticationManager.authenticate(
-                            new UsernamePasswordAuthenticationToken(authRequest.email(), authRequest.password()));
-            String email = authentication.getName();
-            User user = userService.findUserByEmail(email);
-            String token = jwtUtil.createToken(user);
-            return new AuthResponse(user.getId(), email, token, "", jwtConfig.getTokenExpirationAfterSeconds());
-        } catch (BadCredentialsException e) {
-            throw new BadCredentialsAuthenticationException();
-        } catch (Exception e) {
-            throw new GeneralAuthenticationException(e.getMessage());
-        }
+  /**
+   * Authenticates a user/
+   *
+   * @param authRequest The email of the user to retrieve.
+   * @return The UserDto representing the found user.
+   * @throws UserNotFoundException If the user is not found.
+   */
+  @Override
+  public AuthResponse authenticate(AuthRequest authRequest) {
+    try {
+      Authentication authentication =
+          authenticationManager.authenticate(
+              new UsernamePasswordAuthenticationToken(authRequest.email(), authRequest.password()));
+      String email = authentication.getName();
+      User user = userService.findUserByEmail(email);
+      String token = jwtUtil.createToken(user);
+      return new AuthResponse(
+          user.getId(), email, token, "", jwtConfig.getTokenExpirationAfterSeconds());
+    } catch (BadCredentialsException e) {
+      throw new BadCredentialsAuthenticationException();
+    } catch (Exception e) {
+      throw new GeneralAuthenticationException(e.getMessage());
     }
+  }
 
-    @Override
-    public AuthResponse registerUser(CreateUserDto userDto) {
-        userService.createUser(userDto);
-        return authenticate(new AuthRequest(userDto.email(), userDto.password()));
+  @Override
+  public AuthResponse registerUser(CreateUserDto userDto) {
+    userService.createUser(userDto);
+    return authenticate(new AuthRequest(userDto.email(), userDto.password()));
+  }
+
+  @Transactional
+  @Override
+  public String registerUserWithVerify(CreateUserDto userDto) {
+    HttpServletRequest request =
+        ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+    log.info("request.getContextPath() = {}", request.getContextPath());
+
+    UserDto newUserDto = userService.createUser(userDto);
+    VerificationToken token =
+        new VerificationToken(
+            userService.findUserByEmail(userDto.email()), VerificationToken.TokenType.REGISTRATION);
+
+    verificationTokenRepository.save(token);
+
+    eventPublisher.publishEvent(new OnRegistrationCompleteEvent(newUserDto, token.getToken()));
+    //        mailService.sendVerificationEmailResend(userDto.email(), token.getToken());
+    return token.getToken();
+  }
+
+  @Override
+  public Optional<User> getAuthenticatedUser() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    Object principal = authentication.getPrincipal();
+    if (authentication != null && principal instanceof UserDetailsImpl) {
+      return Optional.of(((UserDetailsImpl) principal).getUser());
+    } else if (authentication instanceof UsernamePasswordAuthenticationToken) {
+      String email = (String) authentication.getPrincipal();
+      User user = userService.findUserByEmail(email);
+
+      return Optional.of(user);
     }
+    log.info(
+        "Authentication is null or principal is not of type UserDetailsImpl or UsernamePasswordAuthenticationToken");
+    return Optional.empty();
+  }
 
-    @Transactional
-    @Override
-    public String registerUserWithVerify(CreateUserDto userDto) {
-        HttpServletRequest request =
-                ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
-                        .getRequest();
-        log.info("request.getContextPath() = {}", request.getContextPath());
+  @Override
+  public boolean verifyEmail(String token) {
+    VerificationToken verificationToken = verificationTokenService.getVerificationToken(token);
+    verificationTokenService.verifyToken(
+        verificationToken, VerificationToken.TokenType.REGISTRATION);
+    User user = verificationToken.getUser();
+    user.setEnabled(true);
+    userRepository.save(user);
+    verificationTokenService.delete(verificationToken.getId());
+    return true;
+  }
 
-        UserDto newUserDto = userService.createUser(userDto);
-        VerificationToken token =
-                new VerificationToken(userService.findUserByEmail(userDto.email()), VerificationToken.TokenType.REGISTRATION);
-
-        verificationTokenRepository.save(token);
-
-        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(newUserDto,
-                token.getToken()));
-//        mailService.sendVerificationEmailResend(userDto.email(), token.getToken());
-        return token.getToken();
-    }
-
-    @Override
-    public Optional<User> getAuthenticatedUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = authentication.getPrincipal();
-        if (authentication != null
-                && principal instanceof UserDetailsImpl) {
-            return Optional.of(((UserDetailsImpl) principal).getUser());
-        } else if (authentication instanceof UsernamePasswordAuthenticationToken) {
-            String email = (String) authentication.getPrincipal();
-            User user = userService.findUserByEmail(email);
-
-            return Optional.of(user);
-        }
-        log.info(
-                "Authentication is null or principal is not of type UserDetailsImpl or UsernamePasswordAuthenticationToken");
-        return Optional.empty();
-    }
-
-    @Override
-    public boolean verifyEmail(String token) {
+  @Override
+  public AuthResponse verifyEmailWithLogin(String token) {
+    if (verifyEmail(token)) {
+      try {
         VerificationToken verificationToken = verificationTokenService.getVerificationToken(token);
-        verificationTokenService.verifyToken(verificationToken,VerificationToken.TokenType.REGISTRATION);
         User user = verificationToken.getUser();
-        user.setEnabled(true);
-        userRepository.save(user);
-        verificationTokenService.delete(verificationToken.getId());
-        return true;
+        Authentication authentication =
+            new UsernamePasswordAuthenticationToken(user, null, userDetails.getAuthorities());
+        //                        AuthorityUtils.createAuthorityList("ROLE_USER"));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+//        Authentication authentication =
+//            authenticationManager.authenticate(
+//                new UsernamePasswordAuthenticationToken(
+//                    authRequest.email(), authRequest.password()));
+//        String email = authentication.getName();
+//        User user = userService.findUserByEmail(email);
+        String authToken = jwtUtil.createToken(user);
+        return new AuthResponse(
+            user.getId(), user.getEmail(), authToken, "", jwtConfig.getTokenExpirationAfterSeconds());
+      } catch (BadCredentialsException e) {
+        throw new BadCredentialsAuthenticationException();
+      } catch (Exception e) {
+        throw new GeneralAuthenticationException(e.getMessage());
+      }
     }
 
-    @Override
-    public void forgetPasswordRequest(String email) {
-        HttpServletRequest request =
-                ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
-                        .getRequest();
-        log.info("request.getContextPath() = {}", request.getContextPath());
-        log.debug("request.getContextPath() = {}", request.getContextPath());
-        //check email
+    return null;
+  }
 
-        if (!userService.UserExistsByEmail(email))
-            throw new UserNotFoundException(email);
-        //create token
-        verificationTokenService.clearExpiredTokens();
-        VerificationToken token =
-                new VerificationToken(userService.findUserByEmail(email),
-                        VerificationToken.TokenType.PASSWORD_RESET);
-        verificationTokenRepository.save(token);
-        //create event for mail sending
-        eventPublisher.publishEvent(new OnForgetPasswordEvent(token));
-    }
+  @Override
+  public void forgetPasswordRequest(String email) {
+    HttpServletRequest request =
+        ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+    log.info("request.getContextPath() = {}", request.getContextPath());
+    log.debug("request.getContextPath() = {}", request.getContextPath());
+    // check email
 
-    @Override
-    public boolean verifyResetPasswordToken(String token) {
-        log.debug("Verifying token {}", token);
-        VerificationToken verificationToken = verificationTokenService.getVerificationToken(token);
-        return verificationTokenService.verifyToken(verificationToken, VerificationToken.TokenType.PASSWORD_RESET);
-    }
+    if (!userService.UserExistsByEmail(email)) throw new UserNotFoundException(email);
+    // create token
+    verificationTokenService.clearExpiredTokens();
+    VerificationToken token =
+        new VerificationToken(
+            userService.findUserByEmail(email), VerificationToken.TokenType.PASSWORD_RESET);
+    verificationTokenRepository.save(token);
+    // create event for mail sending
+    eventPublisher.publishEvent(new OnForgetPasswordEvent(token));
+  }
 
-    @Override
-    public boolean resetPassword(PasswordChangeRequest request) {
-        VerificationToken verificationToken = verificationTokenService.getVerificationToken(request.passwordResetToken());
-        if (!verificationTokenService.verifyToken(verificationToken, VerificationToken.TokenType.PASSWORD_RESET))
-            throw new VerificationTokenNotFoundOrExpiredException(verificationToken.getToken());
-        User user = userService.findUserByEmail(request.email());
-        UpdateUserDto updateUserDto = UpdateUserDto.builder()
-                .id(user.getId())
-                .password(passwordEncoder.encode(request.password()))
-                .build();
-        userService.updateUser(updateUserDto);
-        return true;
-    }
+  @Override
+  public boolean verifyResetPasswordToken(String token) {
+    log.debug("Verifying token {}", token);
+    VerificationToken verificationToken = verificationTokenService.getVerificationToken(token);
+    return verificationTokenService.verifyToken(
+        verificationToken, VerificationToken.TokenType.PASSWORD_RESET);
+  }
 
-    public boolean hasId(Long id) {
-        User authenticatedUser = getAuthenticatedUser().orElseThrow(() -> new UserNotFoundException(id));
-        return authenticatedUser.getId().equals(id);
+  @Override
+  public boolean resetPassword(PasswordChangeRequest request) {
+    VerificationToken verificationToken =
+        verificationTokenService.getVerificationToken(request.passwordResetToken());
+    if (!verificationTokenService.verifyToken(
+        verificationToken, VerificationToken.TokenType.PASSWORD_RESET))
+      throw new VerificationTokenNotFoundOrExpiredException(verificationToken.getToken());
+    User user = userService.findUserByEmail(request.email());
+    UpdateUserDto updateUserDto =
+        UpdateUserDto.builder()
+            .id(user.getId())
+            .password(passwordEncoder.encode(request.password()))
+            .build();
+    userService.updateUser(updateUserDto);
+    return true;
+  }
 
-    }
+  public boolean hasId(Long id) {
+    User authenticatedUser =
+        getAuthenticatedUser().orElseThrow(() -> new UserNotFoundException(id));
+    return authenticatedUser.getId().equals(id);
+  }
 }

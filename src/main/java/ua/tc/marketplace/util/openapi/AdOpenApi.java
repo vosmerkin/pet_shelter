@@ -47,7 +47,7 @@ public interface AdOpenApi {
   @Operation(
       summary = "Get advertisement by ID",
       description = "Retrieves an advertisement by its unique identifier.")
-  @GetMapping("/{adId}")
+//  @GetMapping("/{adId}")
   ResponseEntity<AdDto> getAdById(@PathVariable Long adId);
 
   @Operation(
