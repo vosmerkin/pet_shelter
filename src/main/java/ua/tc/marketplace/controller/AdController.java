@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ua.tc.marketplace.config.ApiURLs;
 import ua.tc.marketplace.facade.AdFacade;
 import ua.tc.marketplace.model.dto.ad.*;
+import ua.tc.marketplace.model.enums.ApiEndpoint;
 import ua.tc.marketplace.util.openapi.AdOpenApi;
 
 /**
@@ -54,9 +55,11 @@ public class AdController implements AdOpenApi {
     private final AdFacade adFacade;
 
     @Override
-    @GetMapping
+    @RequestMapping(method = ApiEndpoint.GET_ALL_ADS.getPath())
+    @GetMapping(ApiEndpoint.GET_ALL_ADS. )
     public ResponseEntity<Page<AdDto>> getAllAds(
             @RequestParam Map<String, String> params, @PageableDefault(sort = "id") Pageable pageable) {
+        ApiEndpoint.GET_ALL_ADS.getPath();
         return ResponseEntity.ok(adFacade.findAll(params, pageable));
     }
 
