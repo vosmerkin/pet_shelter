@@ -43,7 +43,7 @@ public class VerificationToken {
     @NotNull
     private TokenType type;
 
-    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "user_id")
     @NotNull
     private User user;
