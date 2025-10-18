@@ -20,6 +20,7 @@ public class ApiURLs {
     public static final String AUTH_VERIFY_PASSWORD_RESET_WITH_TOKEN = "/verify-reset?token=";
     public static final String AUTH_RESET_PASSWORD = "/reset_password";
     public static final String AUTH_SIGNUP_WITH_VERIFY = "/signup_verify";
+    public static final String LIST_TOKENS = "/list_tokens";
 
 
     //UserController

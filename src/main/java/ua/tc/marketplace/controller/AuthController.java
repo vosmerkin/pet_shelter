@@ -11,13 +11,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.tc.marketplace.config.ApiURLs;
+import ua.tc.marketplace.model.VerificationToken;
 import ua.tc.marketplace.model.auth.AuthRequest;
 import ua.tc.marketplace.model.auth.AuthResponse;
 import ua.tc.marketplace.model.auth.PasswordChangeRequest;
 import ua.tc.marketplace.model.dto.user.CreateUserDto;
 import ua.tc.marketplace.service.AuthenticationService;
+import ua.tc.marketplace.service.VerificationTokenService;
 import ua.tc.marketplace.util.MailService;
 import ua.tc.marketplace.util.openapi.AuthOpenApi;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -30,6 +34,7 @@ public class AuthController implements AuthOpenApi {
 
   private final AuthenticationService authenticationService;
   private final MailService mailService;
+  private final VerificationTokenService verificationTokenService;
 
   @Override
   @PostMapping("/login")
@@ -68,6 +73,12 @@ public class AuthController implements AuthOpenApi {
   // "JavaMailSender_sdfsdfsdfsdfs");
   //        return ResponseEntity.ok().build();
   //    }
+
+  @GetMapping(LIST_TOKENS)
+  public ResponseEntity<List<VerificationToken>> listTokens(){
+    log.info("Request for List of tokens");
+    return ResponseEntity.status(HttpStatus.OK).body(verificationTokenService.getAll());
+  }
 
     @GetMapping(AUTH_VERIFY_EMAIL)
   public ResponseEntity<Boolean> verifyEmail(@RequestParam("token") String token) {

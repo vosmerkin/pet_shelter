@@ -15,8 +15,8 @@ import java.util.Properties;
 @EnableConfigurationProperties(MailProperties.class)
 public class MailConfig {
 
-    @Value("${verification.resend.api.key}")
-    String resendApiKey;
+//    @Value("${verification.resend.api.key}")
+//    String resendApiKey;
 
     private final MailProperties mailProperties;
 
@@ -72,8 +72,8 @@ public class MailConfig {
     }
 
 
-    @Bean
-    public Resend resendMailService() {
-        return new Resend(resendApiKey);
-    }
+//    @Bean
+//    public Resend resendMailService() {
+//        return new Resend(resendApiKey);
+//    }
 }

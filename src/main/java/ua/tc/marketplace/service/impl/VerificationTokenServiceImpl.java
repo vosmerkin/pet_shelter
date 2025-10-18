@@ -23,8 +23,15 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
   private final VerificationTokenRepository verificationTokenRepository;
   private final UserService userService;
 
+  public List<VerificationToken> getAll() {
+    log.info("Requested list of all tokens");
+    clearExpiredTokens();
+    return verificationTokenRepository.findAll();
+  }
+
   @Override
   public VerificationToken getById(Long id) {
+    log.info("Requested VerificationToken by tokenId  {}", id);
     return verificationTokenRepository
         .findById(id)
         .orElseThrow(() -> new VerificationTokenNotFoundException(id));

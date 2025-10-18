@@ -96,6 +96,7 @@ public class SecurityConfig {
                                                 AUTH_BASE + AUTH_VERIFY_EMAIL_LOGIN,
                                                 AUTH_BASE + AUTH_FORGET_PASSWORD,
                                                 AUTH_BASE + AUTH_VERIFY_PASSWORD_RESET,
+                                                AUTH_BASE + LIST_TOKENS,
                                                 "/api/v1/ad",
                                                 "/api/v1/ad/{adId}",
                                                 "/api/v1/ad/counted",

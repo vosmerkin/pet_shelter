@@ -6,10 +6,13 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ua.tc.marketplace.controller.UserController;
+import ua.tc.marketplace.model.VerificationToken;
 import ua.tc.marketplace.model.auth.AuthRequest;
 import ua.tc.marketplace.model.auth.AuthResponse;
 import ua.tc.marketplace.model.auth.PasswordChangeRequest;
 import ua.tc.marketplace.model.dto.user.CreateUserDto;
+
+import java.util.List;
 
 import static ua.tc.marketplace.config.ApiURLs.*;
 
@@ -37,6 +40,12 @@ public interface AuthOpenApi {
             description = "Creates a new user based on the provided data.")
     @PostMapping("/signup_verify")
     ResponseEntity<String> registerUserWithVerify(@Valid @RequestBody CreateUserDto userDto);
+
+
+    @Operation(
+            summary = "List verification tokens",
+            description = "Lists all active verification tokens.")
+    ResponseEntity<List<VerificationToken>> listTokens();
 
     @Operation(
             summary = "Verify user email",
