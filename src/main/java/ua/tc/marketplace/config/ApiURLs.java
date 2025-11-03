@@ -10,8 +10,26 @@ public class ApiURLs {
     public static final String AD_UPDATE = "/{adId}";
     public static final String AD_DELETE = "/{adId}";
 
+    //Article controller
+    public static final String ARTICLE_BASE = "/api/v1/article";
+    public static final String ARTICLE_GET_ALL = "";
+    public static final String ARTICLE_GET_BY_ID = "/{id}";
+    public static final String ARTICLE_CREATE = "";
+    public static final String ARTICLE_UPDATE = "/{id}";
+    public static final String ARTICLE_DELETE = "/{id}";
+
+    //Attribute controller
+    public static final String ATTRIBUTE_BASE = "/api/v1/attribute";
+    public static final String ATTRIBUTE_GET_ALL = "";
+    public static final String ATTRIBUTE_GET_BY_ID = "/{id}";
+    public static final String ATTRIBUTE_CREATE = "";
+    public static final String ATTRIBUTE_UPDATE = "/{id}";
+    public static final String ATTRIBUTE_DELETE = "/{id}";
+
     //AuthController
     public static final String AUTH_BASE = "/api/v1/auth";
+    public static final String AUTH_LOGIN = "/login";
+    public static final String AUTH_SIGNUP = "/signup";
     public static final String AUTH_VERIFY_EMAIL = "/verify-email";
     public static final String AUTH_VERIFY_EMAIL_LOGIN = "/verify-email-login";
     public static final String AUTH_VERIFY_EMAIL_WITH_TOKEN = "/verify-email?token=";
@@ -21,15 +39,6 @@ public class ApiURLs {
     public static final String AUTH_RESET_PASSWORD = "/reset_password";
     public static final String AUTH_SIGNUP_WITH_VERIFY = "/signup_verify";
     public static final String LIST_TOKENS = "/list_tokens";
-
-
-    //UserController
-    public static final String USER_BASE = "/api/v1/user";
-    public static final String USER_GET_ALL = "/all";
-    public static final String USER_GET_BY_ID = "/{id}";
-    public static final String USER_GET_BY_EMAIL = "/email/{email}";
-    public static final String USER_UPDATE = "";
-    public static final String USER_DELETE = "/{id}";
 
     //CategoryController
     public static final String CATEGORY_BASE = "/api/v1/category";
@@ -42,6 +51,25 @@ public class ApiURLs {
     public static final String CATEGORY_UPDATE = "/{id}";
     public static final String CATEGORY_ATTRIBUTE_UPDATE = "/{categoryId}/attribute/{attributeId}";
     public static final String CATEGORY_DELETE = "/{id}";
+
+    //Comment controller
+    public static final String COMMENT_BASE = "/api/v1/comment";
+    public static final String COMMENT_GET_ALL = "/all";
+    public static final String COMMENT_GET_BY_ID = "/{id}";
+    public static final String COMMENT_CREATE = "";
+    public static final String COMMENT_UPDATE = "/{id}";
+    public static final String COMMENT_DELETE = "/{id}";
+
+
+
+    //UserController
+    public static final String USER_BASE = "/api/v1/user";
+    public static final String USER_GET_ALL = "/all";
+    public static final String USER_GET_BY_ID = "/{id}";
+    public static final String USER_FULL_GET_BY_ID = "/{id}/full";
+    public static final String USER_GET_BY_EMAIL = "/email/{email}";
+    public static final String USER_UPDATE = "";
+    public static final String USER_DELETE = "/{id}";
 
 
     //SampleDataController

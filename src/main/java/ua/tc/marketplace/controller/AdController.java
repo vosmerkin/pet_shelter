@@ -55,15 +55,13 @@ public class AdController implements AdOpenApi {
     private final AdFacade adFacade;
 
     @Override
-    @RequestMapping(method = ApiEndpoint.GET_ALL_ADS.getPath())
-    @GetMapping(ApiEndpoint.GET_ALL_ADS. )
+    @GetMapping(ApiURLs.AD_GET_ALL)
     public ResponseEntity<Page<AdDto>> getAllAds(
             @RequestParam Map<String, String> params, @PageableDefault(sort = "id") Pageable pageable) {
-        ApiEndpoint.GET_ALL_ADS.getPath();
         return ResponseEntity.ok(adFacade.findAll(params, pageable));
     }
 
-    @GetMapping("/counted")
+    @GetMapping(ApiURLs.AD_GET_ALL_COUNTED)
     public ResponseEntity<AdFilterPageAndAttributesCountDto> getAllAdsWithAttributeItemCount(
             @RequestParam Map<String, String> params,
             @PageableDefault(sort = "id") Pageable pageable) {
@@ -75,27 +73,27 @@ public class AdController implements AdOpenApi {
     }
 
     @Override
-    @GetMapping("/{adId}")
+    @GetMapping(ApiURLs.AD_GET_BY_ID)
     public ResponseEntity<AdDto> getAdById(@PathVariable Long adId) {
         return ResponseEntity.ok(adFacade.findAdById(adId));
     }
 
     @Override
-    @PostMapping
+    @PostMapping(ApiURLs.AD_CREATE)
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<AdDto> createNewAd(@ModelAttribute @Valid CreateAdDto dto) {
         return ResponseEntity.ok(adFacade.createNewAd(dto));
     }
 
     @Override
-    @PutMapping("/{adId}")
+    @PutMapping(ApiURLs.AD_UPDATE)
     @PreAuthorize("@securityService.hasAnyRoleAndAdOwnership(#adId)")
     public ResponseEntity<AdDto> updateAd(@PathVariable Long adId, @RequestBody UpdateAdDto dto) {
         return ResponseEntity.ok(adFacade.updateAd(adId, dto));
     }
 
     @Override
-    @DeleteMapping("/{adId}")
+    @DeleteMapping(ApiURLs.AD_DELETE)
     @PreAuthorize("hasAuthority('ADMIN') or @securityService.hasAnyRoleAndAdOwnership(#adId)")
     public ResponseEntity<Void> deleteAd(@PathVariable Long adId) {
         adFacade.deleteAd(adId);

@@ -37,21 +37,20 @@ public class AuthController implements AuthOpenApi {
   private final VerificationTokenService verificationTokenService;
 
   @Override
-  @PostMapping("/login")
+  @PostMapping(AUTH_LOGIN)
   public ResponseEntity<AuthResponse> authenticate(@Valid @RequestBody AuthRequest authRequest) {
     log.info("Login request: {}", authRequest);
     return ResponseEntity.ok(authenticationService.authenticate(authRequest));
   }
 
   @Override
-  @PostMapping("/signup")
+  @PostMapping(AUTH_SIGNUP)
   public ResponseEntity<AuthResponse> registerUser(@Valid @ModelAttribute CreateUserDto userDto) {
     log.info("Register user request: {}", userDto);
     return ResponseEntity.status(HttpStatus.OK).body(authenticationService.registerUser(userDto));
   }
 
   @Override
-//  @PostMapping("/signup_verify")
   @PostMapping(AUTH_SIGNUP_WITH_VERIFY)
   public ResponseEntity<String> registerUserWithVerify(@Valid @RequestBody CreateUserDto userDto) {
     log.info("Register user with verification request: {}", userDto);

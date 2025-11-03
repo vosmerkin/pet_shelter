@@ -14,12 +14,14 @@ import ua.tc.marketplace.model.dto.attribute.AttributeRequest;
 import ua.tc.marketplace.service.AttributeService;
 import ua.tc.marketplace.util.openapi.AttributeOpenApi;
 
+import static ua.tc.marketplace.config.ApiURLs.*;
+
 /**
  * AttributeController handles HTTP requests related to CRUD operations for the Attribute entity. It
  * provides an API for retrieving, creating, updating, and deleting attributes.
  */
 @RestController
-@RequestMapping("/api/v1/attribute")
+@RequestMapping(ATTRIBUTE_BASE)
 @RequiredArgsConstructor
 @Slf4j
 public class AttributeController implements AttributeOpenApi {
@@ -27,7 +29,7 @@ public class AttributeController implements AttributeOpenApi {
   private final AttributeService attributeService;
 
   @Override
-  @GetMapping
+  @GetMapping(ATTRIBUTE_GET_ALL)
   public ResponseEntity<List<AttributeDto>> getAllAttributes(Pageable pageable) {
     List<AttributeDto> attributes = attributeService.findAll(pageable);
     log.info("Attributes were retrieved successfully");
@@ -35,7 +37,7 @@ public class AttributeController implements AttributeOpenApi {
   }
 
   @Override
-  @GetMapping("/{id}")
+  @GetMapping(ATTRIBUTE_GET_BY_ID)
   public ResponseEntity<AttributeDto> getAttributeById(@PathVariable Long id) {
     AttributeDto attributeDto = attributeService.findById(id);
     log.info("Attribute with ID: {} was retrieved successfully", id);
@@ -44,7 +46,7 @@ public class AttributeController implements AttributeOpenApi {
 
   @Override
   @PreAuthorize("hasAuthority('ADMIN')")
-  @PostMapping
+  @PostMapping(ATTRIBUTE_CREATE)
   public ResponseEntity<AttributeDto> createAttribute(
       @Valid @RequestBody AttributeRequest attributeDTO) {
     AttributeDto createdAttribute = attributeService.createAttribute(attributeDTO);
@@ -54,7 +56,7 @@ public class AttributeController implements AttributeOpenApi {
 
   @Override
   @PreAuthorize("hasAuthority('ADMIN')")
-  @PutMapping("/{id}")
+  @PutMapping(ATTRIBUTE_UPDATE)
   public ResponseEntity<AttributeDto> updateAttribute(
       @PathVariable Long id, @RequestBody AttributeRequest attributeDto) {
     AttributeDto updatedAttribute = attributeService.update(id, attributeDto);
@@ -64,7 +66,7 @@ public class AttributeController implements AttributeOpenApi {
 
   @Override
   @PreAuthorize("hasAuthority('ADMIN')")
-  @DeleteMapping("/{id}")
+  @DeleteMapping(ATTRIBUTE_DELETE)
   public ResponseEntity<Void> deleteAttribute(@PathVariable Long id) {
     attributeService.deleteById(id);
     log.info("Attribute with ID: {} was deleted successfully", id);

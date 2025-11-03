@@ -15,9 +15,11 @@ import ua.tc.marketplace.model.dto.comment.UpdateCommentDto;
 import ua.tc.marketplace.service.CommentService;
 import ua.tc.marketplace.util.openapi.CommentOpenApi;
 
+import static ua.tc.marketplace.config.ApiURLs.*;
+
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/v1/comment")
+@RequestMapping(COMMENT_BASE)
 public class CommentController implements CommentOpenApi {
 
   private final CommentService commentService;
@@ -29,7 +31,7 @@ public class CommentController implements CommentOpenApi {
    * @return A ResponseEntity containing a paginated list of CommentDto.
    */
   @Override
-  @GetMapping("/all")
+  @GetMapping(COMMENT_GET_ALL)
   public ResponseEntity<Page<CommentDto>> getAllComments(@PageableDefault Pageable pageable) {
     return ResponseEntity.status(HttpStatus.OK).body(commentService.findAll(pageable));
   }
@@ -41,7 +43,7 @@ public class CommentController implements CommentOpenApi {
    * @return A ResponseEntity containing the CommentDto.
    */
   @Override
-  @GetMapping("/{id}")
+  @GetMapping(COMMENT_GET_BY_ID)
   public ResponseEntity<CommentDto> getCommentById(@PathVariable Long id) {
     return ResponseEntity.status(HttpStatus.OK).body(commentService.findCommentById(id));
   }
@@ -55,7 +57,7 @@ public class CommentController implements CommentOpenApi {
 //  @PreAuthorize("hasAnyRole('USER','SHELTER') and @authentication.principal.id == #dto.authorId")
   @PreAuthorize("@securityService.hasAnyRoleAndOwnership(#dto.authorId)")
   @Override
-  @PostMapping
+  @PostMapping(COMMENT_CREATE)
   public ResponseEntity<CommentDto> createComment(@RequestBody @Valid CreateCommentDto dto) {
     //    SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     return ResponseEntity.status(HttpStatus.CREATED).body(commentService.createComment(dto));
@@ -70,7 +72,7 @@ public class CommentController implements CommentOpenApi {
    */
   @Override
   @PreAuthorize("@securityService.hasAnyRoleAndOwnership(#commentDto.authorId)")
-  @PutMapping("/{id}")
+  @PutMapping(COMMENT_UPDATE)
   public ResponseEntity<CommentDto> updateComment(@PathVariable Long id, @RequestBody @Valid UpdateCommentDto commentDto) {
     return ResponseEntity.status(HttpStatus.OK).body(commentService.updateComment(id, commentDto));
   }
@@ -83,7 +85,7 @@ public class CommentController implements CommentOpenApi {
    */
   @Override
   @PreAuthorize("hasAuthority('ADMIN') or @securityService.hasAnyRoleAndOwnership(#articleService.findById(id).authorId)")
-  @DeleteMapping("/{id}")
+  @DeleteMapping(COMMENT_DELETE)
   public ResponseEntity<Void> deleteComment(@PathVariable Long id) {
     commentService.deleteCommentById(id);
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

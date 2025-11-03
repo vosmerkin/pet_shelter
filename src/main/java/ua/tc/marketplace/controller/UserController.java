@@ -25,8 +25,6 @@ public class UserController implements UserOpenApi {
 
   private final UserService userService;
 
-  //  private final SecurityService securityService;
-
   @Override
   @PreAuthorize("hasAuthority('ADMIN')")
   @GetMapping(USER_GET_ALL)
