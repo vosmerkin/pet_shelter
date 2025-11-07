@@ -9,6 +9,8 @@ import ua.tc.marketplace.model.entity.Photo;
 import ua.tc.marketplace.service.PhotoStorageService;
 import ua.tc.marketplace.util.openapi.PhotoOpenApi;
 
+import static ua.tc.marketplace.config.ApiURLs.*;
+
 /**
  * Controller for handling photo-related operations.
  *
@@ -29,13 +31,13 @@ import ua.tc.marketplace.util.openapi.PhotoOpenApi;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/photo")
+@RequestMapping(PHOTO_BASE)
 public class PhotoController implements PhotoOpenApi {
 
   private final PhotoStorageService photoStorageService;
 
   @Override
-  @PostMapping("/ad/{adId}")
+  @PostMapping(PHOTO_SAVE_AD_PHOTO_FILES)
   public ResponseEntity<List<Photo>> saveAdPhotoFiles(
       @PathVariable Long adId, @RequestPart("files") MultipartFile[] files) {
     List<Photo> photos = photoStorageService.saveAdPhotos(adId, files);
@@ -43,7 +45,7 @@ public class PhotoController implements PhotoOpenApi {
   }
 
   @Override
-  @DeleteMapping("/ad/{adId}")
+  @DeleteMapping(PHOTO_DELETE_AD_PHOTOS_WITH_FILES)
   public ResponseEntity<List<String>> deleteAdPhotosWithFiles(
       @RequestBody List<Long> photoIds, @PathVariable Long adId) {
     List<String> deletedFiles = photoStorageService.deleteAdPhotos(adId, photoIds);
@@ -51,14 +53,14 @@ public class PhotoController implements PhotoOpenApi {
   }
 
   @Override
-  @GetMapping("/ad/{adId}")
+  @GetMapping(PHOTO_FIND_ALL_BY_ADID)
   public ResponseEntity<List<Photo>> findAllPhotosByAdId(@PathVariable Long adId) {
     List<Photo> photos = photoStorageService.findAllPhotosByAdId(adId);
     return ResponseEntity.ok(photos);
   }
 
   @Override
-  @PostMapping("/user/{userId}")
+  @PostMapping(PHOTO_SAVE_USER_PHOTO_FILES)
   public ResponseEntity<Photo> saveUserPhotoFile(
       @PathVariable Long userId, @RequestPart("file") MultipartFile file) {
     Photo photo = photoStorageService.saveUserPhoto(userId, file);
@@ -66,14 +68,14 @@ public class PhotoController implements PhotoOpenApi {
   }
 
   @Override
-  @DeleteMapping("/user/{userId}")
+  @DeleteMapping(PHOTO_DELETE_USER_PROFILE_PICTURE)
   public ResponseEntity<String> deleteUserProfilePicture(@PathVariable Long userId) {
     String deleted = photoStorageService.deleteUserProfilePicture(userId);
     return ResponseEntity.ok(deleted);
   }
 
   @Override
-  @GetMapping("/user/{userId}")
+  @GetMapping(PHOTO_BY_USERID)
   public ResponseEntity<Photo> findPhotoByUserId(@PathVariable Long userId) {
     Photo userProfilePicture = photoStorageService.findUserProfilePicture(userId);
     return ResponseEntity.ok(userProfilePicture);

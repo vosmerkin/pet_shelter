@@ -60,7 +60,32 @@ public class ApiURLs {
     public static final String COMMENT_UPDATE = "/{id}";
     public static final String COMMENT_DELETE = "/{id}";
 
+    //Photo controller
+    public static final String PHOTO_BASE = "/api/v1/photo";
+    public static final String PHOTO_SAVE_AD_PHOTO_FILES = "/ad/{adId}";
+    public static final String PHOTO_DELETE_AD_PHOTOS_WITH_FILES = "/ad/{adId}";
+    public static final String PHOTO_FIND_ALL_BY_ADID = "/ad/{adId}";
+    public static final String PHOTO_SAVE_USER_PHOTO_FILES = "/user/{userId}";
+    public static final String PHOTO_DELETE_USER_PROFILE_PICTURE = "/user/{userId}";
+    public static final String PHOTO_BY_USERID = "/user/{userId}";
 
+    //Photo files controller
+    public static final String PHOTO_FILES_BASE = "/api/v1/file";
+    public static final String PHOTO_FILES_FIND_ALL_BY_ADID = "/ad/{adId}";
+    public static final String PHOTO_FILES_FIND_AD_PHOTO_FILE_BY_IDS = "/ad/{adId}/photo/{photoId}";
+    public static final String PHOTO_FILES_FIND_PROFILE_PICTURE_FILE_BY_USERID = "/user/{userId}";
+
+    //SampleDataController
+    public static final String SAMPLE_DATA_BASE = "/api/v1/sample_data";
+    public static final String SAMPLE_DATA_ADD_ADS = "/add_ads";
+
+    //Tag controller
+    public static final String TAG_BASE = "/api/v1/tag";
+    public static final String TAG_GET_ALL = "/all";
+    public static final String TAG_GET_BY_ID = "/{id}";
+    public static final String TAG_CREATE = "";
+    public static final String TAG_UPDATE = "/{id}";
+    public static final String TAG_DELETE = "/{id}";
 
     //UserController
     public static final String USER_BASE = "/api/v1/user";
@@ -72,7 +97,5 @@ public class ApiURLs {
     public static final String USER_DELETE = "/{id}";
 
 
-    //SampleDataController
-    public static final String SAMPLE_DATA_BASE = "/api/v1/sample_data";
-    public static final String SAMPLE_DATA_ADD_ADS = "/add_ads";
+
 }

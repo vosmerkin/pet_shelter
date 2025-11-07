@@ -13,6 +13,8 @@ import ua.tc.marketplace.model.dto.photo.FilesResponse;
 import ua.tc.marketplace.service.PhotoStorageService;
 import ua.tc.marketplace.util.openapi.PhotoFilesOpenApi;
 
+import static ua.tc.marketplace.config.ApiURLs.*;
+
 /**
  * Controller for handling photo file-related operations.
  *
@@ -30,20 +32,20 @@ import ua.tc.marketplace.util.openapi.PhotoFilesOpenApi;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/file")
+@RequestMapping(PHOTO_FILES_BASE)
 public class PhotoFilesController implements PhotoFilesOpenApi {
 
   private final PhotoStorageService photoStorageService;
 
   @Override
-  @GetMapping("/ad/{adId}")
+  @GetMapping(PHOTO_FILES_FIND_ALL_BY_ADID)
   public ResponseEntity<List<byte[]>> findAllPhotoFilesByAdId(@PathVariable Long adId) {
     FilesResponse filesResponse = photoStorageService.findAllAdPhotoFiles(adId);
     return new ResponseEntity<>(filesResponse.contents(), filesResponse.headers(), HttpStatus.OK);
   }
 
   @Override
-  @GetMapping("/ad/{adId}/photo/{photoId}")
+  @GetMapping(PHOTO_FILES_FIND_AD_PHOTO_FILE_BY_IDS)
   public ResponseEntity<byte[]> findFileByPhotoId(
       @PathVariable Long adId, @PathVariable Long photoId) {
     FileResponse fileResponse = photoStorageService.findAdPhotoFileById(adId, photoId);
@@ -51,7 +53,7 @@ public class PhotoFilesController implements PhotoFilesOpenApi {
   }
 
   @Override
-  @GetMapping("/user/{userId}")
+  @GetMapping(PHOTO_FILES_FIND_PROFILE_PICTURE_FILE_BY_USERID)
   public ResponseEntity<byte[]> findUserProfilePictureFile(@PathVariable Long userId) {
     FileResponse fileResponse = photoStorageService.findUserProfilePictureFile(userId);
     return new ResponseEntity<>(fileResponse.content(), fileResponse.headers(), HttpStatus.OK);
