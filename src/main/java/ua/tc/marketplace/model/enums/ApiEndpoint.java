@@ -7,6 +7,11 @@ import static ua.tc.marketplace.model.enums.AccessPolicy.*;
 
 import lombok.Getter;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpRequest;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Getter
 public enum ApiEndpoint {
@@ -31,7 +36,8 @@ public enum ApiEndpoint {
   ATTRIBUTE_GET_BY_ID_ENDPOINT(ATTRIBUTE_BASE + ATTRIBUTE_GET_BY_ID, GET, PUBLIC),
   ATTRIBUTE_CREATE_ENDPOINT(ATTRIBUTE_BASE + ATTRIBUTE_CREATE, POST, AUTHENTICATED),
   ATTRIBUTE_UPDATE_ENDPOINT(ATTRIBUTE_BASE + ATTRIBUTE_UPDATE, PUT, AUTHENTICATED_AND_OWNER),
-  ATTRIBUTE_DELETE_ENDPOINT(ATTRIBUTE_BASE + ATTRIBUTE_DELETE, DELETE, ADMIN_OR_AUTHENTICATED_AND_OWNER),
+  ATTRIBUTE_DELETE_ENDPOINT(
+      ATTRIBUTE_BASE + ATTRIBUTE_DELETE, DELETE, ADMIN_OR_AUTHENTICATED_AND_OWNER),
 
   // Auth
   AUTH_LOGIN_ENDPOINT(AUTH_BASE + AUTH_LOGIN, POST, PUBLIC),
@@ -41,7 +47,8 @@ public enum ApiEndpoint {
   AUTH_VERIFY_EMAIL_WITH_TOKEN_ENDPOINT(AUTH_BASE + AUTH_VERIFY_EMAIL_WITH_TOKEN, GET, PUBLIC),
   AUTH_FORGET_PASSWORD_ENDPOINT(AUTH_BASE + AUTH_FORGET_PASSWORD, POST, PUBLIC),
   AUTH_VERIFY_PASSWORD_RESET_ENDPOINT(AUTH_BASE + AUTH_VERIFY_PASSWORD_RESET, POST, PUBLIC),
-  AUTH_VERIFY_PASSWORD_RESET_WITH_TOKEN_ENDPOINT(AUTH_BASE + AUTH_VERIFY_PASSWORD_RESET_WITH_TOKEN, GET, PUBLIC),
+  AUTH_VERIFY_PASSWORD_RESET_WITH_TOKEN_ENDPOINT(
+      AUTH_BASE + AUTH_VERIFY_PASSWORD_RESET_WITH_TOKEN, GET, PUBLIC),
   AUTH_RESET_PASSWORD_ENDPOINT(AUTH_BASE + AUTH_RESET_PASSWORD, POST, PUBLIC),
   AUTH_SIGNUP_WITH_VERIFY_ENDPOINT(AUTH_BASE + AUTH_SIGNUP_WITH_VERIFY, POST, PUBLIC),
   AUTH_LIST_TOKENS_ENDPOINT(AUTH_BASE + LIST_TOKENS, GET, AUTHENTICATED),
@@ -51,11 +58,14 @@ public enum ApiEndpoint {
   CATEGORY_GET_ALL_COUNTED_ENDPOINT(CATEGORY_BASE + CATEGORY_GET_ALL_COUNTED, GET, PUBLIC),
   CATEGORY_BY_ID_ENDPOINT(CATEGORY_BASE + CATEGORY_BY_ID, GET, PUBLIC),
   CATEGORY_ATTRIBUTE_BY_IDS_ENDPOINT(CATEGORY_BASE + CATEGORY_ATTRIBUTE_BY_IDS, GET, PUBLIC),
-  CATEGORY_ATTRIBUTES_BY_CATEGORY_ID_ENDPOINT(CATEGORY_BASE + CATEGORY_ATTRIBUTES_BY_CATEGORY_ID, GET, PUBLIC),
+  CATEGORY_ATTRIBUTES_BY_CATEGORY_ID_ENDPOINT(
+      CATEGORY_BASE + CATEGORY_ATTRIBUTES_BY_CATEGORY_ID, GET, PUBLIC),
   CATEGORY_CREATE_ENDPOINT(CATEGORY_BASE + CATEGORY_CREATE, POST, AUTHENTICATED),
   CATEGORY_UPDATE_ENDPOINT(CATEGORY_BASE + CATEGORY_UPDATE, PUT, AUTHENTICATED_AND_OWNER),
-  CATEGORY_ATTRIBUTE_UPDATE_ENDPOINT(CATEGORY_BASE + CATEGORY_ATTRIBUTE_UPDATE, PUT, AUTHENTICATED_AND_OWNER),
-  CATEGORY_DELETE_ENDPOINT(CATEGORY_BASE + CATEGORY_DELETE, DELETE, ADMIN_OR_AUTHENTICATED_AND_OWNER),
+  CATEGORY_ATTRIBUTE_UPDATE_ENDPOINT(
+      CATEGORY_BASE + CATEGORY_ATTRIBUTE_UPDATE, PUT, AUTHENTICATED_AND_OWNER),
+  CATEGORY_DELETE_ENDPOINT(
+      CATEGORY_BASE + CATEGORY_DELETE, DELETE, ADMIN_OR_AUTHENTICATED_AND_OWNER),
 
   // Comment
   COMMENT_GET_ALL_ENDPOINT(COMMENT_BASE + COMMENT_GET_ALL, GET, PUBLIC),
@@ -65,17 +75,24 @@ public enum ApiEndpoint {
   COMMENT_DELETE_ENDPOINT(COMMENT_BASE + COMMENT_DELETE, DELETE, ADMIN_OR_AUTHENTICATED_AND_OWNER),
 
   // Photo
-  PHOTO_SAVE_AD_PHOTO_FILES_ENDPOINT(PHOTO_BASE + PHOTO_SAVE_AD_PHOTO_FILES, POST, AUTHENTICATED_AND_OWNER),
-  PHOTO_DELETE_AD_PHOTOS_WITH_FILES_ENDPOINT(PHOTO_BASE + PHOTO_DELETE_AD_PHOTOS_WITH_FILES, DELETE, AUTHENTICATED_AND_OWNER),
+  PHOTO_SAVE_AD_PHOTO_FILES_ENDPOINT(
+      PHOTO_BASE + PHOTO_SAVE_AD_PHOTO_FILES, POST, AUTHENTICATED_AND_OWNER),
+  PHOTO_DELETE_AD_PHOTOS_WITH_FILES_ENDPOINT(
+      PHOTO_BASE + PHOTO_DELETE_AD_PHOTOS_WITH_FILES, DELETE, AUTHENTICATED_AND_OWNER),
   PHOTO_FIND_ALL_BY_ADID_ENDPOINT(PHOTO_BASE + PHOTO_FIND_ALL_BY_ADID, GET, PUBLIC),
-  PHOTO_SAVE_USER_PHOTO_FILES_ENDPOINT(PHOTO_BASE + PHOTO_SAVE_USER_PHOTO_FILES, POST, AUTHENTICATED_AND_OWNER),
-  PHOTO_DELETE_USER_PROFILE_PICTURE_ENDPOINT(PHOTO_BASE + PHOTO_DELETE_USER_PROFILE_PICTURE, DELETE, AUTHENTICATED_AND_OWNER),
+  PHOTO_SAVE_USER_PHOTO_FILES_ENDPOINT(
+      PHOTO_BASE + PHOTO_SAVE_USER_PHOTO_FILES, POST, AUTHENTICATED_AND_OWNER),
+  PHOTO_DELETE_USER_PROFILE_PICTURE_ENDPOINT(
+      PHOTO_BASE + PHOTO_DELETE_USER_PROFILE_PICTURE, DELETE, AUTHENTICATED_AND_OWNER),
   PHOTO_BY_USERID_ENDPOINT(PHOTO_BASE + PHOTO_BY_USERID, GET, PUBLIC),
 
   // Photo Files
-  PHOTO_FILES_FIND_ALL_BY_ADID_ENDPOINT(PHOTO_FILES_BASE + PHOTO_FILES_FIND_ALL_BY_ADID, GET, PUBLIC),
-  PHOTO_FILES_FIND_AD_PHOTO_FILE_BY_IDS_ENDPOINT(PHOTO_FILES_BASE + PHOTO_FILES_FIND_AD_PHOTO_FILE_BY_IDS, GET, PUBLIC),
-  PHOTO_FILES_FIND_PROFILE_PICTURE_FILE_BY_USERID_ENDPOINT(PHOTO_FILES_BASE + PHOTO_FILES_FIND_PROFILE_PICTURE_FILE_BY_USERID, GET, PUBLIC),
+  PHOTO_FILES_FIND_ALL_BY_ADID_ENDPOINT(
+      PHOTO_FILES_BASE + PHOTO_FILES_FIND_ALL_BY_ADID, GET, PUBLIC),
+  PHOTO_FILES_FIND_AD_PHOTO_FILE_BY_IDS_ENDPOINT(
+      PHOTO_FILES_BASE + PHOTO_FILES_FIND_AD_PHOTO_FILE_BY_IDS, GET, PUBLIC),
+  PHOTO_FILES_FIND_PROFILE_PICTURE_FILE_BY_USERID_ENDPOINT(
+      PHOTO_FILES_BASE + PHOTO_FILES_FIND_PROFILE_PICTURE_FILE_BY_USERID, GET, PUBLIC),
 
   // Sample Data
   SAMPLE_DATA_ADD_ADS_ENDPOINT(SAMPLE_DATA_BASE + SAMPLE_DATA_ADD_ADS, POST, ADMIN_ONLY),
@@ -112,5 +129,53 @@ public enum ApiEndpoint {
     //    this.secured = secured;
     //    this.requiresOwnership=ownership;
     //    this.requiredAuthorities = Set.copyOf(requiredAuthorities); // immutable copy
+  }
+
+  //  public static void
+  // getMatchersRegistry(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry registry) {
+  //    for (ApiEndpoint ep : ApiEndpoint.values()) {
+  //      AntPathRequestMatcher matcher = new AntPathRequestMatcher(
+  //              ep.getPath(),
+  //              ep.getMethod().name()
+  //      );
+  //
+  //      if (ep.getPolicy() == AccessPolicy.PUBLIC) {
+  //        registry.requestMatchers(matcher).permitAll();
+  //      } else {
+  //        // At minimum: require authentication + basic role
+  //        registry.requestMatchers(matcher).authenticated();
+  //      }
+  //    }
+  //    registry.anyRequest().authenticated();
+  //  }
+  //
+  //
+  //  public static
+  // Customizer<AuthorizeHttpRequestsConfigurer.AuthorizationManagerRequestMatcherRegistry>
+  //  getMatchersRegistry(AuthorizeHttpRequestsConfigurer<?> configurer) {
+  //
+  //    return registry -> registry
+  //            .requestMatchers("/api/public/**").ppermitAll()
+  //            .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN")
+  //            .requestMatchers("/api/admin/**").hasRole("ADMIN")
+  //            .anyRequest().authenticated();
+  //  }
+
+  public static void getMatchersRegistry(
+      AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry
+          registry) {
+
+    for (ApiEndpoint ep : ApiEndpoint.values()) {
+      AntPathRequestMatcher matcher =
+          new AntPathRequestMatcher(ep.getPath(), ep.getMethod().name());
+
+      if (ep.getPolicy() == AccessPolicy.PUBLIC) {
+        registry.requestMatchers(matcher).permitAll();
+      } else {
+        // At minimum: require authentication + basic role
+        registry.requestMatchers(matcher).authenticated();
+      }
+    }
+    registry.anyRequest().authenticated();
   }
 }
