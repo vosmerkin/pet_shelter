@@ -21,6 +21,8 @@ import ua.tc.marketplace.model.entity.User;
 import ua.tc.marketplace.model.enums.ValueType;
 import ua.tc.marketplace.utils.TestUtils;
 
+import static org.mockito.Mockito.mock;
+
 /**
  * AdTestData is a utility class that provides test data for various Ad-related entities and DTOs.
  *
@@ -97,7 +99,8 @@ public final class AdTestData {
         new AdAttributeRequestDto(6L, "brown"));
   }
 
-  public static AdDto getAdDto(List<AdAttributeDto> adAttributeDtos) {
+  public static AdDto getAdDto() {
+    List<AdAttributeDto> adAttributeDtos = getAttributeDtos();
     return new AdDto(
         1L,
         1L,
@@ -162,7 +165,13 @@ public final class AdTestData {
         false);
   }
 
-  public static CreateAdDto getCreateAdDto(MultipartFile[] files) {
+  public static CreateAdDto getCreateAdDto() {
+    // Mock MultipartFile objects
+    MultipartFile file1 = mock(MultipartFile.class);
+    MultipartFile file2 = mock(MultipartFile.class);
+
+    // Create an array of mock MultipartFiles
+    MultipartFile[] files = new MultipartFile[] {file1, file2};
     return new CreateAdDto(
         1L,
         "Sample Ad",

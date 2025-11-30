@@ -168,7 +168,7 @@ class AdFacadeImplTest {
     // Arrange
     Ad ad = new Ad();
     List<AdAttributeDto> adAttributeDtos = getAttributeDtos();
-    AdDto adDto = getAdDto(adAttributeDtos); // create a sample AdDto
+    AdDto adDto = getAdDto(); // create a sample AdDto
     Pageable pageable = PageRequest.of(0, 10);
     Page<Ad> adPage = new PageImpl<>(Collections.singletonList(ad), pageable, 1);
     Map<String, String> filterCriteria = Map.of("title", "example");
@@ -196,7 +196,7 @@ class AdFacadeImplTest {
     List<AdAttributeDto> adAttributeDtos = getAttributeDtos();
     Long adId = 1L;
     Ad ad = new Ad(); // create a sample Ad entity
-    AdDto adDto = getAdDto(adAttributeDtos); // create a sample AdDto
+    AdDto adDto = getAdDto(); // create a sample AdDto
 
     // Mock repository method to return a mocked Ad entity
     when(adService.findAdById(adId)).thenReturn(ad);
@@ -233,20 +233,20 @@ class AdFacadeImplTest {
   @Test
   void createNewAd_shouldCreate_whenValidInput() {
     // Arrange
-    // Mock MultipartFile objects
-    MultipartFile file1 = mock(MultipartFile.class);
-    MultipartFile file2 = mock(MultipartFile.class);
+//    // Mock MultipartFile objects
+//    MultipartFile file1 = mock(MultipartFile.class);
+//    MultipartFile file2 = mock(MultipartFile.class);
+//
+//    // Create an array of mock MultipartFiles
+//    MultipartFile[] files = new MultipartFile[] {file1, file2};
 
-    // Create an array of mock MultipartFiles
-    MultipartFile[] files = new MultipartFile[] {file1, file2};
-
-    CreateAdDto createAdDto = getCreateAdDto(files);
+    CreateAdDto createAdDto = getCreateAdDto();
 
     User mockUser = new User(); // create a mock User entity
     Ad mockAd = new Ad(); // create a mock Ad entity
     Category mockCategory = new Category(); // create a mock Category entity
     mockCategory.setAttributes(getAttributes());
-    AdDto mockAdDto = getAdDto(getAttributeDtos()); // create a mock AdDto
+    AdDto mockAdDto = getAdDto(); // create a mock AdDto
 
     // Mock userService to return mockUser when findUserById is called
     when(userService.findUserById(createAdDto.authorId())).thenReturn(mockUser);

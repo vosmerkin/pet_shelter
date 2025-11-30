@@ -7,8 +7,6 @@ import static ua.tc.marketplace.model.enums.AccessPolicy.*;
 
 import lombok.Getter;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpRequest;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -42,14 +40,14 @@ public enum ApiEndpoint {
   // Auth
   AUTH_LOGIN_ENDPOINT(AUTH_BASE + AUTH_LOGIN, POST, PUBLIC),
   AUTH_SIGNUP_ENDPOINT(AUTH_BASE + AUTH_SIGNUP, POST, PUBLIC),
-  AUTH_VERIFY_EMAIL_ENDPOINT(AUTH_BASE + AUTH_VERIFY_EMAIL, POST, PUBLIC),
-  AUTH_VERIFY_EMAIL_LOGIN_ENDPOINT(AUTH_BASE + AUTH_VERIFY_EMAIL_LOGIN, POST, PUBLIC),
-  AUTH_VERIFY_EMAIL_WITH_TOKEN_ENDPOINT(AUTH_BASE + AUTH_VERIFY_EMAIL_WITH_TOKEN, GET, PUBLIC),
-  AUTH_FORGET_PASSWORD_ENDPOINT(AUTH_BASE + AUTH_FORGET_PASSWORD, POST, PUBLIC),
-  AUTH_VERIFY_PASSWORD_RESET_ENDPOINT(AUTH_BASE + AUTH_VERIFY_PASSWORD_RESET, POST, PUBLIC),
-  AUTH_VERIFY_PASSWORD_RESET_WITH_TOKEN_ENDPOINT(
-      AUTH_BASE + AUTH_VERIFY_PASSWORD_RESET_WITH_TOKEN, GET, PUBLIC),
-  AUTH_RESET_PASSWORD_ENDPOINT(AUTH_BASE + AUTH_RESET_PASSWORD, POST, PUBLIC),
+  AUTH_VERIFY_EMAIL_ENDPOINT(AUTH_BASE + AUTH_VERIFY_EMAIL, GET, PUBLIC),
+  AUTH_VERIFY_EMAIL_LOGIN_ENDPOINT(AUTH_BASE + AUTH_VERIFY_EMAIL_LOGIN, GET, PUBLIC),
+//  AUTH_VERIFY_EMAIL_WITH_TOKEN_ENDPOINT(AUTH_BASE + AUTH_VERIFY_EMAIL_WITH_TOKEN, GET, PUBLIC),
+  AUTH_FORGET_PASSWORD_ENDPOINT(AUTH_BASE + AUTH_FORGET_PASSWORD, GET, PUBLIC),
+  AUTH_VERIFY_PASSWORD_RESET_ENDPOINT(AUTH_BASE + AUTH_VERIFY_PASSWORD_RESET, GET, PUBLIC),
+//  AUTH_VERIFY_PASSWORD_RESET_WITH_TOKEN_ENDPOINT(
+//      AUTH_BASE + AUTH_VERIFY_PASSWORD_RESET_WITH_TOKEN, GET, PUBLIC),
+  AUTH_RESET_PASSWORD_ENDPOINT(AUTH_BASE + AUTH_RESET_PASSWORD, PUT, PUBLIC),
   AUTH_SIGNUP_WITH_VERIFY_ENDPOINT(AUTH_BASE + AUTH_SIGNUP_WITH_VERIFY, POST, PUBLIC),
   AUTH_LIST_TOKENS_ENDPOINT(AUTH_BASE + LIST_TOKENS, GET, AUTHENTICATED),
 
@@ -115,51 +113,12 @@ public enum ApiEndpoint {
   private final HttpMethod method;
   private final AccessPolicy policy;
 
-  //  private final boolean secured;
-  //  private final boolean requiresOwnership;
-  //  private final Set<String> requiredAuthorities;
 
-  //  ApiEndpoint(String path, HttpMethod method, boolean secured) {
   ApiEndpoint(String path, HttpMethod method, AccessPolicy policy) {
-    //  ApiEndpoint(String path, HttpMethod method, boolean secured, boolean ownership,Set<String>
-    // requiredAuthorities) {
     this.path = path;
     this.method = method;
     this.policy = policy;
-    //    this.secured = secured;
-    //    this.requiresOwnership=ownership;
-    //    this.requiredAuthorities = Set.copyOf(requiredAuthorities); // immutable copy
   }
-
-  //  public static void
-  // getMatchersRegistry(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry registry) {
-  //    for (ApiEndpoint ep : ApiEndpoint.values()) {
-  //      AntPathRequestMatcher matcher = new AntPathRequestMatcher(
-  //              ep.getPath(),
-  //              ep.getMethod().name()
-  //      );
-  //
-  //      if (ep.getPolicy() == AccessPolicy.PUBLIC) {
-  //        registry.requestMatchers(matcher).permitAll();
-  //      } else {
-  //        // At minimum: require authentication + basic role
-  //        registry.requestMatchers(matcher).authenticated();
-  //      }
-  //    }
-  //    registry.anyRequest().authenticated();
-  //  }
-  //
-  //
-  //  public static
-  // Customizer<AuthorizeHttpRequestsConfigurer.AuthorizationManagerRequestMatcherRegistry>
-  //  getMatchersRegistry(AuthorizeHttpRequestsConfigurer<?> configurer) {
-  //
-  //    return registry -> registry
-  //            .requestMatchers("/api/public/**").ppermitAll()
-  //            .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN")
-  //            .requestMatchers("/api/admin/**").hasRole("ADMIN")
-  //            .anyRequest().authenticated();
-  //  }
 
   public static void getMatchersRegistry(
       AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry
@@ -172,7 +131,6 @@ public enum ApiEndpoint {
       if (ep.getPolicy() == AccessPolicy.PUBLIC) {
         registry.requestMatchers(matcher).permitAll();
       } else {
-        // At minimum: require authentication + basic role
         registry.requestMatchers(matcher).authenticated();
       }
     }

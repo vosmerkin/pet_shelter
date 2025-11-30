@@ -38,7 +38,7 @@ public interface AuthOpenApi {
     @Operation(
             summary = "Creates a new user",
             description = "Creates a new user based on the provided data.")
-    @PostMapping("/signup_verify")
+//    @PostMapping("/signup_verify")
     ResponseEntity<String> registerUserWithVerify(@Valid @RequestBody CreateUserDto userDto);
 
 
@@ -50,25 +50,25 @@ public interface AuthOpenApi {
     @Operation(
             summary = "Verify user email",
             description = "Verifies email of the user willing to register.")
-    @GetMapping("/verify")
+//    @GetMapping("/verify")
     ResponseEntity<?> verifyEmail(@RequestParam("token") String token);
 
 
     @Operation(
             summary = "Initiate password reset",
             description = "Sends a password reset token to the user's email address to start the password recovery process.")
-    @GetMapping(AUTH_FORGET_PASSWORD)
+//    @GetMapping(AUTH_FORGET_PASSWORD)
     ResponseEntity<String> forgetPassword(@RequestParam("email") String email);
 
     @Operation(
             summary = "Reset user password",
             description = "Resets the user's password using the provided email, password reset token, and new password.")
-    @GetMapping(AUTH_VERIFY_PASSWORD_RESET)
+//    @GetMapping(AUTH_VERIFY_PASSWORD_RESET)
     ResponseEntity<Boolean> confirmPasswordReset(String token);
 
     @Operation(
             summary = "Reset user password",
             description = "Resets the user's password using the provided email, password reset token, and new password.")
-    @PutMapping(AUTH_RESET_PASSWORD)
+//    @PutMapping(AUTH_RESET_PASSWORD)
     ResponseEntity<Boolean> reset_password(@RequestBody PasswordChangeRequest request);
 }
