@@ -10,11 +10,17 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import ua.tc.marketplace.config.ApiURLs;
 
 @Getter
 public enum ApiEndpoint {
+  //Swagger
+  SWAGGER_MAIN_PAGE(SWAGGER_UI_MAIN_PAGE, GET, PUBLIC),
+  SWAGGER_PAGES(SWAGGER_UI_PAGES, GET, PUBLIC),
+  SWAGGER_DOCS(ApiURLs.SWAGGER_DOCS, GET, PUBLIC),
 
-  // Ad
+
+  // Ad,
   AD_GET_ALL_ENDPOINT(AD_BASE + AD_GET_ALL, GET, PUBLIC),
   AD_GET_ALL_COUNTED_ENDPOINT(AD_BASE + AD_GET_ALL_COUNTED, GET, PUBLIC),
   AD_GET_BY_ID_ENDPOINT(AD_BASE + AD_GET_BY_ID, GET, PUBLIC),

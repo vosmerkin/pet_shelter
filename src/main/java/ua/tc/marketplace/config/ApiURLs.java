@@ -1,6 +1,11 @@
 package ua.tc.marketplace.config;
 
 public class ApiURLs {
+    //Swagger
+    public static final String SWAGGER_UI_PAGES = "/swagger-ui/**";
+    public static final String SWAGGER_UI_MAIN_PAGE = "/swagger-ui.html";
+    public static final String SWAGGER_DOCS = "/v3/api-docs/**";
+
     //Ad controller
     public static final String AD_BASE = "/api/v1/ad";
     public static final String AD_GET_ALL = "";

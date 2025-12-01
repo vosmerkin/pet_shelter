@@ -53,7 +53,7 @@ public class SecurityConfig {
     public static final String LOGIN_URL = "/api/v1/auth/login";
     public static final String LOGOUT_URL = "/api/v1/auth/logout";
     public static final String GET_ALL_DEMO_URL = "/api/v1/demo/all";
-    public static final String SWAGGER_DOCS = "/v3/api-docs/**";
+    public static final String SWAGGER_DOCS = "/v1/api-docs/**";
     public static final String SWAGGER_UI_PAGES = "/swagger-ui/**";
     public static final String SWAGGER_UI_MAIN_PAGE = "/swagger-ui.html";
 
