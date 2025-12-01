@@ -23,7 +23,7 @@
     <commons-io.version>2.16.1</commons-io.version>
     <springdoc-openapi-starter-webmvc-ui.version>2.3.0</springdoc-openapi-starter-webmvc-ui.version>
     <commons-imaging.version>1.0.0-alpha5</commons-imaging.version>
-    <mockito-inline.version>5.2.0</mockito-inline.version>
+    <mockito-core.version>5.20.0</mockito-core.version>
     <google-maps-services.version>2.2.0</google-maps-services.version>
   </properties>
   <dependencies>
@@ -95,8 +95,8 @@
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
-      <artifactId>mockito-inline</artifactId>
-      <version>${mockito-inline.version}</version> <!-- Adjust version as necessary -->
+      <artifactId>mockito-core</artifactId>
+      <version>${mockito-core.version}</version> <!-- Adjust version as necessary -->
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -120,16 +120,23 @@
       <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
       <version>${springdoc-openapi-starter-webmvc-ui.version}</version>
     </dependency>
-    <dependency>
-      <groupId>com.resend</groupId>
-      <artifactId>resend-java</artifactId>
-      <version>2.0.0</version>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>com.resend</groupId>-->
+<!--      <artifactId>resend-java</artifactId>-->
+<!--      <version>2.0.0</version>-->
+<!--    </dependency>-->
 
     <dependency>
       <groupId>com.github.javafaker</groupId>
       <artifactId>javafaker</artifactId>
       <version> 1.0.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.reflections</groupId>
+      <artifactId>reflections</artifactId>
+      <version>0.10.2</version>
+      <scope>test</scope>
     </dependency>
 
   </dependencies>

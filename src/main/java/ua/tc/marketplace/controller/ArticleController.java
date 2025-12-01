@@ -15,45 +15,47 @@ import ua.tc.marketplace.model.dto.article.UpdateArticleDto;
 import ua.tc.marketplace.service.ArticleService;
 import ua.tc.marketplace.util.openapi.ArticleOpenApi;
 
+import static ua.tc.marketplace.config.ApiURLs.*;
+
 /**
  * REST controller for managing articles.
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/article")
+@RequestMapping(ARTICLE_BASE)
 public class ArticleController implements ArticleOpenApi {
 
   private final ArticleService articleService;
 
   @Override
-  @GetMapping
+  @GetMapping(ARTICLE_GET_ALL)
   public ResponseEntity<Page<ArticleDto>> getAllArticles(@PageableDefault Pageable pageable) {
     return ResponseEntity.ok(articleService.findAll(pageable));
   }
 
   @Override
-  @GetMapping("/{id}")
+  @GetMapping(ARTICLE_GET_BY_ID)
   public ResponseEntity<ArticleDto> getArticleById(@PathVariable Long id) {
     return ResponseEntity.ok(articleService.findById(id));
   }
 
   @Override
   @PreAuthorize("@securityService.hasAnyRoleAndOwnership(#dto.authorId)")
-  @PostMapping
+  @PostMapping(ARTICLE_CREATE)
   public ResponseEntity<ArticleDto> createArticle(@RequestBody @Valid CreateArticleDto dto) {
     return ResponseEntity.status(HttpStatus.CREATED).body(articleService.create(dto));
   }
 
   @Override
   @PreAuthorize("@securityService.hasAnyRoleAndOwnership(#dto.authorId)")
-  @PutMapping("/{id}")
+  @PutMapping(ARTICLE_UPDATE)
   public ResponseEntity<ArticleDto> updateArticle(@PathVariable Long id, @RequestBody @Valid UpdateArticleDto dto) {
     return ResponseEntity.ok(articleService.update(id, dto));
   }
 
   @Override
   @PreAuthorize("hasAuthority('ADMIN') or @securityService.hasAnyRoleAndOwnership(#articleService.findById(id).authorId)")
-  @DeleteMapping("/{id}")
+  @DeleteMapping(ARTICLE_DELETE)
   public ResponseEntity<Void> deleteArticle(@PathVariable Long id) {
     articleService.deleteById(id);
     return ResponseEntity.noContent().build();

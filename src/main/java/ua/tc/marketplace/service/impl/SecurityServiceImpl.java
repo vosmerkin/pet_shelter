@@ -43,6 +43,7 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Override
     public boolean hasAnyRoleAndOwnership(Long authorId, String... requiredRoles) {
+        log.info("hasAnyRoleAndOwnership with id {}",authorId);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         // 1. Check authentication

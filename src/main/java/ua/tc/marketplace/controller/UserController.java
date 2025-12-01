@@ -25,8 +25,6 @@ public class UserController implements UserOpenApi {
 
   private final UserService userService;
 
-  //  private final SecurityService securityService;
-
   @Override
   @PreAuthorize("hasAuthority('ADMIN')")
   @GetMapping(USER_GET_ALL)
@@ -39,6 +37,13 @@ public class UserController implements UserOpenApi {
   @GetMapping(USER_GET_BY_ID)
   public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
     log.info("Get user by id request: id={}", id);
+    return ResponseEntity.status(HttpStatus.OK).body(userService.findUserDtoById(id));
+  }
+
+//  @Override
+  @GetMapping(USER_FULL_GET_BY_ID)
+  public ResponseEntity<UserDto> getUserFullById(@PathVariable Long id) {
+    log.info("Get user full info by id request: id={}", id);
     return ResponseEntity.status(HttpStatus.OK).body(userService.findUserDtoById(id));
   }
 

@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,10 +22,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import ua.tc.marketplace.jwtAuth.JwtAuthorizationFilter;
+import ua.tc.marketplace.model.enums.AccessPolicy;
+import ua.tc.marketplace.model.enums.ApiEndpoint;
 import ua.tc.marketplace.service.impl.UserDetailsServiceImpl;
 
 import java.util.List;
@@ -78,53 +82,57 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authenticationProvider(authenticationProvider())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .authorizeHttpRequests(
-                        config ->
-                                config
-                                        .requestMatchers(WHITELIST).permitAll()
-                                        .requestMatchers(HttpMethod.POST, CREATE_USER_POST_URL).permitAll()
-                                        .requestMatchers(HttpMethod.POST, CREATE_USER_WITH_VERIFY_POST_URL).permitAll()
-                                        .requestMatchers(HttpMethod.POST, SAMPLE_DATA_BASE + SAMPLE_DATA_ADD_ADS).permitAll()
-                                        .requestMatchers(HttpMethod.PUT, AUTH_BASE + AUTH_RESET_PASSWORD).permitAll()
-                                        .requestMatchers(HttpMethod.PUT, CATEGORY_BASE + CATEGORY_ATTRIBUTE_UPDATE).permitAll()
-//                                        .requestMatchers(HttpMethod.POST, "/api/v1/ad").authenticated()
-                                        .requestMatchers(
-                                                HttpMethod.GET,
-                                                "/api/v1/auth/signup_verify",
-                                                "/api/v1/auth/test_email",
-                                                AUTH_BASE + AUTH_VERIFY_EMAIL,
-                                                AUTH_BASE + AUTH_VERIFY_EMAIL_LOGIN,
-                                                AUTH_BASE + AUTH_FORGET_PASSWORD,
-                                                AUTH_BASE + AUTH_VERIFY_PASSWORD_RESET,
-                                                AUTH_BASE + LIST_TOKENS,
-                                                "/api/v1/ad",
-                                                "/api/v1/ad/{adId}",
-                                                "/api/v1/ad/counted",
-                                                "/api/v1/article/",
-                                                "/api/v1/article/{id}",
-                                                "/api/v1/attribute",
-                                                "/api/v1/attribute/{id}",
-                                                "/api/v1/photo/ad/{adId}",
-                                                "/api/v1/file/ad/{adId}",
-                                                "/api/v1/file/ad/{adId}/photo/{photoId}",
-                                                CATEGORY_BASE + CATEGORY_GET_ALL,
-                                                CATEGORY_BASE + CATEGORY_BY_ID,
-                                                CATEGORY_BASE + CATEGORY_GET_ALL_COUNTED,
-                                                CATEGORY_BASE + CATEGORY_ATTRIBUTE_BY_IDS,
-                                                CATEGORY_BASE + CATEGORY_ATTRIBUTES_BY_CATEGORY_ID,
-                                                "/api/v1/category",
-                                                "/api/v1/category/{id}",
-                                                "/api/v1/category/{categoryId}/attribute/{attributeId}",
-                                                "/api/v1/category/{categoryId}/attribute",
-                                                "/api/v1/comment",
-                                                "/api/v1/comment/{id}",
-                                                "/api/v1/tag",
-                                                "/api/v1/tag/{id}",
-//                                                "/api/v1/user/{id}",
-                                                USER_BASE + USER_GET_BY_EMAIL,
-                                                USER_BASE + USER_GET_BY_ID).permitAll()
-                                        .anyRequest().authenticated()
-                )
+                .authorizeHttpRequests(ApiEndpoint::getMatchersRegistry)
+//                .authorizeHttpRequests(
+//                        config ->
+//                                config
+//                                        .requestMatchers(WHITELIST).permitAll()
+//                                        .requestMatchers(HttpMethod.POST, CREATE_USER_POST_URL).permitAll()
+//                                        .requestMatchers(HttpMethod.POST, CREATE_USER_WITH_VERIFY_POST_URL).permitAll()
+//                                        .requestMatchers(HttpMethod.POST, SAMPLE_DATA_BASE + SAMPLE_DATA_ADD_ADS).permitAll()
+//                                        .requestMatchers(HttpMethod.PUT, AUTH_BASE + AUTH_RESET_PASSWORD).permitAll()
+//                                        .requestMatchers(HttpMethod.PUT, CATEGORY_BASE + CATEGORY_ATTRIBUTE_UPDATE).permitAll()
+////                                        .requestMatchers(HttpMethod.POST, "/api/v1/ad").authenticated()
+//                                        .requestMatchers(
+//                                                HttpMethod.GET,
+//                                                "/api/v1/auth/signup_verify",
+//                                                "/api/v1/auth/test_email",
+//                                                AUTH_BASE + AUTH_VERIFY_EMAIL,
+//                                                AUTH_BASE + AUTH_VERIFY_EMAIL_LOGIN,
+//                                                AUTH_BASE + AUTH_FORGET_PASSWORD,
+//                                                AUTH_BASE + AUTH_VERIFY_PASSWORD_RESET,
+//                                                AUTH_BASE + LIST_TOKENS,
+//                                                "/api/v1/ad",
+//                                                "/api/v1/ad/{adId}",
+//                                                "/api/v1/ad/counted",
+//                                                "/api/v1/article/",
+//                                                "/api/v1/article/{id}",
+//                                                "/api/v1/attribute",
+//                                                "/api/v1/attribute/{id}",
+//                                                "/api/v1/photo/ad/{adId}",
+//                                                "/api/v1/file/ad/{adId}",
+//                                                "/api/v1/file/ad/{adId}/photo/{photoId}",
+//                                                CATEGORY_BASE + CATEGORY_GET_ALL,
+//                                                CATEGORY_BASE + CATEGORY_BY_ID,
+//                                                CATEGORY_BASE + CATEGORY_GET_ALL_COUNTED,
+//                                                CATEGORY_BASE + CATEGORY_ATTRIBUTE_BY_IDS,
+//                                                CATEGORY_BASE + CATEGORY_ATTRIBUTES_BY_CATEGORY_ID,
+//                                                "/api/v1/category",
+//                                                "/api/v1/category/{id}",
+//                                                "/api/v1/category/{categoryId}/attribute/{attributeId}",
+//                                                "/api/v1/category/{categoryId}/attribute",
+//                                                "/api/v1/comment",
+//                                                "/api/v1/comment/{id}",
+//                                                "/api/v1/tag",
+//                                                "/api/v1/tag/{id}",
+//                                                USER_BASE + USER_GET_BY_EMAIL,
+//                                                USER_BASE + USER_GET_BY_ID).permitAll()
+//                                        .anyRequest().authenticated()
+//
+//
+//
+//
+//                )
                 .logout(
                         logout ->
                                 logout

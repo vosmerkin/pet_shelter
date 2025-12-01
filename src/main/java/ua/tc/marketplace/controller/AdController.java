@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ua.tc.marketplace.config.ApiURLs;
 import ua.tc.marketplace.facade.AdFacade;
 import ua.tc.marketplace.model.dto.ad.*;
+import ua.tc.marketplace.model.enums.ApiEndpoint;
 import ua.tc.marketplace.util.openapi.AdOpenApi;
 
 /**
@@ -54,13 +55,13 @@ public class AdController implements AdOpenApi {
     private final AdFacade adFacade;
 
     @Override
-    @GetMapping
+    @GetMapping(ApiURLs.AD_GET_ALL)
     public ResponseEntity<Page<AdDto>> getAllAds(
             @RequestParam Map<String, String> params, @PageableDefault(sort = "id") Pageable pageable) {
         return ResponseEntity.ok(adFacade.findAll(params, pageable));
     }
 
-    @GetMapping("/counted")
+    @GetMapping(ApiURLs.AD_GET_ALL_COUNTED)
     public ResponseEntity<AdFilterPageAndAttributesCountDto> getAllAdsWithAttributeItemCount(
             @RequestParam Map<String, String> params,
             @PageableDefault(sort = "id") Pageable pageable) {
@@ -72,27 +73,27 @@ public class AdController implements AdOpenApi {
     }
 
     @Override
-    @GetMapping("/{adId}")
+    @GetMapping(ApiURLs.AD_GET_BY_ID)
     public ResponseEntity<AdDto> getAdById(@PathVariable Long adId) {
         return ResponseEntity.ok(adFacade.findAdById(adId));
     }
 
     @Override
-    @PostMapping
+    @PostMapping(ApiURLs.AD_CREATE)
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<AdDto> createNewAd(@ModelAttribute @Valid CreateAdDto dto) {
         return ResponseEntity.ok(adFacade.createNewAd(dto));
     }
 
     @Override
-    @PutMapping("/{adId}")
+    @PutMapping(ApiURLs.AD_UPDATE)
     @PreAuthorize("@securityService.hasAnyRoleAndAdOwnership(#adId)")
     public ResponseEntity<AdDto> updateAd(@PathVariable Long adId, @RequestBody UpdateAdDto dto) {
         return ResponseEntity.ok(adFacade.updateAd(adId, dto));
     }
 
     @Override
-    @DeleteMapping("/{adId}")
+    @DeleteMapping(ApiURLs.AD_DELETE)
     @PreAuthorize("hasAuthority('ADMIN') or @securityService.hasAnyRoleAndAdOwnership(#adId)")
     public ResponseEntity<Void> deleteAd(@PathVariable Long adId) {
         adFacade.deleteAd(adId);
