@@ -1,5 +1,9 @@
 mvn clean compile test package
 
+docker login -u vosmerkin
+docker build -f xDockerfile.txt -t vosmerkin/pet_shelter:latest .
+docker push vosmerkin/pet_shelter:latest
+
 echo copy files to suse
 scp target/marketplace-0.0.1-SNAPSHOT.jar evgen@192.168.31.61:/home/evgen/pet_shelter
 

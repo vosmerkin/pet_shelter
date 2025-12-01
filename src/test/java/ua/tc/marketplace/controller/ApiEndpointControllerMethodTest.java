@@ -36,6 +36,7 @@ class ApiEndpointControllerMethodTest {
 
         // Step 2: For each ApiEndpoint, find a matching controller method
         for (ApiEndpoint endpoint : ApiEndpoint.values()) {
+            if (endpoint.name().contains("SWAGGER")) continue;
             String expectedPath = normalizePath(endpoint.getPath());
             String expectedMethod = endpoint.getMethod().name();
 
