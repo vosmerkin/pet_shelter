@@ -171,7 +171,10 @@ public class SecurityConfig {
 //        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 //        source.registerCorsConfiguration(ALL_URL, configuration);
 
-        configuration.setAllowedOriginPatterns(List.of("https://project-pet-shelter-new.netlify.app"));
+        configuration.setAllowedOriginPatterns(List.of(
+                "https://project-pet-shelter-new.netlify.app",
+                "http://localhost:*",
+                "https://localhost:*"));
 
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin", "Cache-Control", "Range"));
