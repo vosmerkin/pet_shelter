@@ -28,8 +28,12 @@ public interface UserOpenApi {
   @Operation(
       summary = "Get user by ID",
       description = "Retrieves a user by its unique identifier.")
-  @GetMapping("/{id}")
   ResponseEntity<UserDto> getUserById(@PathVariable Long id);
+
+  @Operation(
+          summary = "Get full user info by ID",
+          description = "Retrieves a full user info by its unique identifier.")
+  ResponseEntity<UserDto> getUserFullById(@PathVariable Long id);
 
   @Operation(
           summary = "Verifies if user by email exists",
